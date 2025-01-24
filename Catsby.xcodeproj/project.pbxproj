@@ -8,11 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		4330EC002D43671E0020E8EF /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 4330EBFF2D43671E0020E8EF /* .gitignore */; };
+		4330EC022D43677F0020E8EF /* Secret.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 4330EC012D43677F0020E8EF /* Secret.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4330EBE72D4365350020E8EF /* Catsby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Catsby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4330EBFF2D43671E0020E8EF /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		4330EC012D43677F0020E8EF /* Secret.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secret.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,6 +52,7 @@
 		4330EBDE2D4365350020E8EF = {
 			isa = PBXGroup;
 			children = (
+				4330EC012D43677F0020E8EF /* Secret.xcconfig */,
 				4330EBFF2D43671E0020E8EF /* .gitignore */,
 				4330EBE92D4365350020E8EF /* Catsby */,
 				4330EBE82D4365350020E8EF /* Products */,
@@ -129,6 +132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4330EC002D43671E0020E8EF /* .gitignore in Resources */,
+				4330EC022D43677F0020E8EF /* Secret.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +151,7 @@
 /* Begin XCBuildConfiguration section */
 		4330EBFB2D4365360020E8EF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4330EC012D43677F0020E8EF /* Secret.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
