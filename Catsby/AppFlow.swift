@@ -42,4 +42,9 @@
  {keyword}&include_adult=false&language=ko-KR&page=1
  3. https://api.themoviedb.org/3/movie/{movieID}/images
  4. https://api.themoviedb.org/3/movie/{movieID}/credits?language=ko-KR
+ 
+ 🌱< 1차 완성 후 개선해보고 싶은 부분 >
+ 1. 현재 네트워크 통신의 statusCode가 중구난방인 것만 찾아서 정리가 안되어서 해당부분 찾아서 알럿창으로 반영
+ 
+ 🌱< 의문스러운, 질문하고싶은 부분 >
 */

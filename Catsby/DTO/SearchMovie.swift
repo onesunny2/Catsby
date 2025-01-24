@@ -23,7 +23,7 @@ struct SearchMovie: Decodable {
 
 struct SearchResults: Decodable {
     let id: Int
-    let backdroppath: String
+    let backdrop: String
     let title: String
     let overview: String
     let posterpath: String
@@ -31,9 +31,9 @@ struct SearchResults: Decodable {
     let releaseDate: String
     let vote: Double
     
-    enum Codingkeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case id
-        case backdroppath = "backdrop_path"
+        case backdrop = "backdrop_path"
         case title
         case overview
         case posterpath = "poster_path"

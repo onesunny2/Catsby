@@ -17,7 +17,7 @@ struct CreditCast: Decodable {
     let character: String
     let profilepath: String
     
-    enum Codingkeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case name
         case character
         case profilepath = "profile_path"

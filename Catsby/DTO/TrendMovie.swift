@@ -9,12 +9,12 @@ import Foundation
 
 struct TrendMovie: Decodable {
     let page: Int
-    let results: TrendResults
+    let results: [TrendResults]
 }
 
 struct TrendResults: Decodable {
+    let backdrop: String
     let id: Int
-    let backdroppath: String
     let title: String
     let overview: String
     let posterpath: String
@@ -22,9 +22,9 @@ struct TrendResults: Decodable {
     let releaseDate: String
     let vote: Double
     
-    enum Codingkeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
+        case backdrop = "backdrop_path"
         case id
-        case backdroppath = "backdrop_path"
         case title
         case overview
         case posterpath = "poster_path"
