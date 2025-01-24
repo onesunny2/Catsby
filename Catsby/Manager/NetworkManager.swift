@@ -13,8 +13,17 @@ final class NetworkManager {
     static let shared = NetworkManager()
     private init() {}
     
-    func callRequest() {
+    func callRequest(api: TmdbAPI) {
         
+        AF.request(
+            api.endPoint,
+            method: api.method,
+            parameters: api.queryParameter,
+            encoding: URLEncoding(destination: .queryString),
+            headers: api.header
+        ).responseString { value in
+            dump(value)
+        }
     }
 }
 
