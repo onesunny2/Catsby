@@ -42,4 +42,8 @@
  {keyword}&include_adult=false&language=ko-KR&page=1
  3. https://api.themoviedb.org/3/movie/{movieID}/images
  4. https://api.themoviedb.org/3/movie/{movieID}/credits?language=ko-KR
+ 
+ 🌱< 1차 완성 후 개선해보고 싶은 부분 >
+ 
+ 🌱< 의문스러운, 질문하고싶은 부분 >
 */
