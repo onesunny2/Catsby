@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4330EC002D43671E0020E8EF /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 4330EBFF2D43671E0020E8EF /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		4330EBE72D4365350020E8EF /* Catsby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Catsby.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4330EBFF2D43671E0020E8EF /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -45,6 +50,7 @@
 		4330EBDE2D4365350020E8EF = {
 			isa = PBXGroup;
 			children = (
+				4330EBFF2D43671E0020E8EF /* .gitignore */,
 				4330EBE92D4365350020E8EF /* Catsby */,
 				4330EBE82D4365350020E8EF /* Products */,
 			);
@@ -122,6 +128,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4330EC002D43671E0020E8EF /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
