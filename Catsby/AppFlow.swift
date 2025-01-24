@@ -1,6 +1,6 @@
 
 /* 📌 작업 순서
- 온보딩화면 - API 확인 및 DTO 설계 - NetworkingManager - UserDefaultsManager - ViewTransitionManager - (여기까지 하고 다시 생각)
+ 온보딩화면☑️ - API 확인 및 DTO 설계 - NetworkingManager - UserDefaultsManager - ViewTransitionManager - (여기까지 하고 다시 생각)
  
  🌱< 필수 안내 사항 >
  1. LaunchScreen 제외 모두 VC 코드 기반
@@ -35,4 +35,11 @@
      - 영화 상세화면: 영화 백드롭(최대 5개까지), Poster(포스터 전부 보여주기)
   4. Credit API
      - 영화 상세화면: 줄거리(시놉시스), Cast(캐스트 전부 보여주기)
+ 
+ 🌱< API 링크 정리 >
+ 1. https://api.themoviedb.org/3/trending/movie/day?language=ko-KR&page=1
+ 2. https://api.themoviedb.org/3/search/movie?query=
+ {keyword}&include_adult=false&language=ko-KR&page=1
+ 3. https://api.themoviedb.org/3/movie/{movieID}/images
+ 4. https://api.themoviedb.org/3/movie/{movieID}/credits?language=ko-KR
 */
