@@ -8,15 +8,15 @@
 import Foundation
 
 struct ImageMovie: Decodable {
-    let id: Int
     let backdrops: [ImageBackdrops]
+    let id: Int
     let posters: [ImagePosters]
 }
 
 struct ImageBackdrops: Decodable {
     let filepath: String
     
-    enum Codingkeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case filepath = "file_path"
     }
 }
@@ -24,7 +24,8 @@ struct ImageBackdrops: Decodable {
 struct ImagePosters: Decodable {
     let filepath: String
     
-    enum Codingkeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case filepath = "file_path"
     }
 }
+

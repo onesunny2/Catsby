@@ -12,8 +12,8 @@ final class NetworkManager {
     
     static let shared = NetworkManager()
     private init() {}
-    
-    func callRequest(api: TmdbAPI) {
+
+    func callRequest<T: Decodable>(type: T.Type, api: TmdbAPI, successHandler: @escaping (T) -> (), failHandler: @escaping () -> ()) {
         
         AF.request(
             api.endPoint,
@@ -22,7 +22,24 @@ final class NetworkManager {
             encoding: URLEncoding(destination: .queryString),
             headers: api.header
         ).responseString { value in
-            dump(value)
+//            dump(value)
+        }
+        
+        AF.request(
+            api.endPoint,
+            method: api.method,
+            parameters: api.queryParameter,
+            encoding: URLEncoding(destination: .queryString),
+            headers: api.header
+        ).responseDecodable(of: T.self) { response in
+            
+            switch response.result {
+            case let .success(result):
+                successHandler(result)
+            case let .failure(error):
+                print(error)
+                failHandler()
+            }
         }
     }
 }

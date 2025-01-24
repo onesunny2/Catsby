@@ -14,7 +14,15 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         view.backgroundColor = .systemMint
         
-        NetworkManager.shared.callRequest(api: .credit(movieID: 340382))
+        NetworkManager.shared.callRequest(type: CreditMovie.self, api: .credit(movieID: 1028196)) { result in
+            print(result.cast[0].profilepath)
+            
+        } failHandler: {
+            print("실패")
+        }
+        
+
+
     }
 
 
