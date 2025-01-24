@@ -10,6 +10,8 @@
 
 .DS_Store
 
+*.xcconfig
+
 ## User settings
 xcuserdata/
 
