@@ -15,7 +15,7 @@ struct CreditMovie: Decodable {
 struct CreditCast: Decodable {
     let name: String
     let character: String
-    let profilepath: String
+    let profilepath: String?
     
     enum CodingKeys: String, CodingKey {
         case name

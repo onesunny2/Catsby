@@ -1,6 +1,20 @@
 
 /* 📌 작업 순서
- 온보딩화면☑️ - API 확인 및 DTO 설계☑️ - NetworkingManager☑️ - UserDefaultsManager☑️ - ViewTransitionManager - (여기까지 하고 다시 생각)
+ 온보딩화면☑️ - API 확인 및 DTO 설계☑️ - NetworkingManager☑️ - UserDefaultsManager☑️ - ViewTransitionManager☑️ - (여기까지 하고 다시 생각)
+ 
+ ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+ 
+ ⚙️ 개발 시 고민되는 부분
+ 1. 프로토콜을 사용하고 싶은데 어떻게 할 수 있을까? (내가 생각하는 나의 약점 포인트 중 하나)
+ - cell이나 viewcontroller에 configure을 강제하는 역할
+ - 메서드 말고 프로퍼티적으로 사용 가능한 부분은 없을까?,,,
+ 
+ 
+ 
+ 
+ 
+ 
+ ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
  
  🌱< 필수 안내 사항 >
  1. LaunchScreen 제외 모두 VC 코드 기반
