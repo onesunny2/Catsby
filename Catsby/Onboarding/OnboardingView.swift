@@ -6,10 +6,16 @@
 //
 
 import UIKit
+import SnapKit
 
 final class OnboardingView: BaseView {
     
+    let onboardingImageView: BaseImageView
+    
     override init(frame: CGRect) {
+        guard let image = UIImage(named: "onboarding") else { return }
+        onboardingImageView = BaseImageView(type: image)
+        
         super.init(frame: frame)
         
         configHierarchy()
@@ -18,7 +24,7 @@ final class OnboardingView: BaseView {
     }
     
     override func configHierarchy() {
-        <#code#>
+        self.addSubview(onboardingImageView)
     }
     
     override func configLayout() {
