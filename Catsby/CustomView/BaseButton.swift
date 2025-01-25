@@ -9,15 +9,23 @@ import UIKit
 
 final class BaseButton: UIButton {
     
-    init(image: UIImage, title: String, bgColor: UIColor, foreColor: UIColor) {
+    init(
+        title: String,
+        size: CGFloat,
+        weight: UIFont.Weight,
+        bgColor: UIColor,
+        foreColor: UIColor
+    ) {
         super.init(frame: .zero)
         
+        let container = AttributeContainer().font(.systemFont(ofSize: size, weight: weight))
         var config = UIButton.Configuration.filled()
         
-        config.image = image
-        config.title = title
+        config.attributedTitle = AttributedString(title, attributes: container)
         config.baseBackgroundColor = bgColor
         config.baseForegroundColor = foreColor
+        
+        self.configuration = config
     }
     
     func cornerRadius(_ corner: CGFloat) {
