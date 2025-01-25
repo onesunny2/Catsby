@@ -16,6 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
  
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
+        
+        // 앱 시작 분기점 설정
+//        let setStatus: () = UserDefaultsManager.shared.currentStatus(type: .firstSaved(isSaved: nil)).getUserdefaults()
         window?.rootViewController = UINavigationController(rootViewController: ViewController())
         window?.makeKeyAndVisible()
     }
