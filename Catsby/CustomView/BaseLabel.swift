@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BaseLabel: UILabel {
+final class BaseLabel: UILabel {
     
     init(
         text: String,
