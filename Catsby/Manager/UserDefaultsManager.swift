@@ -21,59 +21,61 @@ final class UserDefaultsManager {
     }
 }
 
+// MARK: 저장해야 할 데이터의 목록
 extension UserDefaultsManager {
-    
-    enum SaveData {
-        case profileName(name: String)
-        case profileImage(name: String)
-        case profileDate(saveDate: Date)
-        case firstSaved(isSaved: Bool)
-        case likeButton(isClicke: Bool)
-        case recentKeyword(keyword: String)
+    enum SaveData: String {
+        case profileName  // String
+        case profileImage // String
+        case profileDate  // Date
+        case firstSaved  // Bool
+        case likeButton  // [id(Int): Bool]
+        case recentKeyword  // String 배열 저장
         
         var saveKey: String {
-            switch self {
-            case .profileName: "profileName"
-            case .profileImage: "profileImage"
-            case .profileDate: "profileDate"
-            case .firstSaved: "firstSaved"
-            case .likeButton: "likeButton"
-            case .recentKeyword: "recentKeyword"
-            }
+            return self.rawValue
         }
+    }
+}
+
+// MARK: UserDefaults 관련 메서드들
+extension UserDefaultsManager {
+    func getStringData(type: SaveData) -> String {
+        guard let data = UserDefaults.standard.string(forKey: type.saveKey) else { return "" }
         
-        func saveUserdefaults() {
-            switch self {
-            case let .profileName(name):
-                UserDefaults.standard.set(name, forKey: self.saveKey)
-            case let .profileImage(name):
-                UserDefaults.standard.set(name, forKey: self.saveKey)
-            case let .profileDate(saveDate):
-                UserDefaults.standard.set(saveDate, forKey: self.saveKey)
-            case let .firstSaved(isSaved):
-                UserDefaults.standard.set(isSaved, forKey: self.saveKey)
-            case let .likeButton(isClicke):
-                UserDefaults.standard.set(isClicke, forKey: self.saveKey)
-            case let .recentKeyword(keyword):
-                UserDefaults.standard.set(keyword, forKey: self.saveKey)
-            }
-        }
+        return data
+    }
+    
+    func getBoolData(type: SaveData) -> Bool {
+        let data = UserDefaults.standard.bool(forKey: type.saveKey)
         
-        func getUserdefaults() {
-            switch self {
-            case .profileName:
-                UserDefaults.standard.string(forKey: self.saveKey)
-            case .profileImage:
-                UserDefaults.standard.string(forKey: self.saveKey)
-            case .profileDate:
-                UserDefaults.standard.date(forKey: self.saveKey)
-            case .firstSaved:
-                UserDefaults.standard.bool(forKey: self.saveKey)
-            case .likeButton:
-                UserDefaults.standard.bool(forKey: self.saveKey)
-            case .recentKeyword:
-                UserDefaults.standard.string(forKey: self.saveKey)
-            }
+        return data
+    }
+    
+    func getDateData(type: SaveData) -> Date {
+        guard let data = UserDefaults.standard.date(forKey: type.saveKey) else { return Date() }
+        
+        return data
+    }
+    
+    func getArrayData(type: SaveData) -> [String] {
+        guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? [String] else { return [] }
+        
+        return data
+    }
+    
+    func getDicData(type: SaveData) -> [Int:Bool] {
+        guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? [Int: Bool] else { return [:] }
+        
+        return data
+    }
+    
+    func saveData(value: Any, type: SaveData) {
+        UserDefaults.standard.set(value, forKey: type.saveKey)
+    }
+    
+    func resetData() {
+        for key in UserDefaults.standard.dictionaryRepresentation().keys {
+            UserDefaults.standard.removeObject(forKey: key.description)
         }
     }
 }

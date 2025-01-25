@@ -1,6 +1,10 @@
 
 /* 📌 작업 순서
- 온보딩화면☑️ - API 확인 및 DTO 설계☑️ - NetworkingManager☑️ - UserDefaultsManager☑️ - ViewTransitionManager☑️ - (여기까지 하고 다시 생각)
+ ( 나름의 사전 설계 )
+ LaunchScreen☑️ - API 확인 및 DTO 설계☑️ - NetworkingManager☑️ - UserDefaultsManager☑️ - ViewTransitionManager☑️
+ 
+ ( 본격적 뷰 작업 시작 )
+ 온보딩화면 - 프로필 닉네임 설정 화면 - UserDefaultsManager 정상 작동 확인 - 프로필 이미지 설정 화면
  
  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
  
@@ -9,9 +13,16 @@
  - cell이나 viewcontroller에 configure을 강제하는 역할
  - 메서드 말고 프로퍼티적으로 사용 가능한 부분은 없을까?,,,
  
+ 2. 매번 extension으로 만들던 객체의 설정을 CustomView로 하면 어떻게 될까 -> 어차피 포장지가 다를 뿐 안에 내용은 같으니 해보자
+ 
+ 3. 이미지 이름도 직접 String으로 입력하는 것 보다 case 관리를 하는게 나으려나
  
  
+ ⚙️< 1차 완성 후 개선해보고 싶은 부분 >
+ 1. 현재 네트워크 통신의 statusCode가 중구난방인 것만 찾아서 정리가 안되어서 해당부분 찾아서 알럿창으로 반영
+ 2. navigationBackbutton을 커스텀하면 제스쳐로 뒤로가기 적용되지 않는 점 적용시키기
  
+ ⚙️< 의문스러운, 질문하고싶은 부분 >
  
  
  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -56,9 +67,4 @@
  {keyword}&include_adult=false&language=ko-KR&page=1
  3. https://api.themoviedb.org/3/movie/{movieID}/images
  4. https://api.themoviedb.org/3/movie/{movieID}/credits?language=ko-KR
- 
- 🌱< 1차 완성 후 개선해보고 싶은 부분 >
- 1. 현재 네트워크 통신의 statusCode가 중구난방인 것만 찾아서 정리가 안되어서 해당부분 찾아서 알럿창으로 반영
- 
- 🌱< 의문스러운, 질문하고싶은 부분 >
 */
