@@ -14,6 +14,31 @@ final class UserDefaultsManager {
     
     static let dateformatter = DateFormatter()
     
+    func dateToString(date: Date) -> String {
+        UserDefaultsManager.dateformatter.dateFormat = "yy.MM.dd 가입"
+        let savedate = UserDefaultsManager.dateformatter.string(from: date)
+        return savedate
+    }
+}
+
+// MARK: 저장해야 할 데이터의 목록
+extension UserDefaultsManager {
+    enum SaveData: String, CaseIterable {
+        case profileName  // String
+        case profileImage // String
+        case profileDate  // Date
+        case firstSaved  // Bool
+        case likeButton  // [id(Int): Bool]
+        case recentKeyword  // String 배열 저장
+        
+        var saveKey: String {
+            return self.rawValue
+        }
+    }
+}
+
+// MARK: UserDefaults 관련 메서드들
+extension UserDefaultsManager {
     func getStringData(type: SaveData) -> String {
         guard let data = UserDefaults.standard.string(forKey: type.saveKey) else { return "" }
         
@@ -32,6 +57,18 @@ final class UserDefaultsManager {
         return data
     }
     
+    func getArrayData(type: SaveData) -> [String] {
+        guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? [String] else { return [] }
+        
+        return data
+    }
+    
+    func getDicData(type: SaveData) -> [[Int:Bool]] {
+        guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? [[Int: Bool]] else { return [] }
+        
+        return data
+    }
+    
     func saveData(value: Any, type: SaveData) {
         UserDefaults.standard.set(value, forKey: type.saveKey)
     }
@@ -39,28 +76,6 @@ final class UserDefaultsManager {
     func resetData() {
         for key in UserDefaults.standard.dictionaryRepresentation().keys {
             UserDefaults.standard.removeObject(forKey: key.description)
-        }
-    }
-    
-    func dateToString(date: Date) -> String {
-        UserDefaultsManager.dateformatter.dateFormat = "yy.MM.dd 가입"
-        let savedate = UserDefaultsManager.dateformatter.string(from: date)
-        return savedate
-    }
-}
-
-extension UserDefaultsManager {
-    
-    enum SaveData: String, CaseIterable {
-        case profileName
-        case profileImage
-        case profileDate
-        case firstSaved
-        case likeButton
-        case recentKeyword
-        
-        var saveKey: String {
-            return self.rawValue
         }
     }
 }
