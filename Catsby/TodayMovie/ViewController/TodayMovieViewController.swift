@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TodayMovieViewController: UIViewController {
+final class TodayMovieViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
