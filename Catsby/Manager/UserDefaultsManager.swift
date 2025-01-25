@@ -61,17 +61,17 @@ extension UserDefaultsManager {
         
         func getUserdefaults() {
             switch self {
-            case let .profileName(name):
+            case .profileName:
                 UserDefaults.standard.string(forKey: self.saveKey)
-            case let .profileImage(name):
+            case .profileImage:
                 UserDefaults.standard.string(forKey: self.saveKey)
-            case let .profileDate(saveDate):
+            case .profileDate:
                 UserDefaults.standard.date(forKey: self.saveKey)
-            case let .firstSaved(isSaved):
+            case .firstSaved:
                 UserDefaults.standard.bool(forKey: self.saveKey)
-            case let .likeButton(isClicke):
+            case .likeButton:
                 UserDefaults.standard.bool(forKey: self.saveKey)
-            case let .recentKeyword(keyword):
+            case .recentKeyword:
                 UserDefaults.standard.string(forKey: self.saveKey)
             }
         }
