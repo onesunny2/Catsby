@@ -4,7 +4,7 @@
  LaunchScreen☑️ - API 확인 및 DTO 설계☑️ - NetworkingManager☑️ - UserDefaultsManager☑️ - ViewTransitionManager☑️
  
  ( 본격적 뷰 작업 시작 )
- 온보딩화면 - 프로필 닉네임 설정 화면 - UserDefaultsManager 정상 작동 확인 - 프로필 이미지 설정 화면
+ 온보딩화면☑️ - 프로필 닉네임 설정 화면 - UserDefaultsManager 정상 작동 확인 - 프로필 이미지 설정 화면
  
  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
  

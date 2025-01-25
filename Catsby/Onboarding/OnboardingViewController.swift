@@ -23,7 +23,6 @@ final class OnboardingViewController: UIViewController {
     
     @objc
     func startButtonTapped() {
-        print(#function)
         viewTransition(style: .push, vc: ProfileNicknameViewController())
     }
 
