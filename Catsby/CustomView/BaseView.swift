@@ -7,11 +7,21 @@
 
 import UIKit
 
-class BaseView: UIView {
+class BaseView: UIView, BaseConfigure {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        configHierarchy()
+        configLayout()
+        configView()
     }
+    
+    func configHierarchy() { }
+    
+    func configLayout() { }
+    
+    func configView() { }
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
