@@ -18,8 +18,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
         
         // 앱 시작 분기점 설정
-//        let setStatus: () = UserDefaultsManager.shared.currentStatus(type: .firstSaved(isSaved: nil)).getUserdefaults()
-        window?.rootViewController = UINavigationController(rootViewController: ViewController())
+        let isSetCompleted = UserDefaultsManager.shared.getBoolData(type: .firstSaved)
+
+        window?.rootViewController = UINavigationController(rootViewController: isSetCompleted ? TodayMovieViewController() : OnboardingViewController())
         window?.makeKeyAndVisible()
     }
 

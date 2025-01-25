@@ -23,7 +23,7 @@ final class UserDefaultsManager {
 
 // MARK: 저장해야 할 데이터의 목록
 extension UserDefaultsManager {
-    enum SaveData: String, CaseIterable {
+    enum SaveData: String {
         case profileName  // String
         case profileImage // String
         case profileDate  // Date
@@ -63,8 +63,8 @@ extension UserDefaultsManager {
         return data
     }
     
-    func getDicData(type: SaveData) -> [[Int:Bool]] {
-        guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? [[Int: Bool]] else { return [] }
+    func getDicData(type: SaveData) -> [Int:Bool] {
+        guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? [Int: Bool] else { return [:] }
         
         return data
     }
