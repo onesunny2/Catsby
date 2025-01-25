@@ -1,6 +1,6 @@
 
 /* 📌 작업 순서
- 온보딩화면☑️ - API 확인 및 DTO 설계☑️ - NetworkingManager - UserDefaultsManager - ViewTransitionManager - (여기까지 하고 다시 생각)
+ 온보딩화면☑️ - API 확인 및 DTO 설계☑️ - NetworkingManager☑️ - UserDefaultsManager - ViewTransitionManager - (여기까지 하고 다시 생각)
  
  🌱< 필수 안내 사항 >
  1. LaunchScreen 제외 모두 VC 코드 기반
