@@ -7,19 +7,19 @@
 
 import UIKit
 
-extension ViewController {
+extension UIViewController {
     
-    func viewTransition(style: ViewTransition) {
+    func viewTransition(style: ViewTransition, vc: UIViewController) {
         
         switch style {
         case .push:
-            navigationController?.pushViewController(self, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
         case .modal:
-            present(self, animated: true)
+            present(vc, animated: true)
         case .windowRoot:
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, let window = windowScene.windows.first else { return }
             
-            window.rootViewController = UINavigationController(rootViewController: self)
+            window.rootViewController = UINavigationController(rootViewController: vc)
         }
     }
 }

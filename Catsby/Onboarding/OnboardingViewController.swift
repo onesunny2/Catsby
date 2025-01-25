@@ -17,6 +17,14 @@ final class OnboardingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mainView.startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc
+    func startButtonTapped() {
+        print(#function)
+        viewTransition(style: .push, vc: ProfileNicknameViewController())
     }
 
 }
