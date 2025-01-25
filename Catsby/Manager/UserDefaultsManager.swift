@@ -68,11 +68,11 @@ extension UserDefaultsManager {
             case let .profileDate(saveDate):
                 UserDefaults.standard.date(forKey: self.saveKey)
             case let .firstSaved(isSaved):
-                UserDefaults.standard.set(isSaved, forKey: self.saveKey)
+                UserDefaults.standard.bool(forKey: self.saveKey)
             case let .likeButton(isClicke):
-                UserDefaults.standard.set(isClicke, forKey: self.saveKey)
+                UserDefaults.standard.bool(forKey: self.saveKey)
             case let .recentKeyword(keyword):
-                UserDefaults.standard.set(keyword, forKey: self.saveKey)
+                UserDefaults.standard.string(forKey: self.saveKey)
             }
         }
     }
