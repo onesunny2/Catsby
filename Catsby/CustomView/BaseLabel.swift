@@ -9,7 +9,14 @@ import UIKit
 
 class BaseLabel: UILabel {
     
-    init(text: String, align: NSTextAlignment, color: UIColor = .catsWhite, size: CGFloat, weight: UIFont.Weight, line: Int = 1) {
+    init(
+        text: String,
+        align: NSTextAlignment,
+        color: UIColor = .catsWhite,
+        size: CGFloat,
+        weight: UIFont.Weight,
+        line: Int = 1
+    ) {
         super.init(frame: .zero)
         
         self.text = text

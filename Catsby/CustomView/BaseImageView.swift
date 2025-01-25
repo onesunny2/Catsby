@@ -16,6 +16,11 @@ final class BaseImageView: UIImageView {
         self.contentMode = .scaleAspectFill
     }
     
+    func clipCorner(_ radius: CGFloat) {
+        self.layer.cornerRadius = radius
+        self.clipsToBounds = true
+    }
+    
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
