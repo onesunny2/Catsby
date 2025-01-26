@@ -9,16 +9,22 @@ import UIKit
 
 final class BaseImageView: UIImageView {
     
-    init(type: UIImage) {
+    init(type: UIImage, bgcolor: UIColor) {
         super.init(frame: .zero)
         
         self.image = type
         self.contentMode = .scaleAspectFill
+        self.backgroundColor = bgcolor
     }
     
     func clipCorner(_ radius: CGFloat) {
         self.layer.cornerRadius = radius
         self.clipsToBounds = true
+    }
+    
+    func stroke(_ color: UIColor, _ width: CGFloat) {
+        self.layer.borderColor = color.cgColor
+        self.layer.borderWidth = width
     }
     
     @available(*, unavailable)

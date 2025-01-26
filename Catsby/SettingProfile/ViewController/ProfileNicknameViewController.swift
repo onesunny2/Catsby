@@ -8,11 +8,19 @@
 import UIKit
 
 class ProfileNicknameViewController: UIViewController {
+    
+    private let mainView = ProfileNicknameView()
+    let randomImage = ProfileImage.imageList.randomElement() ?? ""
+    
+    override func loadView() {
+        view = mainView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .catsLightgray
+        
+        mainView.profileImageView.image = UIImage(named: randomImage)
+        navigationItem.title = "프로필 설정"
     }
 
 }
