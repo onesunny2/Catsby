@@ -23,7 +23,7 @@ final class OnboardingView: BaseView {
         
         startButton = BaseButton(title: "시작하기", size: 18, weight: .bold, bgColor: .catsBlack, foreColor: .catsMain)
         startButton.capsuleStyle()
-        startButton.stroke(.catsMain, 1)
+        startButton.stroke(.catsMain, 2)
         
         super.init(frame: frame)
    

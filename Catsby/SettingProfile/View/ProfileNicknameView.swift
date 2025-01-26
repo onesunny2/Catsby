@@ -28,7 +28,7 @@ final class ProfileNicknameView: BaseView {
     
     
     override init(frame: CGRect) {
-        let image = UIImage(named: "profile_11")
+        let image = UIImage(named: "")
         profileImageView = BaseImageView(type: image ?? UIImage(), bgcolor: .catsBlack)
         
         let camera = UIImage(systemName: "camera.circle.fill", withConfiguration: UIImage.SymbolConfiguration.init(paletteColors: [.catsWhite, .catsMain]))
@@ -38,7 +38,7 @@ final class ProfileNicknameView: BaseView {
         
         completeButton = BaseButton(title: "완료", size: 18, weight: .bold, bgColor: .catsBlack, foreColor: .catsMain)
         completeButton.capsuleStyle()
-        completeButton.stroke(.catsMain, 1)
+        completeButton.stroke(.catsMain, 2)
         
         super.init(frame: frame)
         
