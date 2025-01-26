@@ -12,6 +12,10 @@ final class TodayMovieViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        print(UserDefaultsManager.shared.getStringData(type: .profileName))
+        print(UserDefaultsManager.shared.getStringData(type: .profileImage))
+        print(UserDefaultsManager.shared.getDateData(type: .profileDate))
+        
         view.backgroundColor = .systemGreen
     }
 
