@@ -42,6 +42,7 @@ final class ProfileNicknameView: BaseView {
         
         super.init(frame: frame)
         
+        backgroundColor = .catsBlack
         configHierarchy()
         configLayout()
         configView()
