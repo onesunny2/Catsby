@@ -23,6 +23,19 @@ final class ProfileNicknameViewController: UIViewController {
         navigationItem.title = "프로필 설정"
         mainView.textfield.delegate = self
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
+        
+        tapGesture()
+    }
+    
+    private func tapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
+        mainView.profileImageView.isUserInteractionEnabled = true
+        mainView.profileImageView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func imageViewTapped() {
+        print(#function)
+        self.viewTransition(style: .push(animated: true), vc: ProfileImageViewController())
     }
 
 }
@@ -37,7 +50,7 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
         checkSpecialCharacter(text)
     }
     
-    func checkLength(_ textfield: UITextField) {
+    private func checkLength(_ textfield: UITextField) {
         guard let count = textfield.text?.count else { return }
         
         switch count {
@@ -54,7 +67,7 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
         }
     }
     
-    func checkSpecialCharacter(_ text: String) {
+    private func checkSpecialCharacter(_ text: String) {
         let list = ["@", "#", "$", "%"]
         for index in 0...list.count - 1 {
             if text.contains(list[index]) {
@@ -63,7 +76,7 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
         }
     }
     
-    func checkNumber(_ text: String) {
+    private func checkNumber(_ text: String) {
         let result = text.map{ $0.isNumber }
         if result.contains(true) {
             mainView.checkNickname.text = "닉네임에 숫자는 포함할 수 없어요."

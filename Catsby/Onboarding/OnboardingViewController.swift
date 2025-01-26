@@ -27,7 +27,7 @@ final class OnboardingViewController: UIViewController {
         viewTransition(style: .push(animated: true), vc: ProfileNicknameViewController())
     }
     
-    func setNavigation() {
+    private func setNavigation() {
         navigationController?.navigationBar.tintColor = .catsMain
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.catsWhite]
         navigationItem.backButtonTitle = ""

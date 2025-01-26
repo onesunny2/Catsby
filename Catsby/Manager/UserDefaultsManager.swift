@@ -14,7 +14,7 @@ final class UserDefaultsManager {
     
     static let dateformatter = DateFormatter()
     
-    func dateToString(date: Date) -> String {
+    private func dateToString(date: Date) -> String {
         UserDefaultsManager.dateformatter.dateFormat = "yy.MM.dd 가입"
         let savedate = UserDefaultsManager.dateformatter.string(from: date)
         return savedate

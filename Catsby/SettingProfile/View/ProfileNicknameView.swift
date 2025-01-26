@@ -20,7 +20,7 @@ import SnapKit
 final class ProfileNicknameView: BaseView {
     
     let profileImageView: BaseImageView
-    private let cameraImageView: BaseImageView
+    let cameraImageView: BaseImageView
     let textfield = UITextField()
     private let underline = UIView()
     let checkNickname: BaseLabel
@@ -100,7 +100,7 @@ final class ProfileNicknameView: BaseView {
         }
     }
     
-    func configView() {
+    private func configView() {
         textfield.textColor = .catsWhite
         textfield.attributedPlaceholder = NSAttributedString(string: "닉네임을 적어주세요 :>", attributes: [NSAttributedString.Key.foregroundColor: UIColor.catsDarkgray])
         textfield.borderStyle = .none
