@@ -82,7 +82,7 @@ final class ProfileNicknameView: BaseView {
         }
         
         underline.snp.makeConstraints {
-            $0.top.equalTo(textfield.snp.bottom).offset(12)
+            $0.top.equalTo(textfield.snp.bottom).offset(8)
             $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide).inset(8)
             $0.height.equalTo(1)
         }
@@ -100,6 +100,7 @@ final class ProfileNicknameView: BaseView {
     }
     
     func configView() {
+        textfield.textColor = .catsWhite
         textfield.attributedPlaceholder = NSAttributedString(string: "닉네임을 적어주세요 :>", attributes: [NSAttributedString.Key.foregroundColor: UIColor.catsDarkgray])
         textfield.borderStyle = .none
         textfield.autocorrectionType = .no
