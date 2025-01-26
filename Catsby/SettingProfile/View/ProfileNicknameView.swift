@@ -20,6 +20,7 @@ import SnapKit
 final class ProfileNicknameView: BaseView {
     
     let profileImageView: BaseImageView
+    let cameraImageView: BaseImageView
     let textfield = UITextField()
     let underline = UIView()
     let checkNickname: BaseLabel
@@ -29,6 +30,9 @@ final class ProfileNicknameView: BaseView {
     override init(frame: CGRect) {
         let image = UIImage(named: "profile_11")
         profileImageView = BaseImageView(type: image ?? UIImage(), bgcolor: .catsBlack)
+        
+        let camera = UIImage(systemName: "camera.circle.fill", withConfiguration: UIImage.SymbolConfiguration.init(paletteColors: [.catsWhite, .catsMain]))
+        cameraImageView = BaseImageView(type: camera ?? UIImage(), bgcolor: .clear)
         
         checkNickname = BaseLabel(text: "Test", align: .left, color: .catsMain, size: 16, weight: .regular)
         
@@ -46,13 +50,13 @@ final class ProfileNicknameView: BaseView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let radius = profileImageView.frame.width / 2
-        profileImageView.clipCorner(radius)
+        let profileRadius = profileImageView.frame.width / 2
+        profileImageView.clipCorner(profileRadius)
         profileImageView.stroke(.catsMain, 2)
     }
     
     override func configHierarchy() {
-        [profileImageView, textfield, underline, checkNickname, completeButton].forEach {
+        [profileImageView, cameraImageView, textfield, underline, checkNickname, completeButton].forEach {
             self.addSubview($0)
         }
     }
@@ -62,6 +66,13 @@ final class ProfileNicknameView: BaseView {
             $0.top.equalTo(self.safeAreaLayoutGuide).inset(30)
             $0.centerX.equalTo(self.safeAreaLayoutGuide)
             $0.size.equalTo(120)
+        }
+        
+        cameraImageView.snp.makeConstraints {
+            $0.bottom.equalTo(profileImageView.snp.bottom).offset(2)
+            $0.trailing.equalTo(profileImageView.snp.trailing).offset(4)
+            $0.size.equalTo(40)
+            
         }
         
         textfield.snp.makeConstraints {
