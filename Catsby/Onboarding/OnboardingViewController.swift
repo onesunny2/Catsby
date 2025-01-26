@@ -18,12 +18,19 @@ final class OnboardingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setNavigation()
         mainView.startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
     }
     
     @objc
     func startButtonTapped() {
         viewTransition(style: .push(animated: true), vc: ProfileNicknameViewController())
+    }
+    
+    func setNavigation() {
+        navigationController?.navigationBar.tintColor = .catsMain
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.catsWhite]
+        navigationItem.backButtonTitle = ""
     }
 
 }

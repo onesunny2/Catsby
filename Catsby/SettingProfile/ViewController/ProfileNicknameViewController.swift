@@ -18,6 +18,7 @@ class ProfileNicknameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.title = "프로필 설정"
     }
 
 }
