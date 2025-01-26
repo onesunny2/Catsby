@@ -52,6 +52,7 @@ final class ProfileNicknameViewController: UIViewController {
             userdefaults.saveData(value: randomImage, type: .profileImage)
             userdefaults.saveData(value: text, type: .profileName)
             userdefaults.saveData(value: Date(), type: .profileDate)
+            userdefaults.saveData(value: true, type: .firstSaved)
             
             self.viewTransition(style: .windowRoot, vc: TodayMovieViewController())
         }
