@@ -28,6 +28,10 @@ final class BaseButton: UIButton {
         self.configuration = config
     }
     
+    func buttonImage(image: UIImage) {
+        self.configuration?.image = image
+    }
+    
     func cornerRadius(_ corner: CGFloat) {
         self.configuration?.cornerStyle = .fixed
         self.configuration?.background.cornerRadius = corner

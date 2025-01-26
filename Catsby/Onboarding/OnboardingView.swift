@@ -10,7 +10,7 @@ import SnapKit
 
 final class OnboardingView: BaseView {
     
-    var onboardingImageView = BaseImageView(type: UIImage(named: "onboarding") ?? UIImage())
+    var onboardingImageView = BaseImageView(type: UIImage(named: "onboarding") ?? UIImage(), bgcolor: .clear)
     let titleLabel: BaseLabel
     let detailLabel: BaseLabel
     let startButton: BaseButton

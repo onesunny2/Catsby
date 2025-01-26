@@ -8,11 +8,16 @@
 import UIKit
 
 class ProfileNicknameViewController: UIViewController {
+    
+    private let mainView = ProfileNicknameView()
+    
+    override func loadView() {
+        view = mainView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .catsLightgray
     }
 
 }

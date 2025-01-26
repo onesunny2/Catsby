@@ -12,8 +12,8 @@ extension UIViewController {
     func viewTransition(style: ViewTransition, vc: UIViewController) {
         
         switch style {
-        case .push:
-            navigationController?.pushViewController(vc, animated: true)
+        case let .push(animated):
+            navigationController?.pushViewController(vc, animated: animated)
         case .modal:
             present(vc, animated: true)
         case .windowRoot:
