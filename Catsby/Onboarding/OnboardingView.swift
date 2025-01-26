@@ -10,9 +10,9 @@ import SnapKit
 
 final class OnboardingView: BaseView {
     
-    var onboardingImageView = BaseImageView(type: UIImage(named: "onboarding") ?? UIImage(), bgcolor: .clear)
-    let titleLabel: BaseLabel
-    let detailLabel: BaseLabel
+    private var onboardingImageView = BaseImageView(type: UIImage(named: "onboarding") ?? UIImage(), bgcolor: .clear)
+    private let titleLabel: BaseLabel
+    private let detailLabel: BaseLabel
     let startButton: BaseButton
     
     override init(frame: CGRect) {

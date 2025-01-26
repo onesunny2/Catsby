@@ -11,7 +11,7 @@ import SnapKit
 /*
  1. 커스텀 백버튼 (이전 뷰 컨트롤러 화면에서 설정해야 함)
  2. 프로필 이미지는 UIImageView으로 생성(tapGesture 예정)
-    ㄴ 처음에 랜덤 이미지 들어가도록 enum caseIterable 활용 예정
+    ㄴ 처음에 랜덤 이미지 들어가도록 enum 활용 예정
  3. 텍스트필드 - BaseView 만들까 했는데 화면 구성 상 한번만 들어갈 것 같아 단일 화면에서 구성
  4. underLine - UIView로 생성
  5. 닉네임 조건은 VC 단위에서 설정 예정 - 다만 처음엔 "" 공백
@@ -20,9 +20,9 @@ import SnapKit
 final class ProfileNicknameView: BaseView {
     
     let profileImageView: BaseImageView
-    let cameraImageView: BaseImageView
+    private let cameraImageView: BaseImageView
     let textfield = UITextField()
-    let underline = UIView()
+    private let underline = UIView()
     let checkNickname: BaseLabel
     let completeButton: BaseButton
     
@@ -34,7 +34,7 @@ final class ProfileNicknameView: BaseView {
         let camera = UIImage(systemName: "camera.circle.fill", withConfiguration: UIImage.SymbolConfiguration.init(paletteColors: [.catsWhite, .catsMain]))
         cameraImageView = BaseImageView(type: camera ?? UIImage(), bgcolor: .clear)
         
-        checkNickname = BaseLabel(text: "Test", align: .left, color: .catsMain, size: 16, weight: .regular)
+        checkNickname = BaseLabel(text: " ", align: .left, color: .catsMain, size: 16, weight: .regular)
         
         completeButton = BaseButton(title: "완료", size: 18, weight: .bold, bgColor: .catsBlack, foreColor: .catsMain)
         completeButton.capsuleStyle()
