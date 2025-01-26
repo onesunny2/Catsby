@@ -21,14 +21,22 @@ final class ProfileNicknameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setNavigation()
+        
         mainView.profileImageView.image = UIImage(named: randomImage)
-        navigationItem.title = "프로필 설정"
         mainView.textfield.delegate = self
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
         
         tapGesture()
         
         mainView.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
+    }
+    
+    private func setNavigation() {
+        navigationItem.title = "프로필 설정"
+        navigationController?.navigationBar.tintColor = .catsMain
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.catsWhite]
+        navigationItem.backButtonTitle = ""
     }
     
     private func tapGesture() {

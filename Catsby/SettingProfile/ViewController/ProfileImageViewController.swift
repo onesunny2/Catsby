@@ -7,12 +7,18 @@
 
 import UIKit
 
-class ProfileImageViewController: UIViewController {
+final class ProfileImageViewController: UIViewController {
+    
+    private let mainView = ProfileImageView()
+    
+    override func loadView() {
+        view = mainView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .catsDarkgray
+        navigationItem.title = "프로필 이미지 설정"
     }
     
 
