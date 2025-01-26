@@ -40,6 +40,7 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
         guard let text = textfield.text else { return }
         checkLength(textfield)
         checkNumber(text)
+        checkSpecialCharacter(text)
     }
     
     func checkLength(_ textfield: UITextField) {
@@ -59,8 +60,13 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
         }
     }
     
-    func checkSpecialCharacter() {
-        
+    func checkSpecialCharacter(_ text: String) {
+        let list = ["@", "#", "$", "%"]
+        for index in 0...list.count - 1 {
+            if text.contains(list[index]) {
+                mainView.checkNickname.text = "닉네임에 @, #, $, %는 포함할 수 없어요"
+            }
+        }
     }
     
     func checkNumber(_ text: String) {
