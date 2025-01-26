@@ -10,6 +10,8 @@ import UIKit
 final class ProfileNicknameViewController: UIViewController {
     
     private let mainView = ProfileNicknameView()
+    private let userdefaults = UserDefaultsManager.shared
+    
     let randomImage = ProfileImage.imageList.randomElement() ?? ""
     
     override func loadView() {
@@ -25,6 +27,8 @@ final class ProfileNicknameViewController: UIViewController {
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
         
         tapGesture()
+        
+        mainView.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
     
     private func tapGesture() {
@@ -36,6 +40,21 @@ final class ProfileNicknameViewController: UIViewController {
     @objc func imageViewTapped() {
         print(#function)
         self.viewTransition(style: .push(animated: true), vc: ProfileImageViewController())
+    }
+    
+    @objc private func completeButtonTapped() {
+        
+        if mainView.checkNickname.text == Comment.pass.rawValue {
+            
+            guard let text = mainView.textfield.text else {
+                return }
+            
+            userdefaults.saveData(value: randomImage, type: .profileImage)
+            userdefaults.saveData(value: text, type: .profileName)
+            userdefaults.saveData(value: Date(), type: .profileDate)
+            
+            self.viewTransition(style: .windowRoot, vc: TodayMovieViewController())
+        }
     }
 
 }
