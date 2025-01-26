@@ -7,13 +7,7 @@
 
 import UIKit
 
-/*
- < 기능 구현 >
- 1. 닉네임 조건
- -
- */
-
-class ProfileNicknameViewController: UIViewController {
+final class ProfileNicknameViewController: UIViewController {
     
     private let mainView = ProfileNicknameView()
     let randomImage = ProfileImage.imageList.randomElement() ?? ""

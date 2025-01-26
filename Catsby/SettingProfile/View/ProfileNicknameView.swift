@@ -20,9 +20,9 @@ import SnapKit
 final class ProfileNicknameView: BaseView {
     
     let profileImageView: BaseImageView
-    let cameraImageView: BaseImageView
+    private let cameraImageView: BaseImageView
     let textfield = UITextField()
-    let underline = UIView()
+    private let underline = UIView()
     let checkNickname: BaseLabel
     let completeButton: BaseButton
     
