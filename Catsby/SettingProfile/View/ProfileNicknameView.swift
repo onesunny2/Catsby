@@ -34,7 +34,7 @@ final class ProfileNicknameView: BaseView {
         let camera = UIImage(systemName: "camera.circle.fill", withConfiguration: UIImage.SymbolConfiguration.init(paletteColors: [.catsWhite, .catsMain]))
         cameraImageView = BaseImageView(type: camera ?? UIImage(), bgcolor: .clear)
         
-        checkNickname = BaseLabel(text: "Test", align: .left, color: .catsMain, size: 16, weight: .regular)
+        checkNickname = BaseLabel(text: " ", align: .left, color: .catsMain, size: 16, weight: .regular)
         
         completeButton = BaseButton(title: "완료", size: 18, weight: .bold, bgColor: .catsBlack, foreColor: .catsMain)
         completeButton.capsuleStyle()

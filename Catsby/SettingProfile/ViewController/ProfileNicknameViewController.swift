@@ -28,27 +28,27 @@ class ProfileNicknameViewController: UIViewController {
         mainView.profileImageView.image = UIImage(named: randomImage)
         navigationItem.title = "프로필 설정"
         mainView.textfield.delegate = self
+        mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
     }
 
 }
 
 // MARK: textfield 기능 관련
 extension ProfileNicknameViewController: UITextFieldDelegate {
- 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        checkLength(textField)
-        checkSpecialCharacter()
-        checkNumber()
-        
-        return true
+    
+    @objc func checkNicknameCondition(textfield: UITextField) {
+        guard let text = textfield.text else { return }
+        checkLength(textfield)
+        checkNumber(text)
     }
     
     func checkLength(_ textfield: UITextField) {
         guard let count = textfield.text?.count else { return }
         
         switch count {
-        case 0...1:
+        case 0:
+            mainView.checkNickname.text = " "
+        case 1:
             mainView.checkNickname.text = "2글자 이상 10글자 미만으로 설정해주세요."
         case 2...9:
             mainView.checkNickname.text = "사용할 수 있는 닉네임이에요!"
@@ -63,7 +63,10 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
         
     }
     
-    func checkNumber() {
-        
+    func checkNumber(_ text: String) {
+        let result = text.map{ $0.isNumber }
+        if result.contains(true) {
+            mainView.checkNickname.text = "닉네임에 숫자는 포함할 수 없어요."
+        }
     }
 }
