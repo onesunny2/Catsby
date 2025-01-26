@@ -55,13 +55,13 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
         
         switch count {
         case 0:
-            mainView.checkNickname.text = " "
+            mainView.checkNickname.text = Comment.space.rawValue
         case 1:
-            mainView.checkNickname.text = "2글자 이상 10글자 미만으로 설정해주세요."
+            mainView.checkNickname.text = Comment.length.rawValue
         case 2...9:
-            mainView.checkNickname.text = "사용할 수 있는 닉네임이에요!"
+            mainView.checkNickname.text = Comment.pass.rawValue
         case 10...:
-            mainView.checkNickname.text = "2글자 이상 10글자 미만으로 설정해주세요."
+            mainView.checkNickname.text = Comment.length.rawValue
         default:
             print("checkLength: error")
         }
@@ -71,7 +71,7 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
         let list = ["@", "#", "$", "%"]
         for index in 0...list.count - 1 {
             if text.contains(list[index]) {
-                mainView.checkNickname.text = "닉네임에 @, #, $, %는 포함할 수 없어요"
+                mainView.checkNickname.text = Comment.specialCharacter.rawValue
             }
         }
     }
@@ -79,7 +79,17 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
     private func checkNumber(_ text: String) {
         let result = text.map{ $0.isNumber }
         if result.contains(true) {
-            mainView.checkNickname.text = "닉네임에 숫자는 포함할 수 없어요."
+            mainView.checkNickname.text = Comment.number.rawValue
         }
+    }
+}
+
+extension ProfileNicknameViewController {
+    enum Comment: String {
+        case length = "2글자 이상 10글자 미만으로 설정해주세요."
+        case specialCharacter = "닉네임에 @, #, $, %는 포함할 수 없어요"
+        case number = "닉네임에 숫자는 포함할 수 없어요."
+        case pass = "사용할 수 있는 닉네임이에요!"
+        case space = " "
     }
 }
