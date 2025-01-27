@@ -19,9 +19,9 @@ final class OnboardingView: BaseView {
         titleLabel = BaseLabel(text: "Onboarding", align: .center, size: 36, weight: .bold)
         
         let detail = "당신만의 영화 세상,\nCatsby를 시작해보세요."
-        detailLabel = BaseLabel(text: detail, align: .center, size: 18, weight: .regular, line: 2)
+        detailLabel = BaseLabel(text: detail, align: .center, size: 16, weight: .regular, line: 2)
         
-        startButton = BaseButton(title: "시작하기", size: 18, weight: .bold, bgColor: .catsBlack, foreColor: .catsMain)
+        startButton = BaseButton(title: "시작하기", size: 16, weight: .bold, bgColor: .catsBlack, foreColor: .catsMain)
         startButton.capsuleStyle()
         startButton.stroke(.catsMain, 2)
         
