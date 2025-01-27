@@ -10,6 +10,7 @@ import UIKit
 final class ProfileImageViewController: UIViewController {
     
     private let mainView = ProfileImageView()
+    var isFirstSelected = false
     
     override func loadView() {
         view = mainView
@@ -46,6 +47,31 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
         cell.profileImageView.image = UIImage(named: selectedImage)
         cell.clipImage()
         
+        if cell.profileImageView.image == mainView.mainImageView.image {
+            cell.isSelected = true
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
+            cell.profileImageView.stroke(.catsMain, 2)
+        }
+        
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedImage = ProfileImage.imageList[indexPath.item]
+
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
+        
+        cell.profileImageView.stroke(.catsMain, 2)
+        
+        guard let selectedImageView = cell.profileImageView.image else { return }
+        mainView.mainImageView.image = selectedImageView
+        ProfileImage.selectedImage = selectedImage
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
+        
+        cell.profileImageView.stroke(.catsLightgray, 1)
     }
 }

@@ -5,13 +5,14 @@
 //  Created by Lee Wonsun on 1/24/25.
 //
 
-import Foundation
+import UIKit
 
 final class UserDefaultsManager {
     
     static let shared = UserDefaultsManager()
     private init() {}
     
+    let encoder = JSONEncoder()
     static let dateformatter = DateFormatter()
     
     private func dateToString(date: Date) -> String {

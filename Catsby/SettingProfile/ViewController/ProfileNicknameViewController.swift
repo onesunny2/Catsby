@@ -20,16 +20,23 @@ final class ProfileNicknameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
+        ProfileImage.selectedImage = randomImage
         setNavigation()
         
-        mainView.profileImageView.image = UIImage(named: randomImage)
+        mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
         mainView.textfield.delegate = self
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
         
         tapGesture()
         
         mainView.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
+    }
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
     }
     
     private func setNavigation() {
@@ -57,7 +64,7 @@ final class ProfileNicknameViewController: UIViewController {
             guard let text = mainView.textfield.text else {
                 return }
             
-            userdefaults.saveData(value: randomImage, type: .profileImage)
+            userdefaults.saveData(value: ProfileImage.selectedImage, type: .profileImage)
             userdefaults.saveData(value: text, type: .profileName)
             userdefaults.saveData(value: Date(), type: .profileDate)
             userdefaults.saveData(value: true, type: .firstSaved)
