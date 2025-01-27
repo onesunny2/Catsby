@@ -57,7 +57,9 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
         
         cell.profileImageView.stroke(.catsMain, 2)
         
-        mainView.mainImageView.image = cell.profileImageView.image
+        guard let selectedImage = cell.profileImageView.image else { return }
+        mainView.mainImageView.image = selectedImage
+        ProfileImage.selectedImage = selectedImage
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
