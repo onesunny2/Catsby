@@ -52,10 +52,12 @@ extension UserDefaultsManager {
         return data
     }
     
-    func getDateData(type: SaveData) -> Date {
-        guard let data = UserDefaults.standard.date(forKey: type.saveKey) else { return Date() }
+    func getDateData(type: SaveData) -> String {
+        guard let data = UserDefaults.standard.date(forKey: type.saveKey) else { return "" }
         
-        return data
+        let date = dateToString(date: data)
+        
+        return date
     }
     
     func getArrayData(type: SaveData) -> [String] {
