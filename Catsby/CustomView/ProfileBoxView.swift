@@ -10,13 +10,13 @@ import SnapKit
 
 final class ProfileBoxView: BaseView {
     
-    let backgroundView = UIView()
-    let profileImageView: BaseImageView
-    let nicknameStackView = UIStackView()
-    let nicknameLabel: BaseLabel
-    let registerDate: BaseLabel
-    let arrowImageView: BaseImageView
-    let movieboxButton: BaseButton
+    private let backgroundView = UIView()
+    private let profileImageView: BaseImageView
+    private let nicknameStackView = UIStackView()
+    private let nicknameLabel: BaseLabel
+    private let registerDate: BaseLabel
+    private let arrowImageView: BaseImageView
+    private let movieboxButton: BaseButton
     
     override init(frame: CGRect) {
         let profile = UserDefaultsManager.shared.getStringData(type: .profileImage)
@@ -80,7 +80,7 @@ final class ProfileBoxView: BaseView {
         }
         
         nicknameStackView.snp.makeConstraints {
-            $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(8)
             $0.centerY.equalTo(profileImageView)
             $0.trailing.equalTo(arrowImageView.snp.leading).inset(16)
         }

@@ -10,24 +10,22 @@ import SnapKit
 
 final class TodayMovieViewController: UIViewController {
     
-    let profileboxView = ProfileBoxView()
+    private let mainView = TodayMovieView()
+    
+    override func loadView() {
+        view = mainView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .catsBlack
         setNavigation()
-        
-        view.addSubview(profileboxView)
-        profileboxView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(16)
-            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(8)
-        }
-
+        setCollectionView()
     }
     
     @objc func searchItemTapped() {
-        
+        print(#function)
     }
     
     private func setNavigation() {
@@ -36,5 +34,24 @@ final class TodayMovieViewController: UIViewController {
         navigationItem.title = "오늘의 영화"
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.catsWhite]
         navigationItem.backButtonTitle = ""
+    }
+}
+
+extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    private func setCollectionView() {
+        mainView.collectionView.delegate = self
+        mainView.collectionView.dataSource = self
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 20
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
+        
+        return cell
     }
 }
