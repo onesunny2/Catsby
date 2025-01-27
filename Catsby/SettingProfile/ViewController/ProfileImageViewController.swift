@@ -48,4 +48,22 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
         
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        print(#function)
+
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
+        
+        cell.profileImageView.stroke(.catsMain, 2)
+        
+        mainView.mainImageView.image = cell.profileImageView.image
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
+        
+        cell.profileImageView.stroke(.catsLightgray, 1)
+    }
 }
