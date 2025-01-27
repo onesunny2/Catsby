@@ -73,7 +73,6 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         
         let url = NetworkManager.pathUrl + row.posterpath
         cell.getData(url: url, title: row.title, plot: row.overview)
-        print(row.posterpath)
         cell.posterCornerRadius()
         
         return cell
