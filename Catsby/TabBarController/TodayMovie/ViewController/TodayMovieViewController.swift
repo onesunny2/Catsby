@@ -11,6 +11,12 @@ import SnapKit
 final class TodayMovieViewController: UIViewController {
     
     private let mainView = TodayMovieView()
+    private let networkManager = NetworkManager.shared
+    var trendMovie: [TrendResults] = [] {
+        didSet {
+            mainView.collectionView.reloadData()
+        }
+    }
     
     override func loadView() {
         view = mainView
@@ -22,10 +28,21 @@ final class TodayMovieViewController: UIViewController {
         view.backgroundColor = .catsBlack
         setNavigation()
         setCollectionView()
+        getTodayMovieData()
     }
     
     @objc func searchItemTapped() {
         print(#function)
+    }
+    
+    func getTodayMovieData() {
+        
+        networkManager.callRequest(type: TrendMovie.self, api: .trend) { result in
+            self.trendMovie = result.results
+            print(self.trendMovie.count)
+        } failHandler: {
+            print(#function, "error")
+        }
     }
     
     private func setNavigation() {
@@ -45,13 +62,17 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        return trendMovie.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
+        let row = trendMovie[indexPath.item]
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
         
+        let url = NetworkManager.pathUrl + row.posterpath
+        cell.getData(url: url, title: row.title, plot: row.overview)
         cell.posterCornerRadius()
         
         return cell

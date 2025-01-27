@@ -11,6 +11,7 @@ import Alamofire
 final class NetworkManager {
     
     static let shared = NetworkManager()
+    static let pathUrl = "https://image.tmdb.org/t/p/w500"
     private init() {}
 
     func callRequest<T: Decodable>(type: T.Type, api: TmdbAPI, successHandler: @escaping (T) -> (), failHandler: @escaping () -> ()) {
@@ -22,7 +23,7 @@ final class NetworkManager {
             encoding: URLEncoding(destination: .queryString),
             headers: api.header
         ).responseString { value in
-            dump(value)
+//            dump(value)
         }
         
         AF.request(
