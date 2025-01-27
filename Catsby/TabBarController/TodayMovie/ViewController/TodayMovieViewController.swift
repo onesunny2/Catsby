@@ -31,7 +31,7 @@ final class TodayMovieViewController: UIViewController {
     private func setNavigation() {
         let searchImage = UIImage(systemName: "magnifyingglass")?.withTintColor(.catsMain, renderingMode: .alwaysOriginal)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: searchImage, style: .done, target: self, action: #selector(searchItemTapped))
-        navigationItem.title = "오늘의 영화"
+        navigationItem.title = "Catsby의 영화세상"
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.catsWhite]
         navigationItem.backButtonTitle = ""
     }
@@ -51,6 +51,8 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
+        
+        cell.posterCornerRadius()
         
         return cell
     }

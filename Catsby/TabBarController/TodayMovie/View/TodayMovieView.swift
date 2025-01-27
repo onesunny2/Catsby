@@ -21,8 +21,8 @@ final class TodayMovieView: BaseView {
     private func collectionViewFlowLayout() -> UICollectionViewFlowLayout {
         let insetPadding: CGFloat = 16
         let cellPadding: CGFloat = 16
-        let cellWidth: CGFloat = UIScreen.main.bounds.width * 0.6
-        let cellHeight: Double = UIScreen.main.bounds.height - (96 + profileboxView.frame.height + recentSearchScrollView.frame.height + recentSearchLabel.frame.height + todayMovieLabel.frame.height)
+        let cellWidth: CGFloat = UIScreen.main.bounds.width * 0.55
+        let cellHeight: CGFloat = collectionView.bounds.height
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -37,7 +37,7 @@ final class TodayMovieView: BaseView {
         recentSearchLabel = BaseLabel(text: "최근검색어", align: .left, color: .catsWhite, size: 16, weight: .bold)
         
         let text = "최근 검색어 내역이 없습니다."
-        noSearchLabel = BaseLabel(text: text, align: .center, color: .catsLightgray, size: 12, weight: .regular)
+        noSearchLabel = BaseLabel(text: text, align: .center, color: .catsDarkgray, size: 12, weight: .regular)
         
         todayMovieLabel = BaseLabel(text: "오늘의 영화", align: .left, color: .catsWhite, size: 16, weight: .bold)
         
@@ -45,14 +45,18 @@ final class TodayMovieView: BaseView {
         
         super.init(frame: frame)
         
-        collectionView.collectionViewLayout = collectionViewFlowLayout()
-        
         configHierarchy()
         configLayout()
         configView()
         
         let count = UserDefaultsManager.shared.getArrayData(type: .recentKeyword).count
         scrollContentView.isHidden = (count == 0) ? false : true
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        collectionView.collectionViewLayout = collectionViewFlowLayout()
     }
     
     override func configHierarchy() {
