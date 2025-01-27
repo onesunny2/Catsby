@@ -70,6 +70,7 @@ final class ProfileBoxView: BaseView {
     
     override func configLayout() {
         backgroundView.snp.makeConstraints {
+            $0.top.equalTo(self.safeAreaLayoutGuide)
             $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide)
             $0.height.equalTo(140)
         }
