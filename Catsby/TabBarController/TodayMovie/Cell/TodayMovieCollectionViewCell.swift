@@ -72,11 +72,18 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
     }
     
     func getData(url: String, title: String, plot: String) {
-        posterImageView.kf.setImage(with: URL(string: url))
+        let processor = DownsamplingImageProcessor(size: CGSize(width: posterImageView.frame.width, height: posterImageView.frame.height))
+        posterImageView.kf.setImage(with: URL(string: url),
+                                    options: [
+                                        .processor(processor),
+                                        .scaleFactor(UIScreen.main.scale),
+                                        .cacheOriginalImage
+                                    ])
+        
         titleLabel.text = title
         plotLabel.text = plot
     }
-    
+
     func posterCornerRadius() {
         posterImageView.clipCorner(10)
         
