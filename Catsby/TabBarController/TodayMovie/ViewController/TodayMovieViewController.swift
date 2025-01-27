@@ -71,7 +71,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
         
-        let url = "https://image.tmdb.org/t/p/w500" + row.posterpath
+        let url = NetworkManager.pathUrl + row.posterpath
         cell.getData(url: url, title: row.title, plot: row.overview)
         print(row.posterpath)
         cell.posterCornerRadius()
