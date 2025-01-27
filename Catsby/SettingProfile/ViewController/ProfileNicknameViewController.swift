@@ -20,13 +20,11 @@ final class ProfileNicknameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        guard let selectedImage = UIImage(named: randomImage) else { return }
-        ProfileImage.selectedImage = selectedImage
-        
+    
+        ProfileImage.selectedImage = randomImage
         setNavigation()
         
-        mainView.profileImageView.image = ProfileImage.selectedImage
+        mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
         mainView.textfield.delegate = self
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
         
@@ -38,7 +36,7 @@ final class ProfileNicknameViewController: UIViewController {
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         
-        mainView.profileImageView.image = ProfileImage.selectedImage
+        mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
     }
     
     private func setNavigation() {

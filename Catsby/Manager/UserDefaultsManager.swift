@@ -12,6 +12,7 @@ final class UserDefaultsManager {
     static let shared = UserDefaultsManager()
     private init() {}
     
+    let encoder = JSONEncoder()
     static let dateformatter = DateFormatter()
     
     private func dateToString(date: Date) -> String {
@@ -59,12 +60,6 @@ extension UserDefaultsManager {
     
     func getArrayData(type: SaveData) -> [String] {
         guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? [String] else { return [] }
-        
-        return data
-    }
-    
-    func getUIImageData(type: SaveData) -> UIImage {
-        guard let data = UserDefaults.standard.uiImage(forKey: type.saveKey) else { return UIImage() }
         
         return data
     }

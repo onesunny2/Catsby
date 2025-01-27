@@ -37,8 +37,7 @@ final class ProfileImageView: BaseView {
     }
     
     override init(frame: CGRect) {
-        let image = UIImage(named: "profile_11")
-        mainImageView = BaseImageView(type: image ?? UIImage(), bgcolor: .catsBlack)
+        mainImageView = BaseImageView(type: UIImage(named: ProfileImage.selectedImage) ?? UIImage(), bgcolor: .catsBlack)
         
         let camera = UIImage(systemName: "camera.circle.fill", withConfiguration: UIImage.SymbolConfiguration.init(paletteColors: [.catsWhite, .catsMain]))
         cameraImageView = BaseImageView(type: camera ?? UIImage(), bgcolor: .clear)

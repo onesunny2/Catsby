@@ -51,14 +51,14 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        print(#function)
+        let selectedImage = ProfileImage.imageList[indexPath.item]
 
         guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
         
         cell.profileImageView.stroke(.catsMain, 2)
         
-        guard let selectedImage = cell.profileImageView.image else { return }
-        mainView.mainImageView.image = selectedImage
+        guard let selectedImageView = cell.profileImageView.image else { return }
+        mainView.mainImageView.image = selectedImageView
         ProfileImage.selectedImage = selectedImage
     }
     
