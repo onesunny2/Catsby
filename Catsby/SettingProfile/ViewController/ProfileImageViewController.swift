@@ -10,7 +10,6 @@ import UIKit
 final class ProfileImageViewController: UIViewController {
     
     private let mainView = ProfileImageView()
-    var isFirstSelected = false
     
     override func loadView() {
         view = mainView
