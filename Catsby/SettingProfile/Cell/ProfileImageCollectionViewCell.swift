@@ -6,15 +6,39 @@
 //
 
 import UIKit
+import SnapKit
 
-final class ProfileImageCollectionViewCell: UICollectionViewCell {
+final class ProfileImageCollectionViewCell: UICollectionViewCell, BaseConfigure {
     
     static let id = "ProfileImageCollectionViewCell"
     
+    let profileImageView: BaseImageView
+    
     override init(frame: CGRect) {
+        profileImageView = BaseImageView(type: UIImage(), bgcolor: .catsBlack)
+        
         super.init(frame: frame)
         
-        backgroundColor = .catsMain
+        backgroundColor = .clear
+        configHierarchy()
+        configLayout()
+    }
+    
+    func configHierarchy() {
+        self.addSubview(profileImageView)
+    }
+    
+    func configLayout() {
+        profileImageView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+    }
+    
+    func clipImage() {
+        let radius = self.bounds.width / 2
+        profileImageView.clipCorner(radius)
+        profileImageView.stroke(.catsLightgray, 1)
+        self.layoutIfNeeded()
     }
     
     @available(*, unavailable)

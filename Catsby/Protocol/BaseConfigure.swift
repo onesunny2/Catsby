@@ -11,5 +11,4 @@ protocol BaseConfigure: AnyObject {
     
     func configHierarchy()
     func configLayout()
-    func configView()
 }

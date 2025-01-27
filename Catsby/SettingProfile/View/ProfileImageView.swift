@@ -86,7 +86,7 @@ final class ProfileImageView: BaseView {
         collectionView.snp.makeConstraints {
             $0.top.equalTo(mainImageView.snp.bottom).offset(40)
             $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide)
-            $0.height.equalTo(UIScreen.main.bounds.width * 0.65)
+            $0.height.equalTo(UIScreen.main.bounds.width * 0.7)
         }
     }
     
