@@ -4,7 +4,9 @@
  LaunchScreen☑️ - API 확인 및 DTO 설계☑️ - NetworkingManager☑️ - UserDefaultsManager☑️ - ViewTransitionManager☑️
  
  ( 본격적 뷰 작업 시작 )
- 온보딩화면☑️ - 프로필 닉네임 설정 화면☑️ - UserDefaultsManager 정상 작동 확인☑️ - 프로필 이미지 설정 화면☑️
+ < 1페이즈 > 온보딩화면☑️ - 프로필 닉네임 설정 화면☑️ - UserDefaultsManager 정상 작동 확인☑️ - 프로필 이미지 설정 화면☑️
+ < 2페이즈 > 탭바컨트롤러 - 오늘의영화(최근검색어X) - 오늘의영화(최근검색어O) - 검색결과화면 - 영화상세화면 - 설정화면 - 프로필 수정 모달
+ < 3페이즈 >
  
  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
  

@@ -69,7 +69,7 @@ final class ProfileNicknameViewController: UIViewController {
             userdefaults.saveData(value: Date(), type: .profileDate)
             userdefaults.saveData(value: true, type: .firstSaved)
             
-            self.viewTransition(style: .windowRoot, vc: TodayMovieViewController())
+            self.viewTransition(style: .windowRoot, vc: TabBarController())
         }
     }
 

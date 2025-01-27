@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // 앱 시작 분기점 설정
         let isSetCompleted = UserDefaultsManager.shared.getBoolData(type: .firstSaved)
 
-        window?.rootViewController = UINavigationController(rootViewController: isSetCompleted ? TodayMovieViewController() : OnboardingViewController())
+        window?.rootViewController = UINavigationController(rootViewController: isSetCompleted ? TabBarController() : OnboardingViewController())
         window?.makeKeyAndVisible()
     }
 
