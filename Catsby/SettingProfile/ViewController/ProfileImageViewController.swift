@@ -45,11 +45,13 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
         
         cell.profileImageView.image = UIImage(named: selectedImage)
         cell.clipImage()
+        cell.profileImageView.alpha = 0.5
         
         if cell.profileImageView.image == mainView.mainImageView.image {
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
             cell.profileImageView.stroke(.catsMain, 2)
+            cell.profileImageView.alpha = 1
         }
         
         return cell
@@ -61,6 +63,7 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
         guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
         
         cell.profileImageView.stroke(.catsMain, 2)
+        cell.profileImageView.alpha = 1
         
         guard let selectedImageView = cell.profileImageView.image else { return }
         mainView.mainImageView.image = selectedImageView
@@ -72,5 +75,6 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
         guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
         
         cell.profileImageView.stroke(.catsLightgray, 1)
+        cell.profileImageView.alpha = 0.5
     }
 }
