@@ -50,6 +50,9 @@ final class TodayMovieView: BaseView {
         configHierarchy()
         configLayout()
         configView()
+        
+        let count = UserDefaultsManager.shared.getArrayData(type: .recentKeyword).count
+        scrollContentView.isHidden = (count == 0) ? false : true
     }
     
     override func configHierarchy() {
@@ -63,7 +66,7 @@ final class TodayMovieView: BaseView {
     override func configLayout() {
         profileboxView.snp.makeConstraints {
             $0.top.equalTo(self.safeAreaLayoutGuide).inset(16)
-            $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide).inset(8)
+            $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide).inset(16)
             $0.height.equalTo(140)
         }
         
