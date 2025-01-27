@@ -5,7 +5,7 @@
 //  Created by Lee Wonsun on 1/24/25.
 //
 
-import Foundation
+import UIKit
 
 final class UserDefaultsManager {
     
@@ -59,6 +59,12 @@ extension UserDefaultsManager {
     
     func getArrayData(type: SaveData) -> [String] {
         guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? [String] else { return [] }
+        
+        return data
+    }
+    
+    func getUIImageData(type: SaveData) -> UIImage {
+        guard let data = UserDefaults.standard.uiImage(forKey: type.saveKey) else { return UIImage() }
         
         return data
     }

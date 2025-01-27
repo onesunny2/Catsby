@@ -66,7 +66,7 @@ final class ProfileNicknameViewController: UIViewController {
             guard let text = mainView.textfield.text else {
                 return }
             
-            userdefaults.saveData(value: randomImage, type: .profileImage)
+            userdefaults.saveData(value: ProfileImage.selectedImage, type: .profileImage)
             userdefaults.saveData(value: text, type: .profileName)
             userdefaults.saveData(value: Date(), type: .profileDate)
             userdefaults.saveData(value: true, type: .firstSaved)
