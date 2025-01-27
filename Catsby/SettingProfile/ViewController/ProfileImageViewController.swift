@@ -19,7 +19,28 @@ final class ProfileImageViewController: UIViewController {
         super.viewDidLoad()
 
         navigationItem.title = "프로필 이미지 설정"
+        setCollectionView()
     }
     
 
+}
+
+// MARK: collectoionView 설정
+extension ProfileImageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    private func setCollectionView() {
+        mainView.collectionView.delegate = self
+        mainView.collectionView.dataSource = self
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 12
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileImageCollectionViewCell.id, for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
+        
+        return cell
+    }
 }
