@@ -22,7 +22,7 @@ final class NetworkManager {
             encoding: URLEncoding(destination: .queryString),
             headers: api.header
         ).responseString { value in
-            dump(value)
+//            dump(value)
         }
         
         AF.request(

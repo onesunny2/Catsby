@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 import SnapKit
 
 final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
@@ -20,17 +21,12 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
     override init(frame: CGRect) {
         posterImageView = BaseImageView(type: UIImage(named: "profile_11") ?? UIImage(), bgcolor: .catsWhite)
         
-        titleLabel = BaseLabel(text: "짜리몽땅 이짜몽", align: .left, color: .catsWhite, size: 16, weight: .bold)
+        titleLabel = BaseLabel(text: "", align: .left, color: .catsWhite, size: 16, weight: .bold)
         
-//        heartButton = BaseButton(title: "", size: 0, weight: .bold, bgColor: .clear, foreColor: .catsMain)
-        
-        let plot = "안녕하세요 저는 리캡과제 중 입니다. 지금은 12시가 넘어서 월요일이구요 과제 제출은 토요일인데요 지금 저는 20%는 끝냈을까요? 저는 이제 어떻게 하나요 살려주세요ㅠㅠㅠㅠㅠㅠㅠㅠ"
-        plotLabel = BaseLabel(text: plot, align: .left, size: 12, weight: .regular, line: 2)
+        plotLabel = BaseLabel(text: "", align: .left, size: 12, weight: .regular, line: 2)
         
         super.init(frame: frame)
-        
-//        heartButton.buttonImage(image: UIImage(systemName: "heart") ?? UIImage())
-        
+
         configHierarchy()
         configLayout()
         configView()
@@ -73,6 +69,12 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
         heartButton.configuration?.imagePadding = 0
         heartButton.configuration?.baseForegroundColor = .catsMain
         heartButton.configuration?.baseBackgroundColor = .clear
+    }
+    
+    func getData(url: String, title: String, plot: String) {
+        posterImageView.kf.setImage(with: URL(string: url))
+        titleLabel.text = title
+        plotLabel.text = plot
     }
     
     func posterCornerRadius() {
