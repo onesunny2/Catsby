@@ -81,8 +81,8 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView {
         case mainView.backdropCollectionView: return imageBackdrop.count
-        case mainView.castCollectionView: return 4
-        case mainView.posterCollectionView: return 3
+        case mainView.castCollectionView: return imagePosters.count
+        case mainView.posterCollectionView: return imagePosters.count
         default: return 0
         }
     }
@@ -92,7 +92,7 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
         switch collectionView {
         case mainView.backdropCollectionView:
             let backdrop = imageBackdrop[indexPath.item]
-            print(imageBackdrop.count)
+
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BackDropCollectionViewCell.id, for: indexPath) as? BackDropCollectionViewCell else { return UICollectionViewCell() }
             
             let url = NetworkManager.pathUrl + backdrop.filepath
@@ -102,12 +102,19 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
             return cell
             
         case mainView.castCollectionView:
+            
+            
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.id, for: indexPath) as? CastCollectionViewCell else { return UICollectionViewCell() }
             
             return cell
             
         case mainView.posterCollectionView:
+            let poster = imagePosters[indexPath.item]
+            
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PosterCollectionViewCell.id, for: indexPath) as? PosterCollectionViewCell else { return UICollectionViewCell() }
+            
+            let url = NetworkManager.pathUrl + poster.filepath
+            cell.getPosterImage(url: url)
             
             return cell
             
