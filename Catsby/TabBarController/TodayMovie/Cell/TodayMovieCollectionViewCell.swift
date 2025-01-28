@@ -75,13 +75,12 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
         posterImageView.backgroundColor = .catsDarkgray
         
         heartButton.configuration = .filled()
-        heartButton.configuration?.image = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
         heartButton.configuration?.imagePadding = 0
         heartButton.configuration?.baseForegroundColor = .catsMain
         heartButton.configuration?.baseBackgroundColor = .clear
     }
     
-    func getData(url: String, title: String, plot: String) {
+    func getData(url: String, title: String, plot: String, isLiked: Bool) {
         let processor = DownsamplingImageProcessor(size: CGSize(width: posterImageView.frame.width, height: posterImageView.frame.height))
         posterImageView.kf.setImage(with: URL(string: url),
                                     options: [
@@ -92,6 +91,7 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
         
         titleLabel.text = title
         plotLabel.text = plot
+        heartButton.configuration?.image = UIImage(systemName: isLiked ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
     }
 
     func posterCornerRadius() {
