@@ -14,6 +14,7 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
     static let id = "TodayMovieCollectionViewCell"
     
     let posterImageView: BaseImageView
+    let textStackView = UIStackView()
     let titleLabel: BaseLabel
     let heartButton = UIButton()
     let plotLabel: BaseLabel
@@ -33,10 +34,12 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
     }
     
     func configHierarchy() {
-        [posterImageView, plotLabel, titleLabel, heartButton ].forEach {
+        [posterImageView, textStackView, heartButton ].forEach {
             self.addSubview($0)
         }
- 
+        [titleLabel, plotLabel].forEach {
+            textStackView.addArrangedSubview($0)
+        }
     }
     
     func configLayout() {
@@ -45,13 +48,20 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
             $0.height.equalTo(self.frame.height * 0.84)
         }
         
+        textStackView.snp.makeConstraints {
+            $0.top.equalTo(posterImageView.snp.bottom).offset(8)
+            $0.bottom.horizontalEdges.equalToSuperview()
+        }
+        
+        textStackView.axis = .vertical
+        textStackView.alignment = .leading
+        
         plotLabel.snp.makeConstraints {
             $0.bottom.horizontalEdges.equalToSuperview()
         }
 
         titleLabel.snp.makeConstraints {
             $0.leading.equalToSuperview()
-            $0.bottom.equalTo(plotLabel.snp.top).offset(-4)
         }
         
         heartButton.snp.makeConstraints {
