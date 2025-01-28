@@ -26,20 +26,39 @@ final class TodayMovieViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .catsBlack
+        NotificationCenter.default.addObserver(self, selector: #selector(receivedProfile), name: NSNotification.Name("editProfile"), object: nil)
+        
         setNavigation()
         setCollectionView()
         getTodayMovieData()
+        tapGesture()
+    }
+    
+    @objc func receivedProfile(notification: NSNotification) {
+        
+        guard let nickname = notification.userInfo?["nickname"] as? String, let image = notification.userInfo?["image"] as? String else { return }
+        mainView.profileboxView.nicknameLabel.text = nickname
+        mainView.profileboxView.profileImageView.image = UIImage(named: image)
+    }
+    
+    @objc func profileAreaTapped() {
+        self.viewTransition(style: .naviModal, vc: EditProfileNicknameViewController())
     }
     
     @objc func searchItemTapped() {
         print(#function)
     }
     
-    func getTodayMovieData() {
+    private func tapGesture() {
+        let tapgesture = UITapGestureRecognizer(target: self, action: #selector(profileAreaTapped))
+        mainView.profileboxView.isUserInteractionEnabled = true
+        mainView.profileboxView.addGestureRecognizer(tapgesture)
+    }
+    
+    private func getTodayMovieData() {
         
         networkManager.callRequest(type: TrendMovie.self, api: .trend) { result in
             self.trendMovie = result.results
-            print(self.trendMovie.count)
         } failHandler: {
             print(#function, "error")
         }

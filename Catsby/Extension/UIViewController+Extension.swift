@@ -16,6 +16,12 @@ extension UIViewController {
             navigationController?.pushViewController(vc, animated: animated)
         case .modal:
             present(vc, animated: true)
+        case .naviModal:
+            let nv = UINavigationController(rootViewController: vc)
+            nv.modalPresentationStyle = .pageSheet
+            nv.sheetPresentationController?.prefersGrabberVisible = true
+            
+            present(nv, animated: true)
         case .windowRoot:
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, let window = windowScene.windows.first else { return }
             
