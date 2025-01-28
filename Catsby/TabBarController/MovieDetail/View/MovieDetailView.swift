@@ -12,15 +12,15 @@ final class MovieDetailView: BaseView {
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    private let backdropCollectionView: UICollectionView
+    let backdropCollectionView: UICollectionView
     private let backdropInfoLabel: BaseLabel
     private let synopsisTitleLabel: BaseLabel
     private let synopsisContentLabel: BaseLabel
     private let moreButton: BaseButton
     private let castTitleLabel: BaseLabel
-    private let castCollectionView: UICollectionView
+    let castCollectionView: UICollectionView
     private let posterTitleLabel: BaseLabel
-    private let posterCollectionView: UICollectionView
+    let posterCollectionView: UICollectionView
     
     override init(frame: CGRect) {
         backdropCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
