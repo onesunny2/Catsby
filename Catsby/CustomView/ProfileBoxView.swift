@@ -11,9 +11,9 @@ import SnapKit
 final class ProfileBoxView: BaseView {
     
     private let backgroundView = UIView()
-    private let profileImageView: BaseImageView
+    let profileImageView: BaseImageView
     private let nicknameStackView = UIStackView()
-    private let nicknameLabel: BaseLabel
+    let nicknameLabel: BaseLabel
     private let registerDate: BaseLabel
     private let arrowImageView: BaseImageView
     private let movieboxButton: BaseButton

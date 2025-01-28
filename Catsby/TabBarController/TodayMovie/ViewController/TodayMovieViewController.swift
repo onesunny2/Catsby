@@ -26,10 +26,19 @@ final class TodayMovieViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .catsBlack
+        NotificationCenter.default.addObserver(self, selector: #selector(receivedProfile), name: NSNotification.Name("editProfile"), object: nil)
+        
         setNavigation()
         setCollectionView()
         getTodayMovieData()
         tapGesture()
+    }
+    
+    @objc func receivedProfile(notification: NSNotification) {
+        
+        guard let nickname = notification.userInfo?["nickname"] as? String, let image = notification.userInfo?["image"] as? String else { return }
+        mainView.profileboxView.nicknameLabel.text = nickname
+        mainView.profileboxView.profileImageView.image = UIImage(named: image)
     }
     
     @objc func profileAreaTapped() {
