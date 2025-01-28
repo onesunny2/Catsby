@@ -112,6 +112,11 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
 
         UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
+        
+        // 상단 프로필에 변경된 무비박스 카운트 반영되도록
+        let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
+        let newtitle = "\(count)개의 무비박스 보관중"
+        mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
 
         mainView.collectionView.reloadItems(at: [IndexPath(item: sender.tag, section: 0)])
     }
