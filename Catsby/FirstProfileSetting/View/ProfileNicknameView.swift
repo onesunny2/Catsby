@@ -19,6 +19,8 @@ import SnapKit
 
 final class ProfileNicknameView: BaseView {
     
+    private let userdefaults = UserDefaultsManager.shared
+    
     let profileImageView: BaseImageView
     let cameraImageView: BaseImageView
     let textfield = UITextField()
@@ -28,8 +30,8 @@ final class ProfileNicknameView: BaseView {
     
     
     override init(frame: CGRect) {
-        let image = UIImage(named: "")
-        profileImageView = BaseImageView(type: image ?? UIImage(), bgcolor: .catsBlack)
+        let recentImage = userdefaults.getStringData(type: .profileImage)
+        profileImageView = BaseImageView(type: UIImage(named: recentImage) ?? UIImage(), bgcolor: .catsBlack)
         
         let camera = UIImage(systemName: "camera.circle.fill", withConfiguration: UIImage.SymbolConfiguration.init(paletteColors: [.catsWhite, .catsMain]))
         cameraImageView = BaseImageView(type: camera ?? UIImage(), bgcolor: .clear)
