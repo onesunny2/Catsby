@@ -10,7 +10,7 @@ import SnapKit
 
 final class TodayMovieView: BaseView {
     
-    private let profileboxView = ProfileBoxView()
+    let profileboxView = ProfileBoxView()
     private let recentSearchLabel: BaseLabel
     private let recentSearchScrollView = UIScrollView()
     private let scrollContentView = UIView()

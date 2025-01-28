@@ -29,13 +29,24 @@ final class TodayMovieViewController: UIViewController {
         setNavigation()
         setCollectionView()
         getTodayMovieData()
+        tapGesture()
+    }
+    
+    @objc func profileAreaTapped() {
+        print(#function)
     }
     
     @objc func searchItemTapped() {
         print(#function)
     }
     
-    func getTodayMovieData() {
+    private func tapGesture() {
+        let tapgesture = UITapGestureRecognizer(target: self, action: #selector(profileAreaTapped))
+        mainView.profileboxView.isUserInteractionEnabled = true
+        mainView.profileboxView.addGestureRecognizer(tapgesture)
+    }
+    
+    private func getTodayMovieData() {
         
         networkManager.callRequest(type: TrendMovie.self, api: .trend) { result in
             self.trendMovie = result.results
