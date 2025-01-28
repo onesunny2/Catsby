@@ -30,6 +30,7 @@ final class MovieDetailViewController: UIViewController {
     }
     var movieId: Int = 0
     var synopsis: String = ""
+    var movieTitle: String = ""
     
     override func loadView() {
         view = mainView
@@ -75,7 +76,7 @@ final class MovieDetailViewController: UIViewController {
     }
     
     private func setNavigation() {
-        navigationItem.title = "영화 제목"
+        navigationItem.title = movieTitle
         let heart = UIImage(systemName: "heart")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: heart, style: .done, target: self, action: #selector(heartButtonTapped))
     }
