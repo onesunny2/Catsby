@@ -29,7 +29,7 @@ final class MovieDetailView: BaseView {
         
         synopsisTitleLabel = BaseLabel(text: "Synopsis", align: .left, size: 16, weight: .semibold)
         
-        synopsisContentLabel = BaseLabel(text: "Test\nTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTest\nTest\nTest\nTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTest", align: .left, size: 14, weight: .regular, line: 3)
+        synopsisContentLabel = BaseLabel(text: "TestTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTestTestTestTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTest", align: .left, size: 14, weight: .regular, line: 3)
         
         moreButton = BaseButton(title: "More", size: 16, weight: .bold, bgColor: .clear, foreColor: .catsMain)
         
@@ -130,7 +130,7 @@ final class MovieDetailView: BaseView {
         scrollView.showsVerticalScrollIndicator = false
         
         [backdropCollectionView, castCollectionView, posterCollectionView].forEach {
-            $0.backgroundColor = .systemIndigo
+            $0.backgroundColor = .clear
             $0.showsHorizontalScrollIndicator = false
         }
         
@@ -145,7 +145,7 @@ final class MovieDetailView: BaseView {
 // MARK: collectionView layout
 extension MovieDetailView {
     
-    func backdropCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
+    private func backdropCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
         let cellWidth = UIScreen.main.bounds.width
         let cellHeight = cellHeight.backdrop.height
         
@@ -159,7 +159,7 @@ extension MovieDetailView {
         return layout
     }
     
-    func castCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
+    private func castCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
         let insetSpacing: CGFloat = 16
         let cellWidth: CGFloat = UIScreen.main.bounds.width / 2.5
         let cellHeight: CGFloat = (cellHeight.cast.height - 16) / 2
@@ -174,7 +174,7 @@ extension MovieDetailView {
         return layout
     }
     
-    func posterCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
+    private func posterCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
         let insetSpacing: CGFloat = 16
         let cellWidth: CGFloat = UIScreen.main.bounds.width / 3
         let cellHeight: CGFloat = cellHeight.poster.height

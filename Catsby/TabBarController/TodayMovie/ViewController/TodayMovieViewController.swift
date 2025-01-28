@@ -71,6 +71,7 @@ final class TodayMovieViewController: UIViewController {
         navigationItem.title = "Catsby의 영화세상"
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.catsWhite]
         navigationItem.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = .catsMain
     }
 }
 
