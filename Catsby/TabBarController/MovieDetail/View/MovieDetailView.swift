@@ -15,7 +15,7 @@ final class MovieDetailView: BaseView {
     let backdropCollectionView: UICollectionView
     private let backdropInfoLabel: BaseLabel
     private let synopsisTitleLabel: BaseLabel
-    private let synopsisContentLabel: BaseLabel
+    let synopsisContentLabel: BaseLabel
     private let moreButton: BaseButton
     private let castTitleLabel: BaseLabel
     let castCollectionView: UICollectionView
@@ -25,7 +25,7 @@ final class MovieDetailView: BaseView {
     override init(frame: CGRect) {
         backdropCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         
-        backdropInfoLabel = BaseLabel(text: "Test | Test | Test", align: .center, color: .catsDarkgray, size: 14, weight: .regular)
+        backdropInfoLabel = BaseLabel(text: " ", align: .center, color: .catsDarkgray, size: 14, weight: .regular)
         
         synopsisTitleLabel = BaseLabel(text: "Synopsis", align: .left, size: 16, weight: .semibold)
         

@@ -29,6 +29,7 @@ final class MovieDetailViewController: UIViewController {
         }
     }
     var movieId: Int = 0
+    var synopsis: String = ""
     
     override func loadView() {
         view = mainView
@@ -40,6 +41,12 @@ final class MovieDetailViewController: UIViewController {
         setCollectionView()
         setNavigation()
         getImageAPI()
+        
+        setDataFromAPI()
+    }
+    
+    private func setDataFromAPI() {
+        mainView.synopsisContentLabel.text = synopsis
     }
     
     private func getImageAPI() {
