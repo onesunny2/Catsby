@@ -34,6 +34,7 @@ final class TodayMovieViewController: UIViewController {
         tapGesture()
     }
     
+    // 프로필 수정 내용 값 역전달 받기
     @objc func receivedProfile(notification: NSNotification) {
         
         guard let nickname = notification.userInfo?["nickname"] as? String, let image = notification.userInfo?["image"] as? String else { return }
@@ -87,13 +88,36 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let row = trendMovie[indexPath.item]
+        let key = String(row.id)
+        let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[key]
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
         
+        cell.heartButton.tag = indexPath.item
+        cell.heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
+        
         let url = NetworkManager.pathUrl + row.posterpath
-        cell.getData(url: url, title: row.title, plot: row.overview)
+        cell.getData(url: url, title: row.title, plot: row.overview, isLiked: isLiked ?? false)
         cell.posterCornerRadius()
         
         return cell
+    }
+    
+    @objc private func heartButtonTapped(_ sender: UIButton) {
+        
+        let row = trendMovie[sender.tag]
+        let key = String(row.id)
+        var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
+        
+        savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
+
+        UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
+        
+        // 상단 프로필에 변경된 무비박스 카운트 반영되도록
+        let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
+        let newtitle = "\(count)개의 무비박스 보관중"
+        mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
+
+        mainView.collectionView.reloadItems(at: [IndexPath(item: sender.tag, section: 0)])
     }
 }

@@ -28,6 +28,12 @@ final class BaseButton: UIButton {
         self.configuration = config
     }
     
+    func changeTitle(title: String, size: CGFloat, weight: UIFont.Weight) {
+        let container = AttributeContainer().font(.systemFont(ofSize: size, weight: weight))
+        
+        self.configuration?.attributedTitle = AttributedString(title, attributes: container)
+    }
+    
     func buttonImage(image: UIImage) {
         self.configuration?.image = image
     }

@@ -16,7 +16,7 @@ final class ProfileBoxView: BaseView {
     let nicknameLabel: BaseLabel
     private let registerDate: BaseLabel
     private let arrowImageView: BaseImageView
-    private let movieboxButton: BaseButton
+    var movieboxButton: BaseButton
     
     override init(frame: CGRect) {
         let profile = UserDefaultsManager.shared.getStringData(type: .profileImage)
@@ -31,7 +31,7 @@ final class ProfileBoxView: BaseView {
         let arrow = UIImage(systemName: "chevron.right")?.withTintColor(.catsLightgray, renderingMode: .alwaysOriginal)
         arrowImageView = BaseImageView(type: arrow ?? UIImage(), bgcolor: .clear)
         
-        let count = UserDefaultsManager.shared.getDicData(type: .likeButton).map { $0.value == true }.count
+        let count = UserDefaultsManager.shared.getDicData(type: .likeButton).map { $0.value }.filter{ $0 == true }.count
         movieboxButton = BaseButton(title: "\(count)개의 무비박스 보관중", size: 14, weight: .bold, bgColor: .catsMain, foreColor: .catsWhite)
         
         super.init(frame: frame)
