@@ -23,7 +23,6 @@ final class BackDropCollectionViewCell: UICollectionViewCell, BaseConfigure {
         
         super.init(frame: frame)
         
-        backgroundColor = .catsMain
         configHierarchy()
         configLayout()
         configView()

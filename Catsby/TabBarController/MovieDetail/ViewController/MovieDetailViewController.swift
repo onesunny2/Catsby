@@ -12,6 +12,7 @@ final class MovieDetailViewController: UIViewController {
     
     private let mainView = MovieDetailView()
     private let networkManager = NetworkManager.shared
+    
     private var imageBackdrop: [ImageBackdrops] = [] {
         didSet {
             mainView.backdropCollectionView.reloadData()
@@ -27,6 +28,7 @@ final class MovieDetailViewController: UIViewController {
             mainView.castCollectionView.reloadData()
         }
     }
+    var movieId: Int = 0
     
     override func loadView() {
         view = mainView
@@ -41,7 +43,7 @@ final class MovieDetailViewController: UIViewController {
     }
     
     private func getImageAPI() {
-        networkManager.callRequest(type: ImageMovie.self, api: .image(movieID: 426063)) { result in
+        networkManager.callRequest(type: ImageMovie.self, api: .image(movieID: movieId)) { result in
             self.imageBackdrop = Array(result.backdrops.prefix(5))
             self.imagePosters = result.posters
         } failHandler: {

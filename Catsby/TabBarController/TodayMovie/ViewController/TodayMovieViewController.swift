@@ -106,9 +106,9 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-//        guard let cell = collectionView.cellForItem(at: indexPath) as? TodayMovieCollectionViewCell else { return }
-        
-        self.viewTransition(style: .push(animated: true), vc: MovieDetailViewController())
+        let vc = MovieDetailViewController()
+        vc.movieId = trendMovie[indexPath.item].id
+        self.viewTransition(style: .push(animated: true), vc: vc)
     }
     
     @objc private func heartButtonTapped(_ sender: UIButton) {
