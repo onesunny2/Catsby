@@ -41,8 +41,24 @@ final class MovieDetailViewController: UIViewController {
         setCollectionView()
         setNavigation()
         getImageAPI()
-        
         setDataFromAPI()
+        
+        mainView.moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func moreButtonTapped(_ sender: UIButton) {
+        
+        switch sender.titleLabel?.text {
+        case "More":
+            mainView.moreButton.changeTitle(title: "Hide", size: 16, weight: .bold)
+            mainView.synopsisContentLabel.numberOfLines = 0
+            
+        case "Hide":
+            mainView.moreButton.changeTitle(title: "More", size: 16, weight: .bold)
+            mainView.synopsisContentLabel.numberOfLines = 3
+        default:
+            print(#function, "error")
+        }
     }
     
     private func setDataFromAPI() {

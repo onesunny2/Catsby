@@ -15,8 +15,8 @@ final class MovieDetailView: BaseView {
     let backdropCollectionView: UICollectionView
     private let backdropInfoLabel: BaseLabel
     private let synopsisTitleLabel: BaseLabel
-    let synopsisContentLabel: BaseLabel
-    private let moreButton: BaseButton
+    var synopsisContentLabel: BaseLabel
+    var moreButton: BaseButton
     private let castTitleLabel: BaseLabel
     let castCollectionView: UICollectionView
     private let posterTitleLabel: BaseLabel
