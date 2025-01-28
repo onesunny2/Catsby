@@ -198,7 +198,7 @@ extension MovieDetailView {
         var height: CGFloat {
             switch self {
             case .backdrop:
-                return UIScreen.main.bounds.height / 3
+                return UIScreen.main.bounds.height / 3.5
             case .cast:
                 return UIScreen.main.bounds.height / 5.5
             case .poster:
