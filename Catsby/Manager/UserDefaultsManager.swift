@@ -66,8 +66,8 @@ extension UserDefaultsManager {
         return data
     }
     
-    func getDicData(type: SaveData) -> [Int:Bool] {
-        guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? [Int: Bool] else { return [:] }
+    func getDicData(type: SaveData) -> [String:Bool] {
+        guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? [String: Bool] else { return [:] }
         
         return data
     }

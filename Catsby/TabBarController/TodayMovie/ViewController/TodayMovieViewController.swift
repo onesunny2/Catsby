@@ -88,14 +88,31 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let row = trendMovie[indexPath.item]
-        let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[row.id]
+        let key = String(row.id)
+        let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[key]
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
+        
+        cell.heartButton.tag = indexPath.item
+        cell.heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         
         let url = NetworkManager.pathUrl + row.posterpath
         cell.getData(url: url, title: row.title, plot: row.overview, isLiked: isLiked ?? false)
         cell.posterCornerRadius()
         
         return cell
+    }
+    
+    @objc private func heartButtonTapped(_ sender: UIButton) {
+        
+        let row = trendMovie[sender.tag]
+        let key = String(row.id)
+        var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
+        
+        savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
+
+        UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
+
+        mainView.collectionView.reloadItems(at: [IndexPath(item: sender.tag, section: 0)])
     }
 }
