@@ -59,7 +59,6 @@ final class TodayMovieViewController: UIViewController {
         
         networkManager.callRequest(type: TrendMovie.self, api: .trend) { result in
             self.trendMovie = result.results
-            print(self.trendMovie.count)
         } failHandler: {
             print(#function, "error")
         }

@@ -26,6 +26,7 @@ final class EditProfileNicknameViewController: UIViewController {
         mainView.textfield.delegate = self
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
         setNavigation()
+        tapGesture()
     }
     
     @objc func closeButtonTapped() {
@@ -70,7 +71,7 @@ final class EditProfileNicknameViewController: UIViewController {
     
     @objc func imageViewTapped() {
         print(#function)
-        self.viewTransition(style: .push(animated: true), vc: ProfileImageViewController())
+        self.viewTransition(style: .push(animated: true), vc: EditProfileImageViewController())
     }
 }
 
