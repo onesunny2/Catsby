@@ -29,6 +29,12 @@ final class EditProfileNicknameViewController: UIViewController {
         tapGesture()
     }
     
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
+    }
+    
     @objc func closeButtonTapped() {
         dismiss(animated: true)
     }
