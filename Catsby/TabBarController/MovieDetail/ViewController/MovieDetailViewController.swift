@@ -6,14 +6,21 @@
 //
 
 import UIKit
+import SnapKit
 
 final class MovieDetailViewController: UIViewController {
+    
+    private let mainView = MovieDetailView()
+    
+    override func loadView() {
+        view = mainView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .systemIndigo
-    }
  
+    }
+
 
 }
+
