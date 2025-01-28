@@ -29,7 +29,7 @@ final class MovieDetailView: BaseView {
         
         synopsisTitleLabel = BaseLabel(text: "Synopsis", align: .left, size: 16, weight: .semibold)
         
-        synopsisContentLabel = BaseLabel(text: "Test\nTest\nTest\nTest\nTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTest", align: .left, size: 14, weight: .regular, line: 3)
+        synopsisContentLabel = BaseLabel(text: "Test\nTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTest\nTest\nTest\nTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTest", align: .left, size: 14, weight: .regular, line: 3)
         
         moreButton = BaseButton(title: "More", size: 16, weight: .bold, bgColor: .clear, foreColor: .catsMain)
         
@@ -56,7 +56,7 @@ final class MovieDetailView: BaseView {
         castCollectionView.collectionViewLayout = castCollectionViewFlowLayout()
         posterCollectionView.collectionViewLayout = posterCollectionViewFlowLayout()
     }
-    
+
     override func configHierarchy() {
         self.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -73,11 +73,12 @@ final class MovieDetailView: BaseView {
         contentView.snp.makeConstraints {
             $0.verticalEdges.equalTo(scrollView)
             $0.width.equalTo(scrollView.snp.width)
+            $0.height.greaterThanOrEqualTo(self.snp.height)
         }
         
         backdropCollectionView.snp.makeConstraints {
             $0.top.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(UIScreen.main.bounds.height / 3)
+            $0.height.equalTo(cellHeight.backdrop.height)
         }
         
         backdropInfoLabel.snp.makeConstraints {
@@ -91,7 +92,7 @@ final class MovieDetailView: BaseView {
         }
         
         moreButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(16)
+            $0.trailing.equalToSuperview().inset(8)
             $0.centerY.equalTo(synopsisTitleLabel)
         }
         
@@ -108,7 +109,7 @@ final class MovieDetailView: BaseView {
         castCollectionView.snp.makeConstraints {
             $0.top.equalTo(castTitleLabel.snp.bottom).offset(16)
             $0.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(UIScreen.main.bounds.height / 6)
+            $0.height.equalTo(cellHeight.cast.height)
         }
         
         posterTitleLabel.snp.makeConstraints {
@@ -119,7 +120,8 @@ final class MovieDetailView: BaseView {
         posterCollectionView.snp.makeConstraints {
             $0.top.equalTo(posterTitleLabel.snp.bottom).offset(16)
             $0.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(UIScreen.main.bounds.height / 5)
+            $0.height.equalTo(cellHeight.poster.height)
+            $0.bottom.equalToSuperview().inset(16)
         }
     }
     
@@ -128,8 +130,11 @@ final class MovieDetailView: BaseView {
         scrollView.showsVerticalScrollIndicator = false
         
         [backdropCollectionView, castCollectionView, posterCollectionView].forEach {
-            $0.backgroundColor = .catsMain
+            $0.backgroundColor = .systemIndigo
+            $0.showsHorizontalScrollIndicator = false
         }
+        
+        backdropCollectionView.isPagingEnabled = true
 
         backdropCollectionView.register(BackDropCollectionViewCell.self, forCellWithReuseIdentifier: BackDropCollectionViewCell.id)
         castCollectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.id)
@@ -140,38 +145,39 @@ final class MovieDetailView: BaseView {
 // MARK: collectionView layout
 extension MovieDetailView {
     
-    private func backdropCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
+    func backdropCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
         let cellWidth = UIScreen.main.bounds.width
-        let cellHeight = backdropCollectionView.bounds.height
+        let cellHeight = cellHeight.backdrop.height
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: cellWidth, height: cellHeight)
-        layout.minimumInteritemSpacing = 0
         layout.sectionInset = .zero
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
         
         return layout
     }
     
-    private func castCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
+    func castCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
         let insetSpacing: CGFloat = 16
         let cellWidth: CGFloat = UIScreen.main.bounds.width / 2.5
-        let cellHeight: CGFloat = (castCollectionView.bounds.height - 16) / 2
+        let cellHeight: CGFloat = (cellHeight.cast.height - 16) / 2
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: cellWidth, height: cellHeight)
-        layout.minimumLineSpacing = insetSpacing
-        layout.minimumInteritemSpacing = insetSpacing * 2
-        layout.sectionInset = UIEdgeInsets(top: .zero, left: insetSpacing, bottom: .greatestFiniteMagnitude, right: insetSpacing)
+        layout.minimumLineSpacing = insetSpacing * 2
+        layout.minimumInteritemSpacing = insetSpacing
+        layout.sectionInset = UIEdgeInsets(top: .zero, left: insetSpacing, bottom: .zero, right: insetSpacing)
         
         return layout
     }
     
-    private func posterCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
+    func posterCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
         let insetSpacing: CGFloat = 16
-        let cellWidth: CGFloat = UIScreen.main.bounds.width / 3.5
-        let cellHeight: CGFloat = posterCollectionView.bounds.height
+        let cellWidth: CGFloat = UIScreen.main.bounds.width / 3
+        let cellHeight: CGFloat = cellHeight.poster.height
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -181,5 +187,23 @@ extension MovieDetailView {
         
         return layout
     }
-    
+}
+
+extension MovieDetailView {
+    enum cellHeight {
+        case backdrop
+        case cast
+        case poster
+        
+        var height: CGFloat {
+            switch self {
+            case .backdrop:
+                return UIScreen.main.bounds.height / 3
+            case .cast:
+                return UIScreen.main.bounds.height / 5.5
+            case .poster:
+                return UIScreen.main.bounds.height / 4.5
+            }
+        }
+    }
 }

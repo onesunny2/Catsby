@@ -13,6 +13,8 @@ final class PosterCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        backgroundColor = .catsMain
     }
     
     @available(*, unavailable)

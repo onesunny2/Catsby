@@ -18,7 +18,7 @@ final class MovieDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+
         setCollectionView()
     }
 }
@@ -34,9 +34,9 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView {
-        case mainView.backdropCollectionView: return 5
-        case mainView.castCollectionView: return 10
-        case mainView.posterCollectionView: return 8
+        case mainView.backdropCollectionView: return 2
+        case mainView.castCollectionView: return 4
+        case mainView.posterCollectionView: return 3
         default: return 0
         }
     }
@@ -45,17 +45,23 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
         
         switch collectionView {
         case mainView.backdropCollectionView:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BackDropCollectionViewCell.id, for: indexPath) as? BackDropCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BackDropCollectionViewCell.id, for: indexPath) as? BackDropCollectionViewCell else {
+                print("1 error")
+                return UICollectionViewCell() }
             
             return cell
             
         case mainView.castCollectionView:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.id, for: indexPath) as? CastCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.id, for: indexPath) as? CastCollectionViewCell else {
+                print("2 error")
+                return UICollectionViewCell() }
             
             return cell
             
         case mainView.posterCollectionView:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PosterCollectionViewCell.id, for: indexPath) as? PosterCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PosterCollectionViewCell.id, for: indexPath) as? PosterCollectionViewCell else {
+                print("e error")
+                return UICollectionViewCell() }
             
             return cell
             
