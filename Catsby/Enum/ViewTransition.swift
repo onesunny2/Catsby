@@ -10,5 +10,6 @@ import UIKit
 enum ViewTransition {
     case push(animated: Bool)
     case modal
+    case naviModal
     case windowRoot
 }

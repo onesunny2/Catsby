@@ -33,7 +33,7 @@ final class TodayMovieViewController: UIViewController {
     }
     
     @objc func profileAreaTapped() {
-        print(#function)
+        self.viewTransition(style: .naviModal, vc: EditProfileNicknameViewController())
     }
     
     @objc func searchItemTapped() {
