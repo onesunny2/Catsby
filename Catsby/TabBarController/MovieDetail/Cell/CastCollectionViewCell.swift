@@ -51,10 +51,11 @@ final class CastCollectionViewCell: UICollectionViewCell, BaseConfigure {
         nameStackView.snp.makeConstraints {
             $0.centerY.equalTo(castImageView)
             $0.leading.equalTo(castImageView.snp.trailing).offset(8)
+            $0.width.equalTo((UIScreen.main.bounds.width / 2.5) * 0.6)
         }
         
         nameStackView.axis = .vertical
-        nameStackView.spacing = 10
+        nameStackView.spacing = 8
         
         castNameLabel.snp.makeConstraints {
             $0.leading.equalToSuperview()
@@ -75,6 +76,13 @@ final class CastCollectionViewCell: UICollectionViewCell, BaseConfigure {
         
         castNameLabel.text = castName
         roleNameLabel.text = roleName
+    }
+    
+    func cornerRadius() {
+        let radius = (UIScreen.main.bounds.height / 5.5 - 16) / 4
+        castImageView.clipCorner(radius)
+        
+        self.layoutIfNeeded()
     }
     
     @available(*, unavailable)

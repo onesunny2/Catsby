@@ -107,7 +107,7 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView {
         case mainView.backdropCollectionView: return imageBackdrop.count
-        case mainView.castCollectionView: return imagePosters.count
+        case mainView.castCollectionView: return cast.count
         case mainView.posterCollectionView: return imagePosters.count
         default: return 0
         }
@@ -128,9 +128,13 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
             return cell
             
         case mainView.castCollectionView:
-            
+            let cast = cast[indexPath.item]
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.id, for: indexPath) as? CastCollectionViewCell else { return UICollectionViewCell() }
+            
+            let url = NetworkManager.pathUrl + (cast.profilepath ?? "")
+            cell.getDataFromAPI(url, cast.name, cast.character)
+            cell.cornerRadius()
             
             return cell
             
