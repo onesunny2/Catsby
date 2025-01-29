@@ -121,6 +121,7 @@ final class MovieDetailView: BaseView {
         synopsisContentLabel.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(16)
             $0.top.equalTo(synopsisTitleLabel.snp.bottom).offset(16)
+            $0.height.greaterThanOrEqualTo(35)
         }
         
         castTitleLabel.snp.makeConstraints {
