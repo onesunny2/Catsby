@@ -67,10 +67,11 @@ final class MovieDetailViewController: UIViewController {
         let synopsis = trendResult.overview
         let release = trendResult.releaseDate
         let vote = String(trendResult.vote)
-        let genre = trendResult.genreID
+        let genreID = Array(trendResult.genreID.prefix(2))
+        let genre: String = (Genre.genreList[genreID[0]] ?? "") + ", " + (Genre.genreList[genreID[1]] ?? "")
         
         mainView.synopsisContentLabel.text = synopsis
-        mainView.setBackdropInfo(release, vote, "Test")
+        mainView.setBackdropInfo(release, vote, genre)
     }
     
     private func getDataAPI() {
