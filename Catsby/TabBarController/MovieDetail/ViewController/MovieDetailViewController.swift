@@ -12,6 +12,7 @@ final class MovieDetailViewController: UIViewController {
     
     private let mainView = MovieDetailView()
     private let networkManager = NetworkManager.shared
+    private let group = DispatchGroup()
     
     private var imageBackdrop: [ImageBackdrops] = [] {
         didSet {
@@ -86,19 +87,32 @@ final class MovieDetailViewController: UIViewController {
     }
     
     private func getDataAPI() {
+       
         // backdrop, poster 정보
+        group.enter()
         networkManager.callRequest(type: ImageMovie.self, api: .image(movieID: trendResult.id)) { result in
             self.imageBackdrop = Array(result.backdrops.prefix(5))
             self.imagePosters = result.posters
+            self.group.leave()
         } failHandler: {
             print(#function, "error")
+            self.group.leave()
         }
         
         // cast 정보
+        group.enter()
         networkManager.callRequest(type: CreditMovie.self, api: .credit(movieID: trendResult.id)) { result in
             self.cast = result.cast
+            self.group.leave()
         } failHandler: {
             print(#function, "error")
+            self.group.leave()
+        }
+        
+        group.notify(queue: .main) {
+            self.mainView.backdropCollectionView.reloadData()
+            self.mainView.castCollectionView.reloadData()
+            self.mainView.posterCollectionView.reloadData()
         }
 
     }
