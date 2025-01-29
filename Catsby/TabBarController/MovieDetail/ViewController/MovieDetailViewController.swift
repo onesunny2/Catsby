@@ -102,7 +102,16 @@ final class MovieDetailViewController: UIViewController {
     }
     
     @objc func heartButtonTapped() {
-        print(#function)
+        let key = String(trendResult.id)
+        var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
+        
+        savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
+        
+        UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
+        
+        // 누르고 네비게이션에 하트 모양 반영되도록
+        let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[key] ?? false
+        navigationItem.rightBarButtonItem?.image = UIImage(systemName: savedStatus ? "heart.fill" : "heart")
     }
 }
 
