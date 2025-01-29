@@ -13,7 +13,12 @@ final class MovieDetailView: BaseView {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     let backdropCollectionView: UICollectionView
-    private let backdropInfoLabel: BaseLabel
+    private let backdropInfoStackview = UIStackView()
+    private let releaseDateLabel: BaseLabel
+    private let dividerLabel1: BaseLabel
+    private let voteLabel: BaseLabel
+    private let dividerLabel2: BaseLabel
+    private let genreLabel: BaseLabel
     private let synopsisTitleLabel: BaseLabel
     var synopsisContentLabel: BaseLabel
     var moreButton: BaseButton
@@ -25,7 +30,11 @@ final class MovieDetailView: BaseView {
     override init(frame: CGRect) {
         backdropCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         
-        backdropInfoLabel = BaseLabel(text: " ", align: .center, color: .catsDarkgray, size: 14, weight: .regular)
+        releaseDateLabel = BaseLabel(text: "", align: .center, size: 14, weight: .regular)
+        dividerLabel1 = BaseLabel(text: "|", align: .center, color: .catsDarkgray, size: 14, weight: .regular)
+        voteLabel = BaseLabel(text: "", align: .center, size: 14, weight: .regular)
+        dividerLabel2 = BaseLabel(text: "|", align: .center, color: .catsDarkgray, size: 14, weight: .regular)
+        genreLabel = BaseLabel(text: "", align: .center, size: 14, weight: .regular)
         
         synopsisTitleLabel = BaseLabel(text: "Synopsis", align: .left, size: 16, weight: .semibold)
         
@@ -60,8 +69,12 @@ final class MovieDetailView: BaseView {
     override func configHierarchy() {
         self.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        [backdropCollectionView, backdropInfoLabel, synopsisTitleLabel, synopsisContentLabel, moreButton, castTitleLabel, castCollectionView, posterTitleLabel, posterCollectionView].forEach {
+        [backdropCollectionView, backdropInfoStackview, synopsisTitleLabel, synopsisContentLabel, moreButton, castTitleLabel, castCollectionView, posterTitleLabel, posterCollectionView].forEach {
             contentView.addSubview($0)
+        }
+        
+        [releaseDateLabel, dividerLabel1, voteLabel, dividerLabel2, genreLabel].forEach {
+            backdropInfoStackview.addArrangedSubview($0)
         }
     }
     
@@ -81,13 +94,17 @@ final class MovieDetailView: BaseView {
             $0.height.equalTo(cellHeight.backdrop.height)
         }
         
-        backdropInfoLabel.snp.makeConstraints {
+        backdropInfoStackview.snp.makeConstraints {
             $0.top.equalTo(backdropCollectionView.snp.bottom).offset(16)
             $0.centerX.equalToSuperview()
         }
         
+        backdropInfoStackview.axis = .horizontal
+        backdropInfoStackview.spacing = 12
+        backdropInfoStackview.alignment = .center
+        
         synopsisTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(backdropInfoLabel.snp.bottom).offset(32)
+            $0.top.equalTo(backdropInfoStackview.snp.bottom).offset(32)
             $0.leading.equalToSuperview().inset(16)
         }
         
@@ -139,6 +156,12 @@ final class MovieDetailView: BaseView {
         backdropCollectionView.register(BackDropCollectionViewCell.self, forCellWithReuseIdentifier: BackDropCollectionViewCell.id)
         castCollectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.id)
         posterCollectionView.register(PosterCollectionViewCell.self, forCellWithReuseIdentifier: PosterCollectionViewCell.id)
+    }
+    
+    func setBackdropInfo(_ release: String, _ vote: String, _ genre: String) {
+        releaseDateLabel.imageWithText("calendar", release)
+        voteLabel.imageWithText("star.fill", vote)
+        genreLabel.imageWithText("film.fill", genre)
     }
 }
 
