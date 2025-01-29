@@ -28,9 +28,9 @@ final class MovieDetailViewController: UIViewController {
             mainView.castCollectionView.reloadData()
         }
     }
-    var movieId: Int = 0
-    var synopsis: String = ""
-    var movieTitle: String = ""
+    
+    var trendResult = TrendResults(backdrop: "", id: 0, title: "", overview: "", posterpath: "", genreID: [], releaseDate: "", vote: 0)
+    
     
     override func loadView() {
         view = mainView
@@ -63,12 +63,19 @@ final class MovieDetailViewController: UIViewController {
     }
     
     private func setDataFromAPI() {
+        
+        let synopsis = trendResult.overview
+        let release = trendResult.releaseDate
+        let vote = String(trendResult.vote)
+        let genre = trendResult.genreID
+        
         mainView.synopsisContentLabel.text = synopsis
+        mainView.setBackdropInfo(release, vote, "Test")
     }
     
     private func getDataAPI() {
         // backdrop, poster 정보
-        networkManager.callRequest(type: ImageMovie.self, api: .image(movieID: movieId)) { result in
+        networkManager.callRequest(type: ImageMovie.self, api: .image(movieID: trendResult.id)) { result in
             self.imageBackdrop = Array(result.backdrops.prefix(5))
             self.imagePosters = result.posters
         } failHandler: {
@@ -76,7 +83,7 @@ final class MovieDetailViewController: UIViewController {
         }
         
         // cast 정보
-        networkManager.callRequest(type: CreditMovie.self, api: .credit(movieID: movieId)) { result in
+        networkManager.callRequest(type: CreditMovie.self, api: .credit(movieID: trendResult.id)) { result in
             self.cast = result.cast
         } failHandler: {
             print(#function, "error")
@@ -85,7 +92,7 @@ final class MovieDetailViewController: UIViewController {
     }
     
     private func setNavigation() {
-        navigationItem.title = movieTitle
+        navigationItem.title = trendResult.title
         let heart = UIImage(systemName: "heart")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: heart, style: .done, target: self, action: #selector(heartButtonTapped))
     }

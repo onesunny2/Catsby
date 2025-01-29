@@ -15,9 +15,9 @@ final class MovieDetailView: BaseView {
     let backdropCollectionView: UICollectionView
     private let backdropInfoStackview = UIStackView()
     private let releaseDateLabel: BaseLabel
-    private let dividerLabel1: BaseLabel
+    private let dividerLabel1 = UIView()
     private let voteLabel: BaseLabel
-    private let dividerLabel2: BaseLabel
+    private let dividerLabel2 = UIView()
     private let genreLabel: BaseLabel
     private let synopsisTitleLabel: BaseLabel
     var synopsisContentLabel: BaseLabel
@@ -31,9 +31,7 @@ final class MovieDetailView: BaseView {
         backdropCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         
         releaseDateLabel = BaseLabel(text: "", align: .center, size: 14, weight: .regular)
-        dividerLabel1 = BaseLabel(text: "|", align: .center, color: .catsDarkgray, size: 14, weight: .regular)
         voteLabel = BaseLabel(text: "", align: .center, size: 14, weight: .regular)
-        dividerLabel2 = BaseLabel(text: "|", align: .center, color: .catsDarkgray, size: 14, weight: .regular)
         genreLabel = BaseLabel(text: "", align: .center, size: 14, weight: .regular)
         
         synopsisTitleLabel = BaseLabel(text: "Synopsis", align: .left, size: 16, weight: .semibold)
@@ -103,6 +101,13 @@ final class MovieDetailView: BaseView {
         backdropInfoStackview.spacing = 12
         backdropInfoStackview.alignment = .center
         
+        [dividerLabel1, dividerLabel2].forEach {
+            $0.snp.makeConstraints {
+                $0.width.equalTo(1.5)
+                $0.height.equalTo(18)
+            }
+        }
+        
         synopsisTitleLabel.snp.makeConstraints {
             $0.top.equalTo(backdropInfoStackview.snp.bottom).offset(32)
             $0.leading.equalToSuperview().inset(16)
@@ -145,6 +150,9 @@ final class MovieDetailView: BaseView {
     private func configView() {
         
         scrollView.showsVerticalScrollIndicator = false
+        
+        dividerLabel1.backgroundColor = .catsDarkgray
+        dividerLabel2.backgroundColor = .catsDarkgray
         
         [backdropCollectionView, castCollectionView, posterCollectionView].forEach {
             $0.backgroundColor = .clear

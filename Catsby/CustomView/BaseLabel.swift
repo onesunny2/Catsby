@@ -31,14 +31,14 @@ final class BaseLabel: UILabel {
         
         let attributeString = NSMutableAttributedString(string: "")
         let imageAttatchment = NSTextAttachment(image: symbolImage)
-        imageAttatchment.bounds = .init(x: 0, y: -4, width: 14, height: 14)
+        imageAttatchment.bounds = .init(x: 0, y: -2, width: 14, height: 14)
         attributeString.append(NSAttributedString(attachment: imageAttatchment))
-        attributeString.append(NSAttributedString(string: text))
+        attributeString.append(NSAttributedString(string: " " + text))
         
         self.attributedText = attributeString
         self.textAlignment = .center
         self.textColor = .catsDarkgray
-        self.font = .systemFont(ofSize: 14, weight: .regular)
+        self.font = .systemFont(ofSize: 14, weight: .medium)
     }
     
     @available(*, unavailable)

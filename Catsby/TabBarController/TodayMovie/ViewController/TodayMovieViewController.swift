@@ -107,9 +107,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let vc = MovieDetailViewController()
-        vc.movieId = trendMovie[indexPath.item].id
-        vc.synopsis = trendMovie[indexPath.item].overview
-        vc.movieTitle = trendMovie[indexPath.item].title
+        vc.trendResult = trendMovie[indexPath.item]
         
         self.viewTransition(style: .push(animated: true), vc: vc)
     }
