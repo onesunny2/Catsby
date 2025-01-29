@@ -12,6 +12,7 @@ final class NetworkManager {
     
     static let shared = NetworkManager()
     static let pathUrl = "https://image.tmdb.org/t/p/w500"
+    static let originalUrl = "https://image.tmdb.org/t/p/original"
     private init() {}
 
     func callRequest<T: Decodable>(type: T.Type, api: TmdbAPI, successHandler: @escaping (T) -> (), failHandler: @escaping () -> ()) {

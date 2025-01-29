@@ -71,6 +71,7 @@ final class TodayMovieViewController: UIViewController {
         navigationItem.title = "Catsby의 영화세상"
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.catsWhite]
         navigationItem.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = .catsMain
     }
 }
 
@@ -101,6 +102,14 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         cell.posterCornerRadius()
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let vc = MovieDetailViewController()
+        vc.trendResult = trendMovie[indexPath.item]
+        
+        self.viewTransition(style: .push(animated: true), vc: vc)
     }
     
     @objc private func heartButtonTapped(_ sender: UIButton) {

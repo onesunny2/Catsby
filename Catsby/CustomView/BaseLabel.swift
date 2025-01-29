@@ -26,6 +26,21 @@ final class BaseLabel: UILabel {
         self.numberOfLines = line
     }
     
+    func imageWithText(_ image: String, _ text: String) {
+        guard let symbolImage = UIImage(systemName: image, withConfiguration: UIImage.SymbolConfiguration(pointSize: 14))?.withTintColor(.catsDarkgray, renderingMode: .alwaysOriginal) else { return }
+        
+        let attributeString = NSMutableAttributedString(string: "")
+        let imageAttatchment = NSTextAttachment(image: symbolImage)
+        imageAttatchment.bounds = .init(x: 0, y: -2, width: 14, height: 14)
+        attributeString.append(NSAttributedString(attachment: imageAttatchment))
+        attributeString.append(NSAttributedString(string: " " + text))
+        
+        self.attributedText = attributeString
+        self.textAlignment = .center
+        self.textColor = .catsDarkgray
+        self.font = .systemFont(ofSize: 14, weight: .medium)
+    }
+    
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

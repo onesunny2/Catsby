@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EditProfileImageViewController: UIViewController {
+final class EditProfileImageViewController: UIViewController {
     
     private let mainView = ProfileImageView()
     

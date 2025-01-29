@@ -81,10 +81,9 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
     }
     
     func getData(url: String, title: String, plot: String, isLiked: Bool) {
-        let processor = DownsamplingImageProcessor(size: CGSize(width: posterImageView.frame.width, height: posterImageView.frame.height))
         posterImageView.kf.setImage(with: URL(string: url),
                                     options: [
-                                        .processor(processor),
+                                        .processor(DownSampling.processor(posterImageView)),
                                         .scaleFactor(UIScreen.main.scale),
                                         .cacheOriginalImage
                                     ])
