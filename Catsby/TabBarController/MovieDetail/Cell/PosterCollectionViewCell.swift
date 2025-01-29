@@ -13,7 +13,7 @@ final class PosterCollectionViewCell: UICollectionViewCell, BaseConfigure {
 
     static let id = "PosterCollectionViewCell"
     
-    let posterImageView: BaseImageView
+    private let posterImageView: BaseImageView
     
     override init(frame: CGRect) {
         posterImageView = BaseImageView(type: UIImage(), bgcolor: .clear)
@@ -35,12 +35,10 @@ final class PosterCollectionViewCell: UICollectionViewCell, BaseConfigure {
     }
     
     func getPosterImage(url: String) {
-        let processor = DownsamplingImageProcessor(size: CGSize(width: posterImageView.frame.width, height: posterImageView.frame.height))
-        
         posterImageView.kf.setImage(
             with: URL(string: url),
             options: [
-                .processor(processor),
+                .processor(DownSampling.processor(posterImageView)),
                 .scaleFactor(UIScreen.main.scale),
                 .cacheOriginalImage
             ])

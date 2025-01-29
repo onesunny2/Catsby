@@ -13,10 +13,10 @@ final class BackDropCollectionViewCell: UICollectionViewCell, BaseConfigure {
    
     static let id = "BackDropCollectionViewCell"
     
-    let backdropImageView: BaseImageView
-    let indicatorUIView = UIView()
-    let indicatorStackView = UIStackView()
-    let indicators: [UIView] = [UIView(), UIView(), UIView(), UIView(), UIView()]
+    private let backdropImageView: BaseImageView
+    private let indicatorUIView = UIView()
+    private let indicatorStackView = UIStackView()
+    private let indicators: [UIView] = [UIView(), UIView(), UIView(), UIView(), UIView()]
     
     override init(frame: CGRect) {
         backdropImageView = BaseImageView(type: UIImage(), bgcolor: .clear)
@@ -89,12 +89,10 @@ final class BackDropCollectionViewCell: UICollectionViewCell, BaseConfigure {
     }
     
     func getBackdropImage(url: String) {
-        let processor = DownsamplingImageProcessor(size: CGSize(width: backdropImageView.frame.width, height: backdropImageView.frame.height))
-        
         backdropImageView.kf.setImage(
             with: URL(string: url),
             options: [
-                .processor(processor),
+                .processor(DownSampling.processor(backdropImageView)),
                 .scaleFactor(UIScreen.main.scale),
                 .cacheOriginalImage
             ])

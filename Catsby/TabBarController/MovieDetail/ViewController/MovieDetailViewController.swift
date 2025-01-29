@@ -41,7 +41,7 @@ final class MovieDetailViewController: UIViewController {
 
         setCollectionView()
         setNavigation()
-        getImageAPI()
+        getDataAPI()
         setDataFromAPI()
         
         mainView.moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
@@ -66,13 +66,22 @@ final class MovieDetailViewController: UIViewController {
         mainView.synopsisContentLabel.text = synopsis
     }
     
-    private func getImageAPI() {
+    private func getDataAPI() {
+        // backdrop, poster 정보
         networkManager.callRequest(type: ImageMovie.self, api: .image(movieID: movieId)) { result in
             self.imageBackdrop = Array(result.backdrops.prefix(5))
             self.imagePosters = result.posters
         } failHandler: {
             print(#function, "error")
         }
+        
+        // cast 정보
+        networkManager.callRequest(type: CreditMovie.self, api: .credit(movieID: movieId)) { result in
+            self.cast = result.cast
+        } failHandler: {
+            print(#function, "error")
+        }
+
     }
     
     private func setNavigation() {
