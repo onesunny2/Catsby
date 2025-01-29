@@ -94,12 +94,24 @@ final class MovieDetailViewController: UIViewController {
     
     private func setNavigation() {
         navigationItem.title = trendResult.title
-        let heart = UIImage(systemName: "heart")
+        
+        let movieId = String(trendResult.id)
+        let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[movieId] ?? false
+        let heart = UIImage(systemName: savedStatus ? "heart.fill" : "heart")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: heart, style: .done, target: self, action: #selector(heartButtonTapped))
     }
     
     @objc func heartButtonTapped() {
-        print(#function)
+        let key = String(trendResult.id)
+        var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
+        
+        savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
+        
+        UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
+        
+        // 누르고 네비게이션에 하트 모양 반영되도록
+        let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[key] ?? false
+        navigationItem.rightBarButtonItem?.image = UIImage(systemName: savedStatus ? "heart.fill" : "heart")
     }
 }
 

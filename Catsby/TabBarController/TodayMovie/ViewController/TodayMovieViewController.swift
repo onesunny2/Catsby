@@ -17,6 +17,7 @@ final class TodayMovieViewController: UIViewController {
             mainView.collectionView.reloadData()
         }
     }
+    var selectedMovie = 0  // 영화 상세화면에서 좋아요 반영되었을 때 dataReload를 위해 저장해두는 값
     
     override func loadView() {
         view = mainView
@@ -32,6 +33,12 @@ final class TodayMovieViewController: UIViewController {
         setCollectionView()
         getTodayMovieData()
         tapGesture()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        mainView.collectionView.reloadItems(at: [IndexPath(item: selectedMovie, section: 0)])
     }
     
     // 프로필 수정 내용 값 역전달 받기
@@ -105,6 +112,8 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        selectedMovie = indexPath.item
         
         let vc = MovieDetailViewController()
         vc.trendResult = trendMovie[indexPath.item]
