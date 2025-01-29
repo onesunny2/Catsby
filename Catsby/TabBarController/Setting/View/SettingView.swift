@@ -46,6 +46,7 @@ final class SettingView: BaseView {
         tableView.separatorStyle = .singleLine
         tableView.separatorColor = .catsDarkgray
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+
         tableView.register(SettingTableViewCell.self, forCellReuseIdentifier: SettingTableViewCell.id)
     }
 }
