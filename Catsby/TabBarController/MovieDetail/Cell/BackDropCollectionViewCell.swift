@@ -14,9 +14,17 @@ final class BackDropCollectionViewCell: UICollectionViewCell, BaseConfigure {
     static let id = "BackDropCollectionViewCell"
     
     private let backdropImageView: BaseImageView
-    private let indicatorUIView = UIView()
-    private let indicatorStackView = UIStackView()
-    private let indicators: [UIView] = [UIView(), UIView(), UIView(), UIView(), UIView()]
+    lazy var pageControl: UIPageControl = {
+        let pageControl = UIPageControl()
+        pageControl.currentPage = 0
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        pageControl.numberOfPages = 5
+        pageControl.currentPageIndicatorTintColor = .catsWhite
+        pageControl.pageIndicatorTintColor = .catsDarkgray
+        pageControl.backgroundStyle = .prominent
+ 
+        return pageControl
+    }()
     
     override init(frame: CGRect) {
         backdropImageView = BaseImageView(type: UIImage(), bgcolor: .clear)
@@ -25,16 +33,11 @@ final class BackDropCollectionViewCell: UICollectionViewCell, BaseConfigure {
         
         configHierarchy()
         configLayout()
-        configView()
     }
     
     func configHierarchy() {
         self.addSubview(backdropImageView)
-        self.addSubview(indicatorUIView)
-        indicatorUIView.addSubview(indicatorStackView)
-        indicators.forEach {
-            indicatorStackView.addArrangedSubview($0)
-        }
+        self.addSubview(pageControl)
     }
     
     func configLayout() {
@@ -42,50 +45,10 @@ final class BackDropCollectionViewCell: UICollectionViewCell, BaseConfigure {
             $0.edges.equalToSuperview()
         }
         
-        indicatorUIView.snp.makeConstraints {
-            $0.width.equalTo(100)
-            $0.height.equalTo(24)
-            $0.bottom.equalToSuperview().inset(12)
+        pageControl.snp.makeConstraints {
             $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(12)
         }
-        
-        indicatorStackView.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.width.equalTo(80)
-            $0.height.equalTo(10)
-        }
-        
-        indicatorStackView.axis = .horizontal
-        indicatorStackView.distribution = .equalSpacing
-        indicatorStackView.alignment = .center
-        
-        indicators.forEach {
-            $0.snp.makeConstraints {
-                $0.size.equalTo(8)
-            }
-        }
-    }
-    
-    private func configView() {
-        indicatorUIView.backgroundColor = .darkGray
-        
-        indicatorStackView.backgroundColor = .clear
-        
-        indicators.forEach {
-            $0.backgroundColor = .catsDarkgray
-        }
-        indicators[0].backgroundColor = .catsLightgray
-    }
-    
-    func corderRadius() {
-        indicators.forEach {
-            $0.layer.cornerRadius = 4
-            $0.clipsToBounds = true
-        }
-        indicatorUIView.layer.cornerRadius = 12
-        indicatorUIView.clipsToBounds = true
-        
-        self.layoutIfNeeded()
     }
     
     func getBackdropImage(url: String) {

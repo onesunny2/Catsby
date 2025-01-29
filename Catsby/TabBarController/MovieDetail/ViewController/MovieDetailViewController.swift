@@ -121,9 +121,10 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
 
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BackDropCollectionViewCell.id, for: indexPath) as? BackDropCollectionViewCell else { return UICollectionViewCell() }
             
+            cell.pageControl.currentPage = indexPath.item
+            
             let url = NetworkManager.originalUrl + backdrop.filepath
             cell.getBackdropImage(url: url)
-            cell.corderRadius()
             
             return cell
             
@@ -151,6 +152,4 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
         default: return UICollectionViewCell()
         }
     }
-    
-    
 }
