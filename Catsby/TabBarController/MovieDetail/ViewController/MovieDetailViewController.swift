@@ -94,7 +94,10 @@ final class MovieDetailViewController: UIViewController {
     
     private func setNavigation() {
         navigationItem.title = trendResult.title
-        let heart = UIImage(systemName: "heart")
+        
+        let movieId = String(trendResult.id)
+        let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[movieId] ?? false
+        let heart = UIImage(systemName: savedStatus ? "heart.fill" : "heart")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: heart, style: .done, target: self, action: #selector(heartButtonTapped))
     }
     
