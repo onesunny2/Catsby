@@ -140,8 +140,14 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.id, for: indexPath) as? CastCollectionViewCell else { return UICollectionViewCell() }
             
-            let url = NetworkManager.pathUrl + (cast.profilepath ?? "")
-            cell.getDataFromAPI(url, cast.name, cast.character)
+            if let filepath = cast.profilepath {
+                let url = NetworkManager.pathUrl + filepath
+                cell.getDataFromAPI(url, cast.name, cast.character)
+            } else {
+                let url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYaqjTuNYAbIxAk0GzMiX8-ah3Q63B8cIBMyFJE1zx-4Ty8ZIOSAneIuNysLOXvIffm2o&usqp=CAU"
+                cell.getDataFromAPI(url, cast.name, cast.character)
+            }
+  
             cell.cornerRadius()
             
             return cell
