@@ -28,4 +28,18 @@ extension UIViewController {
             window.rootViewController = vc
         }
     }
+    
+    func alerMessage(_ title: String, _ message: String, _ okHandler: @escaping () -> ()) {
+        let message = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let ok = UIAlertAction(title: "확인", style: .destructive) {_ in 
+            okHandler()
+        }
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        
+        message.addAction(ok)
+        message.addAction(cancel)
+        
+        present(message, animated: true)
+    }
 }

@@ -55,7 +55,14 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        tableView.deselectRow(at: indexPath, animated: false)
+        if indexPath.row == 3 {
+            let title = "탈퇴하기"
+            let message = "탈퇴를 하면 데이터가 모두 초기화됩니다. 탈퇴 하시겠습니까?"
+            alerMessage(title, message) {
+                print("success")
+            }
+        }
+        
     }
 }
 
