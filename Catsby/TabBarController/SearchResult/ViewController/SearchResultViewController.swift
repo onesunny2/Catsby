@@ -7,10 +7,12 @@
 
 import UIKit
 
-class SearchResultViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate {
+final class SearchResultViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate {
     
     private let mainView = SearchResultView()
     private let searchController = UISearchController(searchResultsController: nil)
+    
+    var testList = ["test1", "test2", "test3", "test4"]
     
     override func loadView() {
         view = mainView
@@ -20,6 +22,7 @@ class SearchResultViewController: UIViewController, UISearchBarDelegate, UISearc
         super.viewDidLoad()
         
         setNavigation()
+        setTableView()
     }
 
     
@@ -40,5 +43,29 @@ class SearchResultViewController: UIViewController, UISearchBarDelegate, UISearc
         
         guard let image = textfield.leftView else { return }
         image.tintColor = .catsWhite
+    }
+}
+
+extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    private func setTableView() {
+        mainView.tableView.delegate = self
+        mainView.tableView.dataSource = self
+        mainView.tableView.rowHeight = 150
+        mainView.tableView.separatorStyle = .singleLine
+        mainView.tableView.separatorColor = .catsWhite
+        mainView.tableView.separatorInset.left = 0
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return testList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultTableViewCell.id, for: indexPath) as? SearchResultTableViewCell else { return UITableViewCell() }
+        
+        
+        return cell
     }
 }
