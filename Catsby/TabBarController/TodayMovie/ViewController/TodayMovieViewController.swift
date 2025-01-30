@@ -38,7 +38,7 @@ final class TodayMovieViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // 좋아요한 영화 갯수 반영되도록
+        // 무비박스 갯수 반영
         let savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
         let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
         let newtitle = "\(count)개의 무비박스 보관중"
