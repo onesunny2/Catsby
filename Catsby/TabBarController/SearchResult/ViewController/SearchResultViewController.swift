@@ -10,6 +10,7 @@ import UIKit
 final class SearchResultViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate {
     
     private let mainView = SearchResultView()
+    private let networkManager = NetworkManager.shared
     private let searchController = UISearchController(searchResultsController: nil)
     
     var testList = ["test1", "test2", "test3", "test4"]
@@ -21,19 +22,31 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        getSearchAPI()
         setNavigation()
         setTableView()
     }
 
+    // API 데이터 가져오기
+//    private func getSearchAPI() {
+//        networkManager.callRequest(type: , api: <#T##TmdbAPI#>) { <#T#> in
+//            <#code#>
+//        } failHandler: {
+//            <#code#>
+//        }
+//
+//    }
     
     // 네비게이션 타이틀 및 서치바 설정
     private func setNavigation() {
         navigationItem.title = "영화 검색"
+        navigationItem.hidesSearchBarWhenScrolling = false
         
         searchController.delegate = self
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "검색하고 싶은 영화를 적어주세요 :)"
         searchController.searchBar.searchBarStyle = .minimal
+        searchController.hidesNavigationBarDuringPresentation = false
 
         navigationItem.searchController = searchController
         
@@ -41,8 +54,9 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         textfield.textColor = .catsWhite
         textfield.attributedPlaceholder = NSAttributedString(string: textfield.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.catsDarkgray])
         
-        guard let image = textfield.leftView else { return }
-        image.tintColor = .catsWhite
+        guard let leftImage = textfield.leftView, let rightImage = textfield.rightView else { return }
+        leftImage.tintColor = .catsWhite
+        rightImage.tintColor = .catsWhite
     }
 }
 
@@ -65,6 +79,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultTableViewCell.id, for: indexPath) as? SearchResultTableViewCell else { return UITableViewCell() }
         
+        cell.cornerRadius()
         
         return cell
     }

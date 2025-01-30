@@ -6,15 +6,128 @@
 //
 
 import UIKit
+import Kingfisher
+import SnapKit
 
-final class SearchResultTableViewCell: UITableViewCell {
-    
+/*
+ 포스터 - imageView
+ 영화 제목 & 개봉날짜 - StackView(Label, Label)
+ 영화 장르 - StackView(Label)
+ 하트 버튼 - UIButton
+ */
+
+final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
+
     static let id = "SearchResultTableViewCell"
+    
+    private let posterImageView: BaseImageView
+    private let titleReleaseStackView = UIStackView()
+    private let titleLabel: BaseLabel
+    private let releaseDateLabel: BaseLabel
+    private let genreStackView = UIStackView()
+    private var genreLabel: [BaseLabel]
+    let heartButton = UIButton()
+    var genreList = ["공포", "코미디"]  // 갯수에 따라 달라지도록
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        posterImageView = BaseImageView(type: UIImage(), bgcolor: .catsLightgray)
+        
+        titleLabel = BaseLabel(text: "진격의 이원선", align: .left, size: 16, weight: .bold, line: 2)
+        
+        releaseDateLabel = BaseLabel(text: "2222. 22. 22", align: .left, color: .catsDarkgray, size: 14, weight: .regular)
+        
+        genreLabel = []
+        
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         backgroundColor = .catsBlack
+        configHierarchy()
+        configLayout()
+        configView()
+    }
+    
+    func configHierarchy() {
+        [posterImageView, titleReleaseStackView, genreStackView, heartButton].forEach {
+            self.addSubview($0)
+        }
+        [titleLabel, releaseDateLabel].forEach {
+            titleReleaseStackView.addArrangedSubview($0)
+        }
+        genreLabel.forEach {
+            genreStackView.addArrangedSubview($0)
+        }
+    }
+    
+    func configLayout() {
+        posterImageView.snp.makeConstraints {
+          
+            $0.leading.equalToSuperview()
+            $0.verticalEdges.equalTo(self.safeAreaLayoutGuide).inset(16)
+            $0.width.equalTo(118 * 0.8)
+        }
+        
+        titleReleaseStackView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(20)
+            $0.leading.equalTo(posterImageView.snp.trailing).offset(18)
+        }
+        
+        titleReleaseStackView.axis = .vertical
+        titleReleaseStackView.alignment = .leading
+        titleReleaseStackView.spacing = 6
+        
+        [titleLabel, releaseDateLabel].forEach {
+            $0.snp.makeConstraints {
+                $0.leading.equalToSuperview()
+            }
+        }
+        
+        genreStackView.snp.makeConstraints {
+            $0.leading.equalTo(posterImageView.snp.trailing).offset(18)
+            $0.bottom.equalTo(self.safeAreaLayoutGuide).inset(16)
+        }
+        
+        genreStackView.axis = .horizontal
+        genreStackView.alignment = .leading
+        genreStackView.spacing = 4
+    }
+    
+    private func configView() {
+        heartButton.configuration = .filled()
+        heartButton.configuration?.imagePadding = 0
+        heartButton.configuration?.baseForegroundColor = .catsMain
+        heartButton.configuration?.baseBackgroundColor = .clear
+    }
+    
+    func getData(_ url: String, _ title: String, _ date: String, _ genre: [String], _ isLiked: Bool) {
+        
+        // 이미지
+        let processor = DownSampling.processor(posterImageView)
+        posterImageView.kf.setImage(with: URL(string: url),
+                                    options: [
+                                        .processor(processor),
+                                        .scaleFactor(UIScreen.main.scale),
+                                        .cacheOriginalImage
+                                    ])
+        
+        // 타이틀
+        titleLabel.text = title
+        
+        // 날짜
+        releaseDateLabel.text = date
+        
+        // 장르
+        genreList = genre
+        for index in 0...genreList.count - 1 {
+            genreLabel.append(BaseLabel(text: genreList[index], align: .center, size: 13, weight: .regular))
+        }
+        
+        // 하트
+        heartButton.configuration?.image = UIImage(systemName: isLiked ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
+    }
+    
+    func cornerRadius() {
+        posterImageView.clipCorner(15)
+        self.layoutIfNeeded()
     }
     
     @available(*, unavailable)
