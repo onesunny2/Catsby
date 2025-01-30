@@ -59,7 +59,12 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             let title = "탈퇴하기"
             let message = "탈퇴를 하면 데이터가 모두 초기화됩니다. 탈퇴 하시겠습니까?"
             alerMessage(title, message) {
-                print("success")
+                print("탈퇴 success")
+ 
+                let nav = UINavigationController(rootViewController: OnboardingViewController())
+                self.viewTransition(style: .windowRoot, vc: nav)
+                
+                UserDefaultsManager.shared.resetData()
             }
         }
         

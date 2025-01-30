@@ -26,16 +26,17 @@ extension UIViewController {
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, let window = windowScene.windows.first else { return }
             
             window.rootViewController = vc
+            window.makeKeyAndVisible()
         }
     }
     
     func alerMessage(_ title: String, _ message: String, _ okHandler: @escaping () -> ()) {
         let message = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let ok = UIAlertAction(title: "확인", style: .destructive) {_ in 
+        let ok = UIAlertAction(title: "확인", style: .destructive) {_ in
             okHandler()
         }
-        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        let cancel = UIAlertAction(title: "취소", style: .default)
         
         message.addAction(ok)
         message.addAction(cancel)

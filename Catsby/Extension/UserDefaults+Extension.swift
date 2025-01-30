@@ -12,8 +12,4 @@ extension UserDefaults {
     @discardableResult func date(forKey defaultName: String) -> Date? {
         return self.value(forKey: defaultName) as? Date
     }
-    
-    @discardableResult func uiImage(forKey defaultName: String) -> UIImage? {
-        return self.value(forKey: defaultName) as? UIImage
-    }
 }
