@@ -10,8 +10,8 @@ import Foundation
 struct SearchMovie: Decodable {
     let page: Int
     let results: [SearchResults]
-    let totalPages: Int
-    let totalResults: Int
+    let totalPages: Int?
+    let totalResults: Int?
     
     enum Codingkeys: String, CodingKey {
         case page
@@ -23,7 +23,7 @@ struct SearchMovie: Decodable {
 
 struct SearchResults: Decodable {
     let id: Int
-    let backdrop: String
+    let backdrop: String?
     let title: String
     let overview: String
     let posterpath: String

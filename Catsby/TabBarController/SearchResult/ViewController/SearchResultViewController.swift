@@ -14,6 +14,11 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     private let searchController = UISearchController(searchResultsController: nil)
     
     var testList = ["test1", "test2", "test3", "test4"]
+    var searchMovie = SearchMovie(page: 0, results: [], totalPages: 0, totalResults: 0) {
+        didSet {
+            mainView.tableView.reloadData()
+        }
+    }
     
     override func loadView() {
         view = mainView
@@ -22,20 +27,24 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        getSearchAPI()
+        getSearchAPI()
         setNavigation()
         setTableView()
     }
 
     // API 데이터 가져오기
-//    private func getSearchAPI() {
-//        networkManager.callRequest(type: , api: <#T##TmdbAPI#>) { <#T#> in
-//            <#code#>
-//        } failHandler: {
-//            <#code#>
-//        }
-//
-//    }
+    private func getSearchAPI() {
+        
+        guard let keyword = searchController.searchBar.text else { return }
+        
+        networkManager.callRequest(type: SearchMovie.self, api: .search(keyword: "모아나")) { result in
+            self.searchMovie = result
+            print(self.searchMovie.results.count)
+        } failHandler: {
+            print("request error")
+        }
+
+    }
     
     // 네비게이션 타이틀 및 서치바 설정
     private func setNavigation() {
@@ -44,7 +53,7 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         
         searchController.delegate = self
         searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "검색하고 싶은 영화를 적어주세요 :)"
+        searchController.searchBar.placeholder = "영화를 검색해보세요."
         searchController.searchBar.searchBarStyle = .minimal
         searchController.hidesNavigationBarDuringPresentation = false
 
@@ -72,13 +81,40 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return testList.count
+        return searchMovie.results.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        let row = searchMovie.results[indexPath.row]
+        let genreList = Genre.genreList
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultTableViewCell.id, for: indexPath) as? SearchResultTableViewCell else { return UITableViewCell() }
         
+        let url = NetworkManager.pathUrl + row.posterpath
+        let title = row.title
+        let date = row.releaseDate
+        let genreArray = Array(row.genreID.prefix(2))
+        let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)]
+        
+        // 가지고 있는 장르 갯수에 따라 분리
+        switch genreArray.count {
+        case 0:
+            let genre: [String] = []
+            cell.getData(url, title, date, genre, isLiked ?? false)
+        case 1:
+            let genre = [genreList[genreArray[0]] ?? "장르오류"]
+            cell.getData(url, title, date, genre, isLiked ?? false)
+            print(genre)
+        case 2:
+            let genre = [genreList[genreArray[0]] ?? "장르오류", genreList[genreArray[1]] ?? "장르오류"]
+            cell.getData(url, title, date, genre, isLiked ?? false)
+            print(genre)
+        default:
+            print("genre error")
+            break
+        }
+
         cell.cornerRadius()
         
         return cell

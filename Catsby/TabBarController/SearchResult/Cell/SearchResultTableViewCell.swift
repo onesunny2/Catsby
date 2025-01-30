@@ -37,7 +37,6 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         releaseDateLabel = BaseLabel(text: "2222. 22. 22", align: .left, color: .catsDarkgray, size: 14, weight: .regular)
         
         genreLabel = []
-        
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         backgroundColor = .catsBlack
@@ -89,6 +88,11 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         genreStackView.axis = .horizontal
         genreStackView.alignment = .leading
         genreStackView.spacing = 4
+        
+        heartButton.snp.makeConstraints {
+            $0.bottom.equalTo(posterImageView.snp.bottom)
+            $0.trailing.equalToSuperview()
+        }
     }
     
     private func configView() {
@@ -113,7 +117,10 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         titleLabel.text = title
         
         // 날짜
-        releaseDateLabel.text = date
+        guard let stringToDate = UserDefaultsManager.dateformatter.date(from: date) else { return }
+        UserDefaultsManager.dateformatter.dateFormat = "yyyy. MM. dd"
+        let newDate = UserDefaultsManager.dateformatter.string(from: stringToDate)
+        releaseDateLabel.text = newDate
         
         // 장르
         genreList = genre
@@ -121,12 +128,16 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
             genreLabel.append(BaseLabel(text: genreList[index], align: .center, size: 13, weight: .regular))
         }
         
+        genreLabel.forEach {
+            genreStackView.addArrangedSubview($0)
+        }
+        
         // 하트
         heartButton.configuration?.image = UIImage(systemName: isLiked ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
     }
     
     func cornerRadius() {
-        posterImageView.clipCorner(15)
+        posterImageView.clipCorner(5)
         self.layoutIfNeeded()
     }
     
