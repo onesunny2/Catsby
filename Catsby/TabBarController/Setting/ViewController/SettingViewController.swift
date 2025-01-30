@@ -17,11 +17,33 @@ final class SettingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(receivedProfile), name: NSNotification.Name("editProfile"), object: nil)
+
 
         setNavigation()
         setTableView()
+        tapGesture()
+    }
+    
+    // 프로필 수정 내용 값 역전달 받기
+    @objc func receivedProfile(notification: NSNotification) {
+        
+        guard let nickname = notification.userInfo?["nickname"] as? String, let image = notification.userInfo?["image"] as? String else { return }
+        mainView.profileboxView.nicknameLabel.text = nickname
+        mainView.profileboxView.profileImageView.image = UIImage(named: image)
+    }
+    
+    @objc func profileAreaTapped() {
+        self.viewTransition(style: .naviModal, vc: EditProfileNicknameViewController())
     }
 
+    private func tapGesture() {
+        let tapgesture = UITapGestureRecognizer(target: self, action: #selector(profileAreaTapped))
+        mainView.profileboxView.isUserInteractionEnabled = true
+        mainView.profileboxView.addGestureRecognizer(tapgesture)
+    }
+    
     private func setNavigation() {
         navigationItem.title = "설정"
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.catsWhite]
@@ -67,7 +89,6 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                 UserDefaultsManager.shared.resetData()
             }
         }
-        
     }
 }
 
