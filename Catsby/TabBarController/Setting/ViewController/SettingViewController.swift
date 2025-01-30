@@ -26,6 +26,16 @@ final class SettingViewController: UIViewController {
         tapGesture()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 무비박스 갯수 반영
+        let savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
+        let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
+        let newtitle = "\(count)개의 무비박스 보관중"
+        mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
+    }
+    
     // 프로필 수정 내용 값 역전달 받기
     @objc func receivedProfile(notification: NSNotification) {
         
