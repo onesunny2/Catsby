@@ -34,6 +34,12 @@ final class SettingViewController: UIViewController {
         let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
         let newtitle = "\(count)개의 무비박스 보관중"
         mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
+        
+        // 메인화면에서 바꾼 닉네임, 이미지 반영
+        let nickname = UserDefaultsManager.shared.getStringData(type: .profileName)
+        mainView.profileboxView.nicknameLabel.text = nickname
+        let image = UserDefaultsManager.shared.getStringData(type: .profileImage)
+        mainView.profileboxView.profileImageView.image = UIImage(named: image)
     }
     
     // 프로필 수정 내용 값 역전달 받기

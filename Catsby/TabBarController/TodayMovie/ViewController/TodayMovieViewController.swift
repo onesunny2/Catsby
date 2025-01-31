@@ -141,6 +141,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         
         let vc = MovieDetailViewController()
         vc.trendResult = trendMovie[indexPath.item]
+        vc.isSearchresult = false
         
         self.viewTransition(style: .push(animated: true), vc: vc)
     }

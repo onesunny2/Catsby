@@ -31,6 +31,8 @@ final class MovieDetailViewController: UIViewController {
     }
     
     var trendResult = TrendResults(backdrop: "", id: 0, title: "", overview: "", posterpath: "", genreID: [], releaseDate: "", vote: 0)
+    var searchResult = SearchResults(id: 0, backdrop: "", title: "", overview: "", posterpath: "", genreID: [], releaseDate: "", vote: 0.0)
+    var isSearchresult = false
     
     
     override func loadView() {
@@ -65,10 +67,10 @@ final class MovieDetailViewController: UIViewController {
     
     private func setDataFromAPI() {
         
-        let synopsis = trendResult.overview
-        let release = trendResult.releaseDate
-        let vote = String(trendResult.vote)
-        let genreID = Array(trendResult.genreID.prefix(2))
+        let synopsis = isSearchresult ?  searchResult.overview : trendResult.overview
+        let release = isSearchresult ? searchResult.releaseDate : trendResult.releaseDate
+        let vote = isSearchresult ? String(searchResult.vote) : String(trendResult.vote)
+        let genreID = isSearchresult ? Array(searchResult.genreID.prefix(2)) : Array(trendResult.genreID.prefix(2))
         
         mainView.synopsisContentLabel.text = synopsis
         
@@ -90,7 +92,7 @@ final class MovieDetailViewController: UIViewController {
        
         // backdrop, poster 정보
         group.enter()
-        networkManager.callRequest(type: ImageMovie.self, api: .image(movieID: trendResult.id)) { result in
+        networkManager.callRequest(type: ImageMovie.self, api: .image(movieID: isSearchresult ? searchResult.id : trendResult.id)) { result in
             self.imageBackdrop = Array(result.backdrops.prefix(5))
             self.imagePosters = result.posters
             self.group.leave()
@@ -101,7 +103,7 @@ final class MovieDetailViewController: UIViewController {
         
         // cast 정보
         group.enter()
-        networkManager.callRequest(type: CreditMovie.self, api: .credit(movieID: trendResult.id)) { result in
+        networkManager.callRequest(type: CreditMovie.self, api: .credit(movieID: isSearchresult ? searchResult.id : trendResult.id)) { result in
             self.cast = result.cast
             self.group.leave()
         } failHandler: {
@@ -118,16 +120,16 @@ final class MovieDetailViewController: UIViewController {
     }
     
     private func setNavigation() {
-        navigationItem.title = trendResult.title
+        navigationItem.title = isSearchresult ? searchResult.title : trendResult.title
         
-        let movieId = String(trendResult.id)
+        let movieId = String(isSearchresult ? searchResult.id : trendResult.id)
         let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[movieId] ?? false
         let heart = UIImage(systemName: savedStatus ? "heart.fill" : "heart")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: heart, style: .done, target: self, action: #selector(heartButtonTapped))
     }
     
     @objc func heartButtonTapped() {
-        let key = String(trendResult.id)
+        let key = String(isSearchresult ? searchResult.id : trendResult.id)
         var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
         
         savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
