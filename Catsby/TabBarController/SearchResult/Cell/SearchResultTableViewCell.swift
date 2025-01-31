@@ -25,7 +25,7 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
     private let titleLabel: BaseLabel
     private let releaseDateLabel: BaseLabel
     private let genreStackView = UIStackView()
-    private var genreLabel: [BaseLabel]
+    private var genreButton: [BaseButton]
     let heartButton = UIButton()
     var genreList = ["공포", "코미디"]  // 갯수에 따라 달라지도록
 
@@ -36,7 +36,7 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         
         releaseDateLabel = BaseLabel(text: "2222. 22. 22", align: .left, color: .catsDarkgray, size: 14, weight: .regular)
         
-        genreLabel = []
+        genreButton = []
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         backgroundColor = .catsBlack
@@ -52,7 +52,7 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         [titleLabel, releaseDateLabel].forEach {
             titleReleaseStackView.addArrangedSubview($0)
         }
-        genreLabel.forEach {
+        genreButton.forEach {
             genreStackView.addArrangedSubview($0)
         }
     }
@@ -125,15 +125,18 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         // 장르
         genreList = genre
         for index in 0...genreList.count - 1 {
-            genreLabel.append(BaseLabel(text: genreList[index], align: .center, size: 13, weight: .regular))
+            genreButton.append(BaseButton(title: genreList[index], size: 13, weight: .medium, bgColor: .catsDarkgray, foreColor: .catsWhite))
+            genreButton[index].isUserInteractionEnabled = false
         }
         
-        genreLabel.forEach {
+        genreButton.forEach {
             genreStackView.addArrangedSubview($0)
         }
         
         // 하트
         heartButton.configuration?.image = UIImage(systemName: isLiked ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
+        
+        self.layoutIfNeeded()
     }
     
     func cornerRadius() {

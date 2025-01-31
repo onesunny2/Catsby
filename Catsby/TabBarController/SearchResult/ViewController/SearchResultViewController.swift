@@ -63,9 +63,8 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         textfield.textColor = .catsWhite
         textfield.attributedPlaceholder = NSAttributedString(string: textfield.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.catsDarkgray])
         
-        guard let leftImage = textfield.leftView, let rightImage = textfield.rightView else { return }
+        guard let leftImage = textfield.leftView else { return }
         leftImage.tintColor = .catsWhite
-        rightImage.tintColor = .catsWhite
     }
 }
 
@@ -76,8 +75,9 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         mainView.tableView.dataSource = self
         mainView.tableView.rowHeight = 150
         mainView.tableView.separatorStyle = .singleLine
-        mainView.tableView.separatorColor = .catsWhite
+        mainView.tableView.separatorColor = .catsDarkgray
         mainView.tableView.separatorInset.left = 0
+        mainView.tableView.tableHeaderView = UIView() // 가장 상단 줄 없애기
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -116,6 +116,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         }
 
         cell.cornerRadius()
+        cell.selectionStyle = .none
         
         return cell
     }
