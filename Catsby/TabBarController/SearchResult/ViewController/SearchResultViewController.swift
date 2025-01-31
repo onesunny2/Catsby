@@ -161,6 +161,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
                 break
             }
         } else {
+            // 포스터 없으면 기본값으로 사용할 이미지
             let url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYaqjTuNYAbIxAk0GzMiX8-ah3Q63B8cIBMyFJE1zx-4Ty8ZIOSAneIuNysLOXvIffm2o&usqp=CAU"
             
             // 가지고 있는 장르 갯수에 따라 분리
@@ -182,6 +183,16 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
 
         cell.cornerRadius()
         cell.selectionStyle = .none
+        cell.tapbuttonAction = {
+            let key = String(row.id)
+            var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
+            
+            savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
+
+            UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
+            
+            self.mainView.tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .none)
+        }
         
         return cell
     }

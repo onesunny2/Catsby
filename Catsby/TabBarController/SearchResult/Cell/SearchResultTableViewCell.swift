@@ -29,6 +29,7 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
     private var genreBgView: [UIView]
     let heartButton = UIButton()
     var genreList = ["", ""]  // 갯수에 따라 달라지도록
+    var tapbuttonAction: (() -> ())?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         posterImageView = BaseImageView(type: UIImage(), bgcolor: .catsLightgray)
@@ -45,11 +46,13 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         configHierarchy()
         configLayout()
         configView()
+        
+        heartButton.addTarget(self, action: #selector(heartbuttonTapped), for: .touchUpInside)
     }
     
     func configHierarchy() {
         [posterImageView, titleReleaseStackView, genreStackView, heartButton].forEach {
-            self.addSubview($0)
+            contentView.addSubview($0)
         }
         [titleLabel, releaseDateLabel].forEach {
             titleReleaseStackView.addArrangedSubview($0)
@@ -107,9 +110,10 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         genreStackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
-        
         genreLabel = []
         genreBgView = []
+        
+        tapbuttonAction = {}
     }
     
     private func configView() {
@@ -117,6 +121,11 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         heartButton.configuration?.imagePadding = 0
         heartButton.configuration?.baseForegroundColor = .catsMain
         heartButton.configuration?.baseBackgroundColor = .clear
+    }
+    
+    @objc func heartbuttonTapped() {
+        print(#function)
+        tapbuttonAction?()
     }
     
     func getData(_ url: String, _ title: String, _ date: String, _ genre: [String], _ isLiked: Bool) {
