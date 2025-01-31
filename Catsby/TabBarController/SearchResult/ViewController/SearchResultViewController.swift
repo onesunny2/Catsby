@@ -16,6 +16,7 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     var isEmptyFirst: Bool = true
     let group = DispatchGroup()
     var currentPage = 1
+    var isEnd = false
     var searchResults: [SearchResults] = [] {
         didSet {
             mainView.tableView.reloadData()
@@ -55,6 +56,11 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
                 self.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
             default:
                 self.searchResults.append(contentsOf: value.results)
+            }
+            
+            let caculatePage = (value.totalResults ?? 0 / 20)
+            if self.currentPage == caculatePage {
+                self.isEnd = true
             }
             
             self.group.leave()
@@ -184,7 +190,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         
         for indexPath in indexPaths {
         
-            if searchResults.count - 3 == indexPath.row {
+            if (searchResults.count - 3 == indexPath.row) && (isEnd == false) {
                 currentPage += 1
                 guard let keyword = searchController.searchBar.text else { return }
                 getSearchAPI(keyword)
