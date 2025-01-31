@@ -25,7 +25,8 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
     private let titleLabel: BaseLabel
     private let releaseDateLabel: BaseLabel
     private let genreStackView = UIStackView()
-    private var genreButton: [BaseButton]
+    private var genreLabel: [BaseLabel]
+    private var genreBgView: [UIView]
     let heartButton = UIButton()
     var genreList = ["공포", "코미디"]  // 갯수에 따라 달라지도록
 
@@ -36,7 +37,8 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         
         releaseDateLabel = BaseLabel(text: "2222. 22. 22", align: .left, color: .catsDarkgray, size: 14, weight: .regular)
         
-        genreButton = []
+        genreLabel = []
+        genreBgView = []
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         backgroundColor = .catsBlack
@@ -51,9 +53,6 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         }
         [titleLabel, releaseDateLabel].forEach {
             titleReleaseStackView.addArrangedSubview($0)
-        }
-        genreButton.forEach {
-            genreStackView.addArrangedSubview($0)
         }
     }
     
@@ -72,12 +71,15 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         
         titleReleaseStackView.axis = .vertical
         titleReleaseStackView.alignment = .leading
-        titleReleaseStackView.spacing = 6
+        titleReleaseStackView.spacing = 3
+ 
+        titleLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview()
+            $0.trailing.equalTo(self.safeAreaLayoutGuide).inset(16)
+        }
         
-        [titleLabel, releaseDateLabel].forEach {
-            $0.snp.makeConstraints {
-                $0.leading.equalToSuperview()
-            }
+        releaseDateLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview()
         }
         
         genreStackView.snp.makeConstraints {
@@ -88,7 +90,7 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         genreStackView.axis = .horizontal
         genreStackView.alignment = .leading
         genreStackView.spacing = 4
-        
+
         heartButton.snp.makeConstraints {
             $0.bottom.equalTo(posterImageView.snp.bottom)
             $0.trailing.equalToSuperview()
@@ -124,15 +126,24 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         
         // 장르
         genreList = genre
+        
         for index in 0...genreList.count - 1 {
-            genreButton.append(BaseButton(title: genreList[index], size: 13, weight: .medium, bgColor: .catsDarkgray, foreColor: .catsWhite))
-            genreButton[index].isUserInteractionEnabled = false
+            // 📌 순서 잘 지키기..+ 빈배열이었다가 데이터를 넣었기 때문에 다시 다 그려줘야하는 점..!
+                // stackView - UIView - UILabel의 관계 구조 혼동하지 않도록
+            genreLabel.append(BaseLabel(text: genreList[index], align: .center, size: 13, weight: .medium))
+            genreBgView.append(UIView())
+            genreBgView[index].backgroundColor = .darkGray
+            genreBgView[index].layer.cornerRadius = 5
+            genreBgView[index].clipsToBounds = true
+            
+            genreStackView.addArrangedSubview(genreBgView[index])
+            genreBgView[index].addSubview(genreLabel[index])
+            
+            genreLabel[index].snp.makeConstraints {
+                $0.edges.equalToSuperview().inset(5)
+            }
         }
-        
-        genreButton.forEach {
-            genreStackView.addArrangedSubview($0)
-        }
-        
+   
         // 하트
         heartButton.configuration?.image = UIImage(systemName: isLiked ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
         

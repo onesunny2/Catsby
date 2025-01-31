@@ -26,10 +26,6 @@ final class BaseLabel: UILabel {
         self.numberOfLines = line
     }
     
-    func badgeText(){
-        
-    }
-    
     func imageWithText(_ image: String, _ text: String) {
         guard let symbolImage = UIImage(systemName: image, withConfiguration: UIImage.SymbolConfiguration(pointSize: 14))?.withTintColor(.catsDarkgray, renderingMode: .alwaysOriginal) else { return }
         
