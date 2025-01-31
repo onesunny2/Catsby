@@ -19,6 +19,8 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
     let heartButton = UIButton()
     let plotLabel: BaseLabel
     
+    var buttonTapAction: (() -> ())?
+    
     override init(frame: CGRect) {
         posterImageView = BaseImageView(type: UIImage(named: "profile_11") ?? UIImage(), bgcolor: .catsWhite)
         
@@ -31,6 +33,12 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
         configHierarchy()
         configLayout()
         configView()
+        
+        heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func heartButtonTapped() {
+        buttonTapAction?()
     }
     
     func configHierarchy() {
