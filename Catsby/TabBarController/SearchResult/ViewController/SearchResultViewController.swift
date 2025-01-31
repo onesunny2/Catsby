@@ -13,6 +13,7 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     private let networkManager = NetworkManager.shared
     private let searchController = UISearchController(searchResultsController: nil)
     
+    var isEmptyFirst: Bool = true
     var searchMovie = SearchMovie(page: 0, results: [], totalPages: 0, totalResults: 0) {
         didSet {
             mainView.tableView.reloadData()
@@ -29,11 +30,19 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         setNavigation()
         setTableView()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if isEmptyFirst {
+            DispatchQueue.main.async {
+                self.searchController.searchBar.becomeFirstResponder()
+            }
+        }
+    }
 
     // API 데이터 가져오기
-    private func getSearchAPI() {
-        
-        guard let keyword = searchController.searchBar.text else { return }
+    private func getSearchAPI(_ keyword: String) {
         
         networkManager.callRequest(type: SearchMovie.self, api: .search(keyword: keyword)) { result in
             self.searchMovie = result
@@ -70,7 +79,10 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
 extension SearchResultViewController {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        getSearchAPI()
+        
+        guard let keyword = searchController.searchBar.text else { return }
+        
+        getSearchAPI(keyword)
     }
 }
 

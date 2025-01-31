@@ -61,7 +61,11 @@ final class TodayMovieViewController: UIViewController {
     }
     
     @objc func searchItemTapped() {
-        self.viewTransition(style: .push(animated: true), vc: SearchResultViewController())
+        
+        let vc = SearchResultViewController()
+        
+        vc.isEmptyFirst = true
+        self.viewTransition(style: .push(animated: true), vc: vc)
     }
     
     private func tapGesture() {
