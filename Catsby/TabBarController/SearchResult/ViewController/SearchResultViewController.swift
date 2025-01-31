@@ -14,7 +14,10 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     private let searchController = UISearchController(searchResultsController: nil)
     
     var isEmptyFirst: Bool = true
-    var searchMovie = SearchMovie(page: 0, results: [], totalPages: 0, totalResults: 0) {
+    let group = DispatchGroup()
+    var currentPage = 1
+    var isEnd = false
+    var searchResults: [SearchResults] = [] {
         didSet {
             mainView.tableView.reloadData()
         }
@@ -44,11 +47,33 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     // API 데이터 가져오기
     private func getSearchAPI(_ keyword: String) {
         
-        networkManager.callRequest(type: SearchMovie.self, api: .search(keyword: keyword)) { result in
-            self.searchMovie = result
-            print(self.searchMovie.results.count)
+        group.enter()
+        networkManager.callRequest(type: SearchMovie.self, api: .search(keyword: keyword, page: currentPage)) { value in
+            
+            switch self.currentPage {
+            case 1:
+                self.searchResults = value.results
+                self.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+            default:
+                self.searchResults.append(contentsOf: value.results)
+            }
+            
+            let caculatePage = (value.totalResults ?? 0 / 20)
+            if self.currentPage == caculatePage {
+                self.isEnd = true
+            }
+            
+            self.group.leave()
         } failHandler: {
             print("request error")
+            
+            self.group.leave()
+        }
+        
+        group.notify(queue: .main) {
+            let isTotlaZero = (self.searchResults.count == 0)
+            self.mainView.tableView.isHidden = isTotlaZero ? true : false
+            self.mainView.resultLabel.isHidden = isTotlaZero ? false : true
         }
 
     }
@@ -81,17 +106,19 @@ extension SearchResultViewController {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         guard let keyword = searchController.searchBar.text else { return }
-        
+        searchResults = []
+        currentPage = 1
         getSearchAPI(keyword)
     }
 }
 
 // MARK: - tableView 관련 설정
-extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource {
+extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching {
     
     private func setTableView() {
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
+        mainView.tableView.prefetchDataSource = self
         mainView.tableView.rowHeight = 150
         mainView.tableView.separatorStyle = .singleLine
         mainView.tableView.separatorColor = .catsDarkgray
@@ -101,41 +128,73 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchMovie.results.count
+        return searchResults.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let row = searchMovie.results[indexPath.row]
+        let row = searchResults[indexPath.row]
         let genreList = Genre.genreList
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultTableViewCell.id, for: indexPath) as? SearchResultTableViewCell else { return UITableViewCell() }
         
-        let url = NetworkManager.pathUrl + row.posterpath
         let title = row.title
         let date = row.releaseDate
         let genreArray = Array(row.genreID.prefix(2))
         let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)]
-        
-        // 가지고 있는 장르 갯수에 따라 분리
-        switch genreArray.count {
-        case 0:
-            let genre: [String] = []
-            cell.getData(url, title, date, genre, isLiked ?? false)
-        case 1:
-            let genre = [genreList[genreArray[0]] ?? "장르오류"]
-            cell.getData(url, title, date, genre, isLiked ?? false)
-        case 2:
-            let genre = [genreList[genreArray[0]] ?? "장르오류", genreList[genreArray[1]] ?? "장르오류"]
-            cell.getData(url, title, date, genre, isLiked ?? false)
-        default:
-            print("genre error")
-            break
+        if let posterpath = row.posterpath {
+            let url = NetworkManager.pathUrl + posterpath
+            
+            // 가지고 있는 장르 갯수에 따라 분리
+            switch genreArray.count {
+            case 0:
+                let genre: [String] = []
+                cell.getData(url, title, date, genre, isLiked ?? false)
+            case 1:
+                let genre = [genreList[genreArray[0]] ?? "장르오류"]
+                cell.getData(url, title, date, genre, isLiked ?? false)
+            case 2:
+                let genre = [genreList[genreArray[0]] ?? "장르오류", genreList[genreArray[1]] ?? "장르오류"]
+                cell.getData(url, title, date, genre, isLiked ?? false)
+            default:
+                print("genre error")
+                break
+            }
+        } else {
+            let url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYaqjTuNYAbIxAk0GzMiX8-ah3Q63B8cIBMyFJE1zx-4Ty8ZIOSAneIuNysLOXvIffm2o&usqp=CAU"
+            
+            // 가지고 있는 장르 갯수에 따라 분리
+            switch genreArray.count {
+            case 0:
+                let genre: [String] = []
+                cell.getData(url, title, date, genre, isLiked ?? false)
+            case 1:
+                let genre = [genreList[genreArray[0]] ?? "장르오류"]
+                cell.getData(url, title, date, genre, isLiked ?? false)
+            case 2:
+                let genre = [genreList[genreArray[0]] ?? "장르오류", genreList[genreArray[1]] ?? "장르오류"]
+                cell.getData(url, title, date, genre, isLiked ?? false)
+            default:
+                print("genre error")
+                break
+            }
         }
 
         cell.cornerRadius()
         cell.selectionStyle = .none
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        
+        for indexPath in indexPaths {
+        
+            if (searchResults.count - 3 == indexPath.row) && (isEnd == false) {
+                currentPage += 1
+                guard let keyword = searchController.searchBar.text else { return }
+                getSearchAPI(keyword)
+            }
+        }
     }
 }

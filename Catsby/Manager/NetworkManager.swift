@@ -50,7 +50,7 @@ extension NetworkManager {
     
     enum TmdbAPI {
         case trend
-        case search(keyword: String)
+        case search(keyword: String, page: Int)
         case image(movieID: Int)
         case credit(movieID: Int)
         
@@ -84,8 +84,8 @@ extension NetworkManager {
             switch self {
             case .trend:
                 return ["language": "ko-KR", "page": 1]
-            case let .search(keyword):
-                return ["query": keyword, "include_adult": "false", "language": "ko-KR", "page": 1]
+            case let .search(keyword, page):
+                return ["query": keyword, "include_adult": "false", "language": "ko-KR", "page": page]
             case .image:
                 return [:]
             case .credit:

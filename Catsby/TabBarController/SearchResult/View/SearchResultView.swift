@@ -11,11 +11,17 @@ import SnapKit
 final class SearchResultView: BaseView {
     
     let tableView = UITableView()
+    let resultLabel: BaseLabel
     
     override init(frame: CGRect) {
+        let text = "원하는 검색결과를 찾지 못했습니다"
+        resultLabel = BaseLabel(text: text, align: .center, color: .catsDarkgray, size: 14, weight: .medium)
+        
         super.init(frame: frame)
         
         backgroundColor = .catsBlack
+        
+        resultLabel.isHidden = true
         
         configHierarchy()
         configLayout()
@@ -24,12 +30,17 @@ final class SearchResultView: BaseView {
     
     override func configHierarchy() {
         self.addSubview(tableView)
+        self.addSubview(resultLabel)
     }
     
     override func configLayout() {
         tableView.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview()
             $0.horizontalEdges.equalToSuperview().inset(16)
+        }
+        
+        resultLabel.snp.makeConstraints {
+            $0.center.equalTo(self)
         }
     }
     

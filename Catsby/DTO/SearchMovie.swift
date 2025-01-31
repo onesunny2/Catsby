@@ -26,7 +26,7 @@ struct SearchResults: Decodable {
     let backdrop: String?
     let title: String
     let overview: String
-    let posterpath: String
+    let posterpath: String?
     let genreID: [Int]
     let releaseDate: String
     let vote: Double
