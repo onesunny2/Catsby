@@ -112,7 +112,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
 
-        cell.buttonTapAction = { 
+        cell.buttonTapAction = {
             let key = String(row.id)
             var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
             
