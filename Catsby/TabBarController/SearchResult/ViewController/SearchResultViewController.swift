@@ -14,6 +14,7 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     private let searchController = UISearchController(searchResultsController: nil)
     
     var isEmptyFirst: Bool = true
+    let group = DispatchGroup()
     var searchMovie = SearchMovie(page: 0, results: [], totalPages: 0, totalResults: 0) {
         didSet {
             mainView.tableView.reloadData()
@@ -44,11 +45,20 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     // API 데이터 가져오기
     private func getSearchAPI(_ keyword: String) {
         
+        group.enter()
         networkManager.callRequest(type: SearchMovie.self, api: .search(keyword: keyword)) { result in
             self.searchMovie = result
             print(self.searchMovie.results.count)
+            self.group.leave()
         } failHandler: {
             print("request error")
+            self.group.leave()
+        }
+        
+        group.notify(queue: .main) {
+            let isTotlaZero = (self.searchMovie.results.count == 0)
+            self.mainView.tableView.isHidden = isTotlaZero ? true : false
+            self.mainView.resultLabel.isHidden = isTotlaZero ? false : true
         }
 
     }
