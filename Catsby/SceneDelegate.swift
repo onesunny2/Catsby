@@ -16,12 +16,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
  
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        
-        // 앱 시작 분기점 설정
-        let isSetCompleted = UserDefaultsManager.shared.getBoolData(type: .firstSaved)
-
-        window?.rootViewController = isSetCompleted ? TabBarController() : UINavigationController(rootViewController: OnboardingViewController())
+        window?.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
         window?.makeKeyAndVisible()
+        
+        
+        // 한번 앱 빌드 한 이후에는 2초로 고정되는데 왜 처음 시작에서는 4-5초 정도로 걸릴까?
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0) {
+            let isSetCompleted = UserDefaultsManager.shared.getBoolData(type: .firstSaved)
+            
+            self.window?.rootViewController = isSetCompleted ? TabBarController() : UINavigationController(rootViewController: OnboardingViewController())
+            self.window?.makeKeyAndVisible()
+        }
+        
+//        // 앱 시작 분기점 설정
+//        let isSetCompleted = UserDefaultsManager.shared.getBoolData(type: .firstSaved)
+//
+//        window?.rootViewController = isSetCompleted ? TabBarController() : UINavigationController(rootViewController: OnboardingViewController())
+//        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
