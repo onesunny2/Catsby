@@ -27,12 +27,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.window?.rootViewController = isSetCompleted ? TabBarController() : UINavigationController(rootViewController: OnboardingViewController())
             self.window?.makeKeyAndVisible()
         }
-        
-//        // 앱 시작 분기점 설정
-//        let isSetCompleted = UserDefaultsManager.shared.getBoolData(type: .firstSaved)
-//
-//        window?.rootViewController = isSetCompleted ? TabBarController() : UINavigationController(rootViewController: OnboardingViewController())
-//        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
