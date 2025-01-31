@@ -13,7 +13,6 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     private let networkManager = NetworkManager.shared
     private let searchController = UISearchController(searchResultsController: nil)
     
-    var testList = ["test1", "test2", "test3", "test4"]
     var searchMovie = SearchMovie(page: 0, results: [], totalPages: 0, totalResults: 0) {
         didSet {
             mainView.tableView.reloadData()
@@ -27,7 +26,6 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        getSearchAPI()
         setNavigation()
         setTableView()
     }
@@ -37,7 +35,7 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         
         guard let keyword = searchController.searchBar.text else { return }
         
-        networkManager.callRequest(type: SearchMovie.self, api: .search(keyword: "모아나")) { result in
+        networkManager.callRequest(type: SearchMovie.self, api: .search(keyword: keyword)) { result in
             self.searchMovie = result
             print(self.searchMovie.results.count)
         } failHandler: {
@@ -68,6 +66,15 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     }
 }
 
+// MARK: - searchbar 관련 설정
+extension SearchResultViewController {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        getSearchAPI()
+    }
+}
+
+// MARK: - tableView 관련 설정
 extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource {
     
     private func setTableView() {
@@ -78,6 +85,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         mainView.tableView.separatorColor = .catsDarkgray
         mainView.tableView.separatorInset.left = 0
         mainView.tableView.tableHeaderView = UIView() // 가장 상단 줄 없애기
+        mainView.tableView.keyboardDismissMode = .onDrag
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -105,11 +113,9 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         case 1:
             let genre = [genreList[genreArray[0]] ?? "장르오류"]
             cell.getData(url, title, date, genre, isLiked ?? false)
-            print(genre)
         case 2:
             let genre = [genreList[genreArray[0]] ?? "장르오류", genreList[genreArray[1]] ?? "장르오류"]
             cell.getData(url, title, date, genre, isLiked ?? false)
-            print(genre)
         default:
             print("genre error")
             break
