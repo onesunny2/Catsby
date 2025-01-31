@@ -102,7 +102,7 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         
         // 정확한 이유는 모르겠지만.. prepareForReuse에서 초기화 하면 2개씩 걸러내는게 무시당해지고 해결하지 못함
           // ㄴ 📌 스택뷰에 앞서 사용했던 모든 데이터가 누적되고 있는 것이 문제 였음을 확인 ㅠ
-            // 여기서 아예 새로 데이터를 받아올 때마다 초기화 시키는 방법으로 강행
+            // 여기서 아예 새로 데이터를 받아올 때마다 arrange된 값 다 지우고 초기화 시키는 방법으로 강행
         
         genreStackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
