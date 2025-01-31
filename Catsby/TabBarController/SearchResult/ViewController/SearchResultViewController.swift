@@ -82,6 +82,7 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     private func setNavigation() {
         navigationItem.title = "영화 검색"
         navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.backButtonTitle = ""
         
         searchController.delegate = self
         searchController.searchBar.delegate = self
@@ -195,6 +196,18 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let vc = MovieDetailViewController()
+        
+        vc.isSearchresult = true
+        vc.searchResult = searchResults[indexPath.row]
+        
+        self.viewTransition(style: .push(animated: true), vc: vc)
+        
+        isEmptyFirst = false
     }
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
