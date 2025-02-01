@@ -109,6 +109,10 @@ extension SearchResultViewController {
         guard let keyword = searchController.searchBar.text else { return }
         
         var savedKeywords = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
+        // 중복값 있다면 제거하고 추가되도록
+        if let index = savedKeywords.firstIndex(of: keyword) {
+            savedKeywords.remove(at: index)
+        }
         savedKeywords.append(keyword)
         UserDefaultsManager.shared.saveData(value: savedKeywords, type: .recentKeyword)
         
