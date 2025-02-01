@@ -24,6 +24,9 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         }
     }
     
+    var heartButtonActionToMainView: (() -> ())?
+    var currentId = 0  // 메인화면에 전달
+    
     override func loadView() {
         view = mainView
     }
@@ -214,6 +217,9 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
             
             self.mainView.tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .none)
+            
+            // 메인 화면에 전달 할 좋아요 내용(검색결과에서 누른 영화가 오늘의 영화에 있을 가능성 고려)
+            self.heartButtonActionToMainView?()
         }
         
         return cell
@@ -233,6 +239,8 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)] ?? false
             
             cell.heartButton.configuration?.image = UIImage(systemName: savedStatus ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
+            
+            self.heartButtonActionToMainView?()  // 여기서 변동된 것도 메인화면에 가야하니까
         }
         
         self.viewTransition(style: .push(animated: true), vc: vc)

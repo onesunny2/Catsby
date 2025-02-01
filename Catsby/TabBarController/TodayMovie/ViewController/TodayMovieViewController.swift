@@ -97,7 +97,9 @@ final class TodayMovieViewController: UIViewController {
     @objc func searchItemTapped() {
         
         let vc = SearchResultViewController()
-        
+        vc.heartButtonActionToMainView = {
+            self.mainView.todayMovieCollectionView.reloadData()
+        }
         vc.isEmptyFirst = true
         self.viewTransition(style: .push(animated: true), vc: vc)
     }
@@ -164,11 +166,6 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
                 self.searchKeywordList.remove(at: index)
                 
                 UserDefaultsManager.shared.saveData(value: self.searchKeywordList, type: .recentKeyword)
-            }
-            cell.backgroundAction = {
-//                let vc = SearchResultViewController()
-//                
-//                self.viewTransition(style: .push(animated: true), vc: vc)
             }
             cell.cornerRadius()
             cell.layoutIfNeeded()
