@@ -31,6 +31,7 @@ final class TodayMovieViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // 변경한 프로필 내용 전달
         NotificationCenter.default.addObserver(self, selector: #selector(receivedProfile), name: NSNotification.Name("editProfile"), object: nil)
         
         setNavigation()

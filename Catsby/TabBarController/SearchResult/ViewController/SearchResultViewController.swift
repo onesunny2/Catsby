@@ -221,10 +221,19 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        let row = searchResults[indexPath.row]
+        guard let cell = tableView.cellForRow(at: indexPath) as? SearchResultTableViewCell else { return }
+        
         let vc = MovieDetailViewController()
         
         vc.isSearchresult = true
         vc.searchResult = searchResults[indexPath.row]
+        // 검색결과를 타고 들어간 상세화면에서 좋아요를 눌렀을 경우 검색결과로 되돌아왔을 때 반영되도록 구현
+        vc.heartButtonStatus = {
+            let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)] ?? false
+            
+            cell.heartButton.configuration?.image = UIImage(systemName: savedStatus ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
+        }
         
         self.viewTransition(style: .push(animated: true), vc: vc)
         
