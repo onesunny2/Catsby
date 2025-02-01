@@ -112,6 +112,9 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
         }
         genreLabel = []
         genreBgView = []
+        titleLabel.text = ""
+        releaseDateLabel.text = ""
+        posterImageView.image = UIImage()
         
         tapbuttonAction = {}
     }

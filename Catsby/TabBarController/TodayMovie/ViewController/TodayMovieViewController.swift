@@ -18,7 +18,11 @@ final class TodayMovieViewController: UIViewController {
         }
     }
     var selectedMovie = 0  // 영화 상세화면에서 좋아요 반영되었을 때 dataReload를 위해 저장해두는 값
-    let keywordList = ["진격", "해리포터", "범죄", "마녀배달부", "진격", "해리포터", "범죄", "마녀배달부"]
+    var searchKeywordList = UserDefaultsManager.shared.getArrayData(type: .recentKeyword) {
+        didSet {
+            mainView.recentKeywordCollectionView.reloadData()
+        }
+    }
     
     override func loadView() {
         view = mainView
@@ -45,6 +49,12 @@ final class TodayMovieViewController: UIViewController {
         let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
         let newtitle = "\(count)개의 무비박스 보관중"
         mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
+        
+        // 최근검색어 분기점
+        searchKeywordList = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
+        let keywordCount = UserDefaultsManager.shared.getArrayData(type: .recentKeyword).count
+        mainView.noSearchLabel.isHidden = (keywordCount == 0) ? false : true
+        mainView.recentKeywordCollectionView.isHidden = (keywordCount == 0) ? true : false
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -113,7 +123,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         
         switch collectionView {
         case mainView.recentKeywordCollectionView:
-            return keywordList.count
+            return searchKeywordList.count
         case mainView.todayMovieCollectionView:
             return trendMovie.count
         default:
@@ -126,7 +136,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         switch collectionView {
         case mainView.recentKeywordCollectionView:
             
-            let keyword = keywordList[indexPath.item]
+            let keyword = searchKeywordList.reversed()[indexPath.item]
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentKeywordCollectionViewCell.id, for: indexPath) as? RecentKeywordCollectionViewCell else { return UICollectionViewCell() }
             
@@ -193,7 +203,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         if collectionView == mainView.recentKeywordCollectionView {
-            let text = keywordList[indexPath.row]
+            let text = searchKeywordList.reversed()[indexPath.row]
             let fontStyle = UIFont.systemFont(ofSize: 14, weight: .medium)
             
             let cellWidth = text.size(withAttributes: [.font: fontStyle]).width + 40
