@@ -36,7 +36,7 @@ final class MovieDetailView: BaseView {
         
         synopsisTitleLabel = BaseLabel(text: "Synopsis", align: .left, size: 16, weight: .semibold)
         
-        synopsisContentLabel = BaseLabel(text: "TestTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTestTestTestTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTestnTest", align: .left, size: 14, weight: .regular, line: 3)
+        synopsisContentLabel = BaseLabel(text: "", align: .left, size: 14, weight: .regular, line: 3)
         
         moreButton = BaseButton(title: "More", size: 16, weight: .bold, bgColor: .clear, foreColor: .catsMain)
         

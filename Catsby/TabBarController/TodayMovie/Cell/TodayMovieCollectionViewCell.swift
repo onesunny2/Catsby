@@ -70,6 +70,7 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
 
         titleLabel.snp.makeConstraints {
             $0.leading.equalToSuperview()
+            $0.trailing.equalTo(heartButton.snp.leading).offset(-8)
         }
         
         heartButton.snp.makeConstraints {

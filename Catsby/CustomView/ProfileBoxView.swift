@@ -36,7 +36,7 @@ final class ProfileBoxView: BaseView {
         
         super.init(frame: frame)
         
-        movieboxButton.isUserInteractionEnabled = false
+        movieboxButton.isEnabled = true
         
         configHierarchy()
         configLayout()
