@@ -116,8 +116,6 @@ extension SearchResultViewController {
         savedKeywords.append(keyword)
         UserDefaultsManager.shared.saveData(value: savedKeywords, type: .recentKeyword)
         
-        print(UserDefaultsManager.shared.getArrayData(type: .recentKeyword).count)
-        
         searchResults = []
         currentPage = 1
         getSearchAPI(keyword)
