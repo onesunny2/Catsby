@@ -22,15 +22,6 @@ final class EditProfileImageViewController: UIViewController {
         setCollectionView()
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        let image = UserDefaultsManager.shared.getStringData(type: .profileImage)
-        
-        if image != ProfileImage.selectedImage {
-            ProfileImage.selectedImage = image
-        }
-    }
 }
 
 // MARK: collectoionView 설정

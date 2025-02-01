@@ -68,6 +68,7 @@ final class EditProfileNicknameViewController: UIViewController {
             NotificationCenter.default.post(name: NSNotification.Name("editProfile"), object: nil, userInfo: ["nickname": profileName, "image": profileImage])
             
             dismiss(animated: true)
+
         }
     }
 

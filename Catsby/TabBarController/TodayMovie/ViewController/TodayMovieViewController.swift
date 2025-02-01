@@ -91,7 +91,9 @@ final class TodayMovieViewController: UIViewController {
     }
     
     @objc func profileAreaTapped() {
-        self.viewTransition(style: .naviModal, vc: EditProfileNicknameViewController())
+        let vc = EditProfileNicknameViewController()
+
+        self.viewTransition(style: .naviModal, vc: vc)
     }
     
     @objc func searchItemTapped() {
