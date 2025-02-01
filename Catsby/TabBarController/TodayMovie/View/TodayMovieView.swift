@@ -13,6 +13,7 @@ final class TodayMovieView: BaseView {
     let profileboxView = ProfileBoxView()
     private let recentSearchLabel: BaseLabel
     private let recentKeywordContentView = UIView()
+    let deleteAllKeywordButton: BaseButton
     let noSearchLabel: BaseLabel
     let recentKeywordCollectionView: UICollectionView
     private let todayMovieLabel: BaseLabel
@@ -20,7 +21,7 @@ final class TodayMovieView: BaseView {
     
     private func recentKaywordCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
         let insetPadding: CGFloat = 16
-        let cellPadding: CGFloat = 4
+        let cellPadding: CGFloat = 6
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = cellPadding
@@ -47,6 +48,8 @@ final class TodayMovieView: BaseView {
     
     override init(frame: CGRect) {
         recentSearchLabel = BaseLabel(text: "최근검색어", align: .left, color: .catsWhite, size: 16, weight: .bold)
+        
+        deleteAllKeywordButton = BaseButton(title: "전체 삭제", size: 14, weight: .semibold, bgColor: .clear, foreColor: .catsMain)
         
         recentKeywordCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
         
@@ -78,7 +81,7 @@ final class TodayMovieView: BaseView {
     }
     
     override func configHierarchy() {
-        [profileboxView, recentSearchLabel, recentKeywordContentView, todayMovieLabel, todayMovieCollectionView].forEach {
+        [profileboxView, recentSearchLabel, deleteAllKeywordButton, recentKeywordContentView, todayMovieLabel, todayMovieCollectionView].forEach {
             self.addSubview($0)
         }
         
@@ -99,10 +102,15 @@ final class TodayMovieView: BaseView {
             $0.leading.equalTo(self.safeAreaLayoutGuide).inset(16)
         }
         
+        deleteAllKeywordButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(4)
+            $0.centerY.equalTo(recentSearchLabel)
+        }
+        
         recentKeywordContentView.snp.makeConstraints {
             $0.top.equalTo(recentSearchLabel.snp.bottom).offset(16)
             $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide)
-            $0.height.equalTo(40)
+            $0.height.equalTo(30)
         }
         
         noSearchLabel.snp.makeConstraints {

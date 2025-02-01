@@ -126,7 +126,13 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         switch collectionView {
         case mainView.recentKeywordCollectionView:
             
+            let keyword = keywordList[indexPath.item]
+            
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentKeywordCollectionViewCell.id, for: indexPath) as? RecentKeywordCollectionViewCell else { return UICollectionViewCell() }
+            
+            cell.getDataFromAPI(keyword)
+            cell.cornerRadius()
+            cell.layoutIfNeeded()
             
             return cell
             
@@ -191,15 +197,15 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             let fontStyle = UIFont.systemFont(ofSize: 14, weight: .medium)
             
             let cellWidth = text.size(withAttributes: [.font: fontStyle]).width + 40
-            let cellHeight: CGFloat = 40
+            let cellHeight: CGFloat = 30
             
             return CGSize(width: cellWidth, height: cellHeight)
         } else {
-            
+
             // todayMovie에 대한 값도 리턴이 필요해서 FlowLayout에 설정했던 사이즈 가져옴
             let cellWidth: CGFloat = UIScreen.main.bounds.width * 0.55
             let cellHeight: CGFloat = mainView.todayMovieCollectionView.bounds.height
-            
+ 
             return CGSize(width: cellWidth, height: cellHeight)
         }
     }
