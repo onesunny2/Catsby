@@ -38,6 +38,16 @@ final class EditProfileNicknameViewController: UIViewController {
         mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        let image = userdefaults.getStringData(type: .profileImage)
+        
+        if image != ProfileImage.selectedImage {
+            ProfileImage.selectedImage = image
+        }
+    }
+    
     @objc func closeButtonTapped() {
         dismiss(animated: true)
     }
