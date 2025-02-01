@@ -53,7 +53,7 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
             switch self.currentPage {
             case 1:
                 self.searchResults = value.results
-                self.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+
             default:
                 self.searchResults.append(contentsOf: value.results)
             }
@@ -107,9 +107,20 @@ extension SearchResultViewController {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         guard let keyword = searchController.searchBar.text else { return }
+        
+        var savedKeywords = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
+        savedKeywords.append(keyword)
+        UserDefaultsManager.shared.saveData(value: savedKeywords, type: .recentKeyword)
+        
+        print(UserDefaultsManager.shared.getArrayData(type: .recentKeyword).count)
+        
         searchResults = []
         currentPage = 1
         getSearchAPI(keyword)
+        
+        if searchResults.count != 0 {
+           mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+        }
     }
 }
 
