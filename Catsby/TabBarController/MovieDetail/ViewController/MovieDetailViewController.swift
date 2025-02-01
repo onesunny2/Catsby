@@ -49,6 +49,12 @@ final class MovieDetailViewController: UIViewController {
         
         mainView.moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        mainView.castCollectionView.contentOffset.x = -mainView.castCollectionView.contentInset.left
+    }
     
     @objc func moreButtonTapped(_ sender: UIButton) {
         
@@ -56,13 +62,19 @@ final class MovieDetailViewController: UIViewController {
         case "More":
             mainView.moreButton.changeTitle(title: "Hide", size: 16, weight: .bold)
             mainView.synopsisContentLabel.numberOfLines = 0
-            
+
         case "Hide":
             mainView.moreButton.changeTitle(title: "More", size: 16, weight: .bold)
             mainView.synopsisContentLabel.numberOfLines = 3
+  
         default:
             print(#function, "error")
         }
+    }
+    
+    private func setCollectionViewScrollOffset() {
+        mainView.castCollectionView.contentOffset.x = -mainView.castCollectionView.contentInset.left
+        mainView.posterCollectionView.contentOffset.x = -mainView.posterCollectionView.contentInset.left
     }
     
     private func setDataFromAPI() {
@@ -115,6 +127,9 @@ final class MovieDetailViewController: UIViewController {
             self.mainView.backdropCollectionView.reloadData()
             self.mainView.castCollectionView.reloadData()
             self.mainView.posterCollectionView.reloadData()
+            
+            // 자꾸 처음에 위치가 튀는 것 때문에 설정
+            self.setCollectionViewScrollOffset()
         }
 
     }
