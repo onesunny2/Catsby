@@ -157,6 +157,13 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentKeywordCollectionViewCell.id, for: indexPath) as? RecentKeywordCollectionViewCell else { return UICollectionViewCell() }
             
             cell.getDataFromAPI(keyword)
+            cell.deleteAction = {
+                // 해당되는 키워드 삭제
+                guard let index = self.searchKeywordList.firstIndex(of: keyword) else { return }
+                self.searchKeywordList.remove(at: index)
+                
+                UserDefaultsManager.shared.saveData(value: self.searchKeywordList, type: .recentKeyword)
+            }
             cell.cornerRadius()
             cell.layoutIfNeeded()
             
