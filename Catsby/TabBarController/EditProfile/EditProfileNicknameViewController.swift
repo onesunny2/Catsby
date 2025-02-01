@@ -43,6 +43,7 @@ final class EditProfileNicknameViewController: UIViewController {
         
         let image = userdefaults.getStringData(type: .profileImage)
         
+        // 만약 선택한 애를 저장하지 않고 닫았을 경우를 대비
         if image != ProfileImage.selectedImage {
             ProfileImage.selectedImage = image
         }
