@@ -14,8 +14,10 @@ final class RecentKeywordCollectionViewCell: UICollectionViewCell, BaseConfigure
     
     private let bgView = UIView()
     private let stackView = UIStackView()
-    private let keywordLabel: BaseLabel
+    private var keywordLabel: BaseLabel
     private let deleteButton: BaseButton
+    
+    var deleteAction: (() -> ())?
     
     override init(frame: CGRect) {
         keywordLabel = BaseLabel(text: "", align: .right, color: .catsBlack, size: 14, weight: .medium)
@@ -30,6 +32,8 @@ final class RecentKeywordCollectionViewCell: UICollectionViewCell, BaseConfigure
 
         configHierarchy()
         configLayout()
+        
+        deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     
     func configHierarchy() {
@@ -37,6 +41,13 @@ final class RecentKeywordCollectionViewCell: UICollectionViewCell, BaseConfigure
         self.addSubview(stackView)
         stackView.addArrangedSubview(keywordLabel)
         stackView.addArrangedSubview(deleteButton)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        keywordLabel.text = ""
+        deleteAction = {}
     }
     
     func configLayout() {
@@ -53,6 +64,10 @@ final class RecentKeywordCollectionViewCell: UICollectionViewCell, BaseConfigure
         stackView.spacing = 10
         stackView.alignment = .center
         
+    }
+    
+    @objc private func deleteButtonTapped() {
+        deleteAction?()
     }
     
     func getDataFromAPI(_ text: String) {

@@ -38,7 +38,7 @@ final class TodayMovieViewController: UIViewController {
         getTodayMovieData()
         tapGesture()
         
-        mainView.noSearchLabel.isHidden = true
+        mainView.deleteAllKeywordButton.addTarget(self, action: #selector(deleteAllkeywordsButtonTapped), for: .touchUpInside)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,6 +63,22 @@ final class TodayMovieViewController: UIViewController {
         // 영화 상세화면에서 좋아요 기능 적용한 것 해당 영화만 데이터 리로드 되도록
             // ❔왜인지 viewWillAppear에서 실행하면 시점이 밀리는지 정확한 index로 찾아가지 못함
         mainView.todayMovieCollectionView.reloadItems(at: [IndexPath(item: selectedMovie, section: 0)])
+    }
+    
+    // 최근 검색어 전체 삭제 기능
+    @objc func deleteAllkeywordsButtonTapped() {
+        let title = "최근검색어 삭제"
+        let message = "최근검색어를 모두 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다."
+        
+        alerMessage(title, message) {
+            var searchKeywords = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
+            searchKeywords.removeAll()
+            UserDefaultsManager.shared.saveData(value: searchKeywords, type: .recentKeyword)
+            self.searchKeywordList = searchKeywords
+            
+            self.mainView.noSearchLabel.isHidden = false
+            self.mainView.recentKeywordCollectionView.isHidden = true
+        }
     }
     
     // 프로필 수정 내용 값 역전달 받기
@@ -141,6 +157,13 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentKeywordCollectionViewCell.id, for: indexPath) as? RecentKeywordCollectionViewCell else { return UICollectionViewCell() }
             
             cell.getDataFromAPI(keyword)
+            cell.deleteAction = {
+                // 해당되는 키워드 삭제
+                guard let index = self.searchKeywordList.firstIndex(of: keyword) else { return }
+                self.searchKeywordList.remove(at: index)
+                
+                UserDefaultsManager.shared.saveData(value: self.searchKeywordList, type: .recentKeyword)
+            }
             cell.cornerRadius()
             cell.layoutIfNeeded()
             
