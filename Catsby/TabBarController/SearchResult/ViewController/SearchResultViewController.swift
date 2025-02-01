@@ -16,6 +16,7 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     var isEmptyFirst: Bool = true
     let group = DispatchGroup()
     var currentPage = 1
+    var keywordQuery = ""
     var isEnd = false
     var searchResults: [SearchResults] = [] {
         didSet {
@@ -32,6 +33,11 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         
         setNavigation()
         setTableView()
+        
+        if !isEmptyFirst {
+            searchController.searchBar.text = keywordQuery
+            getSearchAPI()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -45,10 +51,10 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     }
 
     // API 데이터 가져오기
-    private func getSearchAPI(_ keyword: String) {
+    private func getSearchAPI() {
         
         group.enter()
-        networkManager.callRequest(type: SearchMovie.self, api: .search(keyword: keyword, page: currentPage)) { value in
+        networkManager.callRequest(type: SearchMovie.self, api: .search(keyword: keywordQuery, page: currentPage)) { value in
             
             switch self.currentPage {
             case 1:
@@ -107,6 +113,7 @@ extension SearchResultViewController {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         guard let keyword = searchController.searchBar.text else { return }
+        keywordQuery = keyword
         
         var savedKeywords = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
         // 중복값 있다면 제거하고 추가되도록
@@ -118,7 +125,7 @@ extension SearchResultViewController {
         
         searchResults = []
         currentPage = 1
-        getSearchAPI(keyword)
+        getSearchAPI()
         
         if searchResults.count != 0 {
            mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
@@ -229,8 +236,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         
             if (searchResults.count - 3 == indexPath.row) && (isEnd == false) {
                 currentPage += 1
-                guard let keyword = searchController.searchBar.text else { return }
-                getSearchAPI(keyword)
+                getSearchAPI()
             }
         }
     }

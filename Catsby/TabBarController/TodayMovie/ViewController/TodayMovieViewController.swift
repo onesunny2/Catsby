@@ -164,6 +164,11 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
                 
                 UserDefaultsManager.shared.saveData(value: self.searchKeywordList, type: .recentKeyword)
             }
+            cell.backgroundAction = {
+//                let vc = SearchResultViewController()
+//                
+//                self.viewTransition(style: .push(animated: true), vc: vc)
+            }
             cell.cornerRadius()
             cell.layoutIfNeeded()
             
@@ -209,7 +214,14 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         
         switch collectionView {
         case mainView.recentKeywordCollectionView:
-            print("recent")
+            let keyword = searchKeywordList.reversed()[indexPath.item]
+            
+            let vc = SearchResultViewController()
+            vc.isEmptyFirst = false
+            vc.keywordQuery = keyword
+            
+            self.viewTransition(style: .push(animated: true), vc: vc)
+            
         case mainView.todayMovieCollectionView:
             selectedMovie = indexPath.item
             
@@ -218,6 +230,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             vc.isSearchresult = false
             
             self.viewTransition(style: .push(animated: true), vc: vc)
+        
         default:
             break
         }
