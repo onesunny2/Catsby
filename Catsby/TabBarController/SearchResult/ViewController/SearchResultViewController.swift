@@ -77,6 +77,7 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         }
         
         group.notify(queue: .main) {
+            // 검색결과 없으면 tableView 사라지고 레이블 나오도록
             let isTotlaZero = (self.searchResults.count == 0)
             self.mainView.tableView.isHidden = isTotlaZero ? true : false
             self.mainView.resultLabel.isHidden = isTotlaZero ? false : true
