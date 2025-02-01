@@ -33,6 +33,7 @@ final class MovieDetailViewController: UIViewController {
     var trendResult = TrendResults(backdrop: "", id: 0, title: "", overview: "", posterpath: "", genreID: [], releaseDate: "", vote: 0)
     var searchResult = SearchResults(id: 0, backdrop: "", title: "", overview: "", posterpath: "", genreID: [], releaseDate: "", vote: 0.0)
     var isSearchresult = false
+    var heartButtonStatus: (() -> ())? // 검색결과 화면에 하트버튼 상태전달 위한 변수
     
     
     override func loadView() {
@@ -154,6 +155,8 @@ final class MovieDetailViewController: UIViewController {
         // 누르고 네비게이션에 하트 모양 반영되도록
         let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[key] ?? false
         navigationItem.rightBarButtonItem?.image = UIImage(systemName: savedStatus ? "heart.fill" : "heart")
+        
+        heartButtonStatus?()
     }
 }
 

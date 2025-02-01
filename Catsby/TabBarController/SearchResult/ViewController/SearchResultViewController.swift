@@ -24,6 +24,9 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         }
     }
     
+    var heartButtonActionToMainView: (() -> ())?
+    var currentId = 0  // 메인화면에 전달
+    
     override func loadView() {
         view = mainView
     }
@@ -214,6 +217,9 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
             
             self.mainView.tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .none)
+            
+            // 메인 화면에 전달 할 좋아요 내용(검색결과에서 누른 영화가 오늘의 영화에 있을 가능성 고려)
+            self.heartButtonActionToMainView?()
         }
         
         return cell
@@ -221,10 +227,21 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        let row = searchResults[indexPath.row]
+        guard let cell = tableView.cellForRow(at: indexPath) as? SearchResultTableViewCell else { return }
+        
         let vc = MovieDetailViewController()
         
         vc.isSearchresult = true
         vc.searchResult = searchResults[indexPath.row]
+        // 검색결과를 타고 들어간 상세화면에서 좋아요를 눌렀을 경우 검색결과로 되돌아왔을 때 반영되도록 구현
+        vc.heartButtonStatus = {
+            let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)] ?? false
+            
+            cell.heartButton.configuration?.image = UIImage(systemName: savedStatus ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
+            
+            self.heartButtonActionToMainView?()  // 여기서 변동된 것도 메인화면에 가야하니까
+        }
         
         self.viewTransition(style: .push(animated: true), vc: vc)
         
