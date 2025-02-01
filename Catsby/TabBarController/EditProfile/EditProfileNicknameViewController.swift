@@ -25,6 +25,7 @@ final class EditProfileNicknameViewController: UIViewController {
         mainView.completeButton.isHidden = true
         mainView.profileImageView.image = UIImage(named: image)
         mainView.textfield.text = nickname
+        mainView.checkNickname.text = Comment.pass.rawValue
         mainView.textfield.delegate = self
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
         setNavigation()
