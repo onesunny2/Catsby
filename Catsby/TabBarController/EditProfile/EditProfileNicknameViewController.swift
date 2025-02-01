@@ -21,7 +21,7 @@ final class EditProfileNicknameViewController: UIViewController {
         
         let image = userdefaults.getStringData(type: .profileImage)
         let nickname = userdefaults.getStringData(type: .profileName)
-
+        print(#function)
         mainView.completeButton.isHidden = true
         mainView.profileImageView.image = UIImage(named: image)
         mainView.textfield.text = nickname
@@ -29,12 +29,6 @@ final class EditProfileNicknameViewController: UIViewController {
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
         setNavigation()
         tapGesture()
-    }
-    
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        
-        mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
     }
     
     @objc func closeButtonTapped() {
@@ -78,8 +72,12 @@ final class EditProfileNicknameViewController: UIViewController {
     }
     
     @objc func imageViewTapped() {
-        print(#function)
-        self.viewTransition(style: .push(animated: true), vc: EditProfileImageViewController())
+        let vc = EditProfileImageViewController()
+        vc.selectedNewImage = {
+            self.mainView.profileImageView.image = vc.currentImage
+        }
+        
+        self.viewTransition(style: .push(animated: true), vc: vc)
     }
 }
 

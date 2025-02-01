@@ -11,6 +11,9 @@ final class EditProfileImageViewController: UIViewController {
     
     private let mainView = ProfileImageView()
     
+    var selectedNewImage: (() -> ())?
+    var currentImage = UIImage()
+    
     override func loadView() {
         view = mainView
     }
@@ -21,7 +24,6 @@ final class EditProfileImageViewController: UIViewController {
         navigationItem.title = "프로필 이미지 편집"
         setCollectionView()
     }
-
 
 }
 
@@ -58,7 +60,6 @@ extension EditProfileImageViewController: UICollectionViewDelegate, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedImage = ProfileImage.imageList[indexPath.item]
 
         guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
         
@@ -67,7 +68,8 @@ extension EditProfileImageViewController: UICollectionViewDelegate, UICollection
         
         guard let selectedImageView = cell.profileImageView.image else { return }
         mainView.mainImageView.image = selectedImageView
-        ProfileImage.selectedImage = selectedImage
+        currentImage = selectedImageView
+        selectedNewImage?()  // 이전화면에 선택한 이미지 값전달
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
