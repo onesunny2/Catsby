@@ -13,6 +13,17 @@ final class MovieDetailView: BaseView {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     let backdropCollectionView: UICollectionView
+    lazy var pageControl: UIPageControl = {
+        let pageControl = UIPageControl()
+        pageControl.currentPage = 0
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        pageControl.numberOfPages = 5
+        pageControl.currentPageIndicatorTintColor = .catsWhite
+        pageControl.pageIndicatorTintColor = .catsDarkgray
+        pageControl.backgroundStyle = .prominent
+ 
+        return pageControl
+    }()
     private let backdropInfoStackview = UIStackView()
     private let releaseDateLabel: BaseLabel
     private let dividerLabel1 = UIView()
@@ -67,7 +78,7 @@ final class MovieDetailView: BaseView {
     override func configHierarchy() {
         self.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        [backdropCollectionView, backdropInfoStackview, synopsisTitleLabel, synopsisContentLabel, moreButton, castTitleLabel, castCollectionView, posterTitleLabel, posterCollectionView].forEach {
+        [backdropCollectionView, pageControl, backdropInfoStackview, synopsisTitleLabel, synopsisContentLabel, moreButton, castTitleLabel, castCollectionView, posterTitleLabel, posterCollectionView].forEach {
             contentView.addSubview($0)
         }
         
@@ -90,6 +101,11 @@ final class MovieDetailView: BaseView {
         backdropCollectionView.snp.makeConstraints {
             $0.top.horizontalEdges.equalToSuperview()
             $0.height.equalTo(cellHeight.backdrop.height)
+        }
+        
+        pageControl.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalTo(backdropCollectionView.snp.bottom).inset(12)
         }
         
         backdropInfoStackview.snp.makeConstraints {
