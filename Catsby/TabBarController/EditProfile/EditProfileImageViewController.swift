@@ -11,6 +11,9 @@ final class EditProfileImageViewController: UIViewController {
     
     private let mainView = ProfileImageView()
     
+    var selectedImage: String?
+    var selectImageAction: (() -> ())?
+    
     override func loadView() {
         view = mainView
     }
@@ -57,7 +60,7 @@ extension EditProfileImageViewController: UICollectionViewDelegate, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedImage = ProfileImage.imageList[indexPath.item]
+        selectedImage = ProfileImage.imageList[indexPath.item]
 
         guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
         
@@ -66,7 +69,7 @@ extension EditProfileImageViewController: UICollectionViewDelegate, UICollection
         
         guard let selectedImageView = cell.profileImageView.image else { return }
         mainView.mainImageView.image = selectedImageView
-        ProfileImage.selectedImage = selectedImage
+        selectImageAction?()
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {

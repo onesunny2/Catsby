@@ -11,6 +11,8 @@ final class EditProfileNicknameViewController: UIViewController {
     
     private let mainView = ProfileNicknameView()
     private let userdefaults = UserDefaultsManager.shared
+    
+    private var currentImagename: String?
 
     override func loadView() {
         view = mainView
@@ -19,11 +21,11 @@ final class EditProfileNicknameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let image = userdefaults.getStringData(type: .profileImage)
+//        let image = userdefaults.getStringData(type: .profileImage)
         let nickname = userdefaults.getStringData(type: .profileName)
 
         mainView.completeButton.isHidden = true
-        mainView.profileImageView.image = UIImage(named: image)
+//        mainView.profileImageView.image = UIImage(named: image)
         mainView.textfield.text = nickname
         mainView.checkNickname.text = Comment.pass.rawValue
         mainView.textfield.delegate = self
@@ -32,22 +34,22 @@ final class EditProfileNicknameViewController: UIViewController {
         tapGesture()
     }
     
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        
-        mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
-    }
+//    override func viewIsAppearing(_ animated: Bool) {
+//        super.viewIsAppearing(animated)
+//        
+//        mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
+//    }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        let image = userdefaults.getStringData(type: .profileImage)
-        
-        // 만약 선택한 애를 저장하지 않고 닫았을 경우를 대비
-        if image != ProfileImage.selectedImage {
-            ProfileImage.selectedImage = image
-        }
-    }
+//    override func viewDidDisappear(_ animated: Bool) {
+//        super.viewDidDisappear(animated)
+//        
+//        let image = userdefaults.getStringData(type: .profileImage)
+//        
+//        // 만약 선택한 애를 저장하지 않고 닫았을 경우를 대비
+//        if image != ProfileImage.selectedImage {
+//            ProfileImage.selectedImage = image
+//        }
+//    }
     
     @objc func closeButtonTapped() {
         dismiss(animated: true)
@@ -57,10 +59,10 @@ final class EditProfileNicknameViewController: UIViewController {
         
         if mainView.checkNickname.text == Comment.pass.rawValue {
             
-            guard let text = mainView.textfield.text else { return }
+            guard let text = mainView.textfield.text, let image = self.currentImagename else { return }
             // 데이터 저장하고
             userdefaults.saveData(value: text, type: .profileName)
-            userdefaults.saveData(value: ProfileImage.selectedImage, type: .profileImage)
+            userdefaults.saveData(value: image, type: .profileImage)
             
             // 옵저버로 데이터 보내기
             let profileImage = userdefaults.getStringData(type: .profileImage)
@@ -91,8 +93,14 @@ final class EditProfileNicknameViewController: UIViewController {
     }
     
     @objc func imageViewTapped() {
-        print(#function)
-        self.viewTransition(style: .push(animated: true), vc: EditProfileImageViewController())
+        let vc = EditProfileImageViewController()
+        vc.selectImageAction = {
+            let image = UIImage(named: "\(vc.selectedImage ?? "")")
+            self.mainView.profileImageView.image = image
+            self.currentImagename = vc.selectedImage
+        }
+        
+        self.viewTransition(style: .push(animated: true), vc: vc)
     }
 }
 
