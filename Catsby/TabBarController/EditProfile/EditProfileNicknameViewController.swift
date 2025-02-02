@@ -76,9 +76,9 @@ final class EditProfileNicknameViewController: UIViewController {
     @objc func imageViewTapped() {
         let vc = EditProfileImageViewController()
         vc.selectImageAction = {
-            let image = UIImage(named: "\(vc.selectedImage ?? "")")
-            self.mainView.profileImageView.image = image
-            self.currentImagename = vc.selectedImage
+            guard let image = vc.selectedImage else { return }
+            self.mainView.profileImageView.image = UIImage(named: image)
+            self.currentImagename = image
         }
         
         self.viewTransition(style: .push(animated: true), vc: vc)
