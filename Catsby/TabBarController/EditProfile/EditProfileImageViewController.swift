@@ -42,6 +42,7 @@ extension EditProfileImageViewController: UICollectionViewDelegate, UICollection
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let selectedImage = ProfileImage.imageList[indexPath.item]
+        let savedImage = UserDefaultsManager.shared.getStringData(type: .profileImage)
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileImageCollectionViewCell.id, for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
         
@@ -49,7 +50,7 @@ extension EditProfileImageViewController: UICollectionViewDelegate, UICollection
         cell.clipImage()
         cell.profileImageView.alpha = 0.5
         
-        if cell.profileImageView.image == mainView.mainImageView.image {
+        if selectedImage == savedImage {
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
             cell.profileImageView.stroke(.catsMain, 2)
