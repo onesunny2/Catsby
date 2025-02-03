@@ -11,6 +11,9 @@ final class EditProfileImageViewController: UIViewController {
     
     private let mainView = ProfileImageView()
     
+    var selectedImage: String?
+    var selectImageAction: (() -> ())?
+    
     override func loadView() {
         view = mainView
     }
@@ -39,6 +42,7 @@ extension EditProfileImageViewController: UICollectionViewDelegate, UICollection
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let selectedImage = ProfileImage.imageList[indexPath.item]
+        let savedImage = UserDefaultsManager.shared.getStringData(type: .profileImage)
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileImageCollectionViewCell.id, for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
         
@@ -46,7 +50,7 @@ extension EditProfileImageViewController: UICollectionViewDelegate, UICollection
         cell.clipImage()
         cell.profileImageView.alpha = 0.5
         
-        if cell.profileImageView.image == mainView.mainImageView.image {
+        if selectedImage == savedImage {
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
             cell.profileImageView.stroke(.catsMain, 2)
@@ -57,7 +61,7 @@ extension EditProfileImageViewController: UICollectionViewDelegate, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedImage = ProfileImage.imageList[indexPath.item]
+        selectedImage = ProfileImage.imageList[indexPath.item]
 
         guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
         
@@ -66,7 +70,7 @@ extension EditProfileImageViewController: UICollectionViewDelegate, UICollection
         
         guard let selectedImageView = cell.profileImageView.image else { return }
         mainView.mainImageView.image = selectedImageView
-        ProfileImage.selectedImage = selectedImage
+        selectImageAction?()
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
