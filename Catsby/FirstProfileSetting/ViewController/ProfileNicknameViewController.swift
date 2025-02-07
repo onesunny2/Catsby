@@ -11,39 +11,33 @@ final class ProfileNicknameViewController: UIViewController {
     
     private let mainView = ProfileNicknameView()
     private let userdefaults = UserDefaultsManager.shared
-    
-    let randomImage = ProfileImage.imageList.randomElement() ?? ""
+    private let viewModel = ProfileNicknameViewModel()
     
     override func loadView() {
         view = mainView
     }
+    
+    deinit {
+        print("프로필닉네임 VC Deinit")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        ProfileImage.selectedImage = randomImage
-        setNavigation()
-        
-        mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
+
+        let image = viewModel.randomImage
+        print(#function, image)
+        mainView.profileImageView.image = UIImage(named: image)
         mainView.textfield.delegate = self
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
         
         tapGesture()
+        bindVMData()
         
         mainView.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
     
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        
-        mainView.profileImageView.image = UIImage(named: ProfileImage.selectedImage)
-    }
-    
-    private func setNavigation() {
-        navigationItem.title = "프로필 설정"
-        navigationController?.navigationBar.tintColor = .catsMain
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.catsWhite]
-        navigationItem.backButtonTitle = ""
+    private func bindVMData() {
+       
     }
     
     private func tapGesture() {
@@ -117,5 +111,14 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
         if result.contains(true) {
             mainView.checkNickname.text = Comment.number.rawValue
         }
+    }
+}
+
+extension ProfileNicknameViewController {
+    private func setNavigation() {
+        navigationItem.title = "프로필 설정"
+        navigationController?.navigationBar.tintColor = .catsMain
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.catsWhite]
+        navigationItem.backButtonTitle = ""
     }
 }
