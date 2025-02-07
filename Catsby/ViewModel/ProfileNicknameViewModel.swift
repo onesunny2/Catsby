@@ -33,17 +33,25 @@ import Foundation
 
 final class ProfileNicknameViewModel {
     
+    private let userDefaults = UserDefaultsManager.shared
     let randomImage = ProfileImage.imageList.randomElement() ?? "profile_10"
     
     let inputNickname: Observable<String?> = Observable("")
+    let inputCompleteButton: Observable<Void> = Observable(())
     
     let outputInvalidText: Observable<String> = Observable("")
+    let outputViewTransition: Observable<Void> = Observable(())
     
     init() {
         print("프로필닉네임 VM Init")
+        ProfileImage.selectedImage = randomImage
         
         inputNickname.bind { _ in
             self.checkNicknameCondition()
+        }
+        
+        inputCompleteButton.lazyBind { _ in
+            self.tappedCompleteButton()
         }
     }
     
@@ -81,6 +89,24 @@ final class ProfileNicknameViewModel {
             outputInvalidText.value = Comment.pass.rawValue
         default:
             outputInvalidText.value = Comment.length.rawValue
+        }
+    }
+    
+    private func tappedCompleteButton() {
+        
+        if outputInvalidText.value == Comment.pass.rawValue {
+            
+            guard let text = inputNickname.value else {
+                print("text nil")
+                return
+            }
+            
+            userDefaults.saveData(value: ProfileImage.selectedImage, type: .profileImage)
+            userDefaults.saveData(value: text, type: .profileName)
+            userDefaults.saveData(value: Date(), type: .profileDate)
+            userDefaults.saveData(value: true, type: .firstSaved)
+            
+            outputViewTransition.value = ()
         }
     }
 }
