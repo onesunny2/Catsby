@@ -35,11 +35,52 @@ final class ProfileNicknameViewModel {
     
     let randomImage = ProfileImage.imageList.randomElement() ?? "profile_10"
     
+    let inputNickname: Observable<String?> = Observable("")
+    
+    let outputInvalidText: Observable<String> = Observable("")
+    
     init() {
         print("프로필닉네임 VM Init")
+        
+        inputNickname.bind { _ in
+            self.checkNicknameCondition()
+        }
     }
     
     deinit {
         print("프로필닉네임 VM Deinit")
+    }
+    
+    private func checkNicknameCondition() {
+        
+        guard let text = inputNickname.value else {
+            print(#function, "nil")
+            return
+        }
+        
+        // 특수문자
+        for character in text {
+            if "@#$%".contains(character) {
+                outputInvalidText.value = Comment.specialCharacter.rawValue
+                return
+            }
+        }
+        
+        // 숫자
+        if text.contains(/\d/) {
+            outputInvalidText.value = Comment.number.rawValue
+            return
+        }
+        
+        // 길이 체크
+        let count = text.count
+        switch count {
+        case 0:
+            outputInvalidText.value = Comment.space.rawValue
+        case 2...9:
+            outputInvalidText.value = Comment.pass.rawValue
+        default:
+            outputInvalidText.value = Comment.length.rawValue
+        }
     }
 }

@@ -30,6 +30,7 @@ final class ProfileNicknameViewController: UIViewController {
         mainView.textfield.delegate = self
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
         
+        setNavigation()
         tapGesture()
         bindVMData()
         
@@ -37,7 +38,9 @@ final class ProfileNicknameViewController: UIViewController {
     }
     
     private func bindVMData() {
-       
+        viewModel.outputInvalidText.bind { _ in
+            self.mainView.checkNickname.text = self.viewModel.outputInvalidText.value
+        }
     }
     
     private func tapGesture() {
@@ -67,20 +70,19 @@ final class ProfileNicknameViewController: UIViewController {
             self.viewTransition(style: .windowRoot, vc: TabBarController())
         }
     }
-
 }
 
 // MARK: textfield 기능 관련
 extension ProfileNicknameViewController: UITextFieldDelegate {
     
     @objc func checkNicknameCondition(textfield: UITextField) {
-        guard let text = textfield.text else { return }
-        checkLength(textfield)
-        checkNumber(text)
-        checkSpecialCharacter(text)
+        viewModel.inputNickname.value = textfield.text
     }
     
     private func checkLength(_ textfield: UITextField) {
+        
+        viewModel.inputNickname.value = textfield.text
+        
         guard let count = textfield.text?.count else { return }
         
         switch count {
