@@ -17,6 +17,8 @@ import Foundation
 
 final class ProfileImageViewModel {
     
+    var sendSelectedImage: (() -> ())?
+    
     // 컬렉션뷰에서 selected된 이미지
     let inputSelectedImage: Observable<String> = Observable("")
     let inputIndexPathItem: Observable<Int> = Observable(0)

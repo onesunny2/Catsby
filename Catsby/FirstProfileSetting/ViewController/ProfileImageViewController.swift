@@ -12,8 +12,6 @@ final class ProfileImageViewController: UIViewController {
     let viewModel = ProfileImageViewModel()
     private let mainView = ProfileImageView()
     
-    var sendSelectedImage: (() -> ())?
-    
     override func loadView() {
         view = mainView
     }
@@ -97,7 +95,7 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
             self?.mainView.mainImageView.image = UIImage(named: image)
         }
         
-        sendSelectedImage?()
+        viewModel.sendSelectedImage?()
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
