@@ -96,7 +96,7 @@ final class ProfileNicknameView: BaseView {
         }
         
         completeButton.snp.makeConstraints {
-            $0.top.equalTo(checkNickname.snp.bottom).offset(32)
+            $0.bottom.equalTo(self.safeAreaLayoutGuide).inset(25)
             $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide).inset(8)
             $0.height.equalTo(44)
         }
