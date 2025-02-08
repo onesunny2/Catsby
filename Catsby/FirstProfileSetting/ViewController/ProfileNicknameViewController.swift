@@ -52,6 +52,10 @@ final class ProfileNicknameViewController: UIViewController {
         print(#function)
         let vc = ProfileImageViewController()
         vc.viewModel.inputSelectedImage.value = viewModel.currentSelectedImage
+        vc.sendSelectedImage = { [weak self] in
+            let image = vc.viewModel.inputSelectedImage.value
+            self?.mainView.profileImageView.image = UIImage(named: image)
+        }
         self.viewTransition(style: .push(animated: true), vc: vc)
     }
     

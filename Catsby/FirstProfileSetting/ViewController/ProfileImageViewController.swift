@@ -10,8 +10,9 @@ import UIKit
 final class ProfileImageViewController: UIViewController {
     
     let viewModel = ProfileImageViewModel()
-    
     private let mainView = ProfileImageView()
+    
+    var sendSelectedImage: (() -> ())?
     
     override func loadView() {
         view = mainView
@@ -55,9 +56,11 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileImageCollectionViewCell.id, for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
         
-        viewModel.outputCellImage.bind { image in
-            cell.profileImageView.image = UIImage(named: image)
-        }
+        // TODO: 질문 - output값의 bind를 해줘야하는 순간의 판단 기준은 무엇인가? 어떨 때는 bind를 안해야 괜찮을 때가 있는 것 같아서...
+//        viewModel.outputCellImage.bind { image in
+//            cell.profileImageView.image = UIImage(named: image)
+//        }
+        cell.profileImageView.image = UIImage(named: viewModel.outputCellImage.value)
         cell.clipImage()
         cell.profileImageView.alpha = 0.5
         
@@ -88,8 +91,13 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
         cell.profileImageView.stroke(.catsMain, 2)
         cell.profileImageView.alpha = 1
         
-        guard let selectedImageView = cell.profileImageView.image else { return }
-        mainView.mainImageView.image = selectedImageView
+        viewModel.inputSelectedImage.value = ProfileImage.imageList[indexPath.item]
+        
+        viewModel.outputSelectedImage.bind { [weak self] image in
+            self?.mainView.mainImageView.image = UIImage(named: image)
+        }
+        
+        sendSelectedImage?()
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
