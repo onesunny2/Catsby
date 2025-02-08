@@ -38,13 +38,9 @@ final class ProfileNicknameViewController: UIViewController {
     }
     
     private func bindVMData() {
-        viewModel.outputInvalidText.bind { _ in
-            self.mainView.checkNickname.text = self.viewModel.outputInvalidText.value
+        viewModel.outputInvalidText.bind { [weak self] _ in
+            self?.mainView.checkNickname.text = self?.viewModel.outputInvalidText.value
         }
-        
-//        viewModel.outputViewTransition.lazyBind { _ in
-//            self.viewTransition(style: .windowRoot, vc: TabBarController())
-//        }
     }
     
     private func tapGesture() {
@@ -64,23 +60,9 @@ final class ProfileNicknameViewController: UIViewController {
         
         viewModel.inputCompleteButton.value = ()
         
-        viewModel.outputViewTransition.bind { _ in
-            self.viewTransition(style: .windowRoot, vc: TabBarController())
+        viewModel.outputViewTransition.bind { [weak self] _ in
+            self?.viewTransition(style: .windowRoot, vc: TabBarController())
         }
-        
-//        if mainView.checkNickname.text == Comment.pass.rawValue {
-//            
-//            guard let text = mainView.textfield.text else {
-//                return }
-//            
-//            userdefaults.saveData(value: ProfileImage.selectedImage, type: .profileImage)
-//            print("profile-selected",ProfileImage.selectedImage)
-//            userdefaults.saveData(value: text, type: .profileName)
-//            userdefaults.saveData(value: Date(), type: .profileDate)
-//            userdefaults.saveData(value: true, type: .firstSaved)
-//            
-//            self.viewTransition(style: .windowRoot, vc: TabBarController())
-//        }
     }
 }
 

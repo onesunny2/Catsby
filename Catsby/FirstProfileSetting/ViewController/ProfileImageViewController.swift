@@ -9,10 +9,16 @@ import UIKit
 
 final class ProfileImageViewController: UIViewController {
     
+    private let viewModel = ProfileImageViewModel()
+    
     private let mainView = ProfileImageView()
     
     override func loadView() {
         view = mainView
+    }
+    
+    deinit {
+        print("ProfileImage VC Deinit")
     }
 
     override func viewDidLoad() {

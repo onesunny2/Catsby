@@ -46,12 +46,12 @@ final class ProfileNicknameViewModel {
         print("프로필닉네임 VM Init")
         ProfileImage.selectedImage = randomImage
         
-        inputNickname.bind { _ in
-            self.checkNicknameCondition()
+        inputNickname.bind { [weak self] _ in
+            self?.checkNicknameCondition()
         }
         
-        inputCompleteButton.lazyBind { _ in
-            self.tappedCompleteButton()
+        inputCompleteButton.lazyBind { [weak self] _ in
+            self?.tappedCompleteButton()
         }
     }
     
