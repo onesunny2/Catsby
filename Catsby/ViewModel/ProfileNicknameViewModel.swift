@@ -29,11 +29,16 @@ import Foundation
  < 고민되는 부분 >
  - 너무 작은 단위로 프로퍼티를 관리하니까 (ex. 하나의 이벤트 단위보다는 String, Int 등의 단일 객체를) 해당 프로퍼티가 여러 개 사용될 때 어려움을 느낌
    => 그럼 조금 큰 덩어리로 묶어서 하나의 로직? 액션?을 넘기려고 해보자(랜덤 이미지나 이런 예외적인 경우 빼고)
+ 
+ - 선택한 이미지 보관하고 저장하는 로직 바꾸기
+    ㄴ 현재는 열거형의 타입프로퍼티를 사용하고 있는데 이를 뷰모델에 currentImage라는 변수를 두어 제어하고 이미지 선택 화면과는 값 역전달로 주고받아보기
  */
 
 final class ProfileNicknameViewModel {
     
     private let userDefaults = UserDefaultsManager.shared
+    
+    var currentSelectedImage: String = ""
     let randomImage = ProfileImage.imageList.randomElement() ?? "profile_10"
     
     let inputNickname: Observable<String?> = Observable("")
@@ -44,7 +49,7 @@ final class ProfileNicknameViewModel {
     
     init() {
         print("프로필닉네임 VM Init")
-        ProfileImage.selectedImage = randomImage
+        currentSelectedImage = randomImage
         
         inputNickname.bind { [weak self] _ in
             self?.checkNicknameCondition()
@@ -101,7 +106,7 @@ final class ProfileNicknameViewModel {
                 return
             }
             
-            userDefaults.saveData(value: ProfileImage.selectedImage, type: .profileImage)
+            userDefaults.saveData(value: currentSelectedImage, type: .profileImage)
             userDefaults.saveData(value: text, type: .profileName)
             userDefaults.saveData(value: Date(), type: .profileDate)
             userDefaults.saveData(value: true, type: .firstSaved)

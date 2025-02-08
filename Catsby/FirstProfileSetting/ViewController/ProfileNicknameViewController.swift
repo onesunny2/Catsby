@@ -24,8 +24,7 @@ final class ProfileNicknameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let image = viewModel.randomImage
-        mainView.profileImageView.image = UIImage(named: image)
+        mainView.profileImageView.image = UIImage(named: viewModel.currentSelectedImage)
 
         mainView.textfield.delegate = self
         mainView.textfield.addTarget(self, action: #selector(checkNicknameCondition), for: .editingChanged)
@@ -52,7 +51,7 @@ final class ProfileNicknameViewController: UIViewController {
     @objc func imageViewTapped() {
         print(#function)
         let vc = ProfileImageViewController()
-        vc.viewModel.inputSelectedImage.value = ProfileImage.selectedImage
+        vc.viewModel.inputSelectedImage.value = viewModel.currentSelectedImage
         self.viewTransition(style: .push(animated: true), vc: vc)
     }
     
