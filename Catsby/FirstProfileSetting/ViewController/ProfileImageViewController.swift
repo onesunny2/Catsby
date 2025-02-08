@@ -9,7 +9,7 @@ import UIKit
 
 final class ProfileImageViewController: UIViewController {
     
-    private let viewModel = ProfileImageViewModel()
+    let viewModel = ProfileImageViewModel()
     
     private let mainView = ProfileImageView()
     
@@ -18,7 +18,7 @@ final class ProfileImageViewController: UIViewController {
     }
     
     deinit {
-        print("ProfileImage VC Deinit")
+        print("프로필이미지 VC Deinit")
     }
 
     override func viewDidLoad() {
@@ -26,8 +26,12 @@ final class ProfileImageViewController: UIViewController {
 
         navigationItem.title = "프로필 이미지 설정"
         setCollectionView()
+        bindVMData()
     }
     
+    private func bindVMData() {
+        
+    }
 
 }
 

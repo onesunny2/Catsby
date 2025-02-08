@@ -12,10 +12,10 @@ final class ProfileImageViewModel {
     let inputSelectedImage: Observable<String> = Observable("")
     
     init() {
-        print("ProfileImage VM Init")
+        print("프로필이미지 VM Init")
     }
     
     deinit {
-        print("ProfileImage VM Deinit")
+        print("프로필이미지 VM Deinit")
     }
 }
