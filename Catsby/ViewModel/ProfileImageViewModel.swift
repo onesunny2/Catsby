@@ -18,13 +18,38 @@ import Foundation
 
 final class ProfileImageViewModel {
     
+    // 컬렉션뷰에서 selected된 이미지
     let inputSelectedImage: Observable<String> = Observable("")
+    let inputIndexPathItem: Observable<Int> = Observable(0)
+    
+    let outputCellImage: Observable<String> = Observable("")
+    var outputImageIsMatched: Observable<Void> = Observable(())
     
     init() {
         print("프로필이미지 VM Init")
+        
+        inputIndexPathItem.bind { [weak self] index in
+            self?.checkCellImage(index)
+        }
+        
+//        inputSelectedImage.bind { [weak self] _ in
+//            self?.checkSelectedImage()
+//        }
     }
     
     deinit {
         print("프로필이미지 VM Deinit")
+    }
+    
+    private func checkSelectedImage() {
+        
+        if outputCellImage.value == inputSelectedImage.value {
+            outputImageIsMatched.value = ()
+        }
+    }
+    
+    // 전달받은 indexpath로 셀 이미지 내보내기
+    private func checkCellImage(_ index: Int) {
+        outputCellImage.value = ProfileImage.imageList[index]
     }
 }

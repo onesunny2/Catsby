@@ -23,6 +23,8 @@ final class ProfileImageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mainView.mainImageView.image = UIImage(named: viewModel.inputSelectedImage.value)
 
         navigationItem.title = "프로필 이미지 설정"
         setCollectionView()
@@ -48,16 +50,28 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let selectedImage = ProfileImage.imageList[indexPath.item]
+
+        viewModel.inputIndexPathItem.value = indexPath.item
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileImageCollectionViewCell.id, for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
         
-        cell.profileImageView.image = UIImage(named: selectedImage)
+        viewModel.outputCellImage.bind { image in
+            cell.profileImageView.image = UIImage(named: image)
+        }
         cell.clipImage()
         cell.profileImageView.alpha = 0.5
         
-        if cell.profileImageView.image == mainView.mainImageView.image {
+        
+
+        // TODO: 질문- 왜 아래로직으로는 모든 셀이 선택되는 것인지
+//        viewModel.outputImageIsMatched.bind { _ in
+//            cell.isSelected = true
+//            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
+//            cell.profileImageView.stroke(.catsMain, 2)
+//            cell.profileImageView.alpha = 1
+//        }
+        
+        if viewModel.outputCellImage.value == viewModel.inputSelectedImage.value {
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
             cell.profileImageView.stroke(.catsMain, 2)
@@ -68,7 +82,6 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedImage = ProfileImage.imageList[indexPath.item]
 
         guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileImageCollectionViewCell else { return }
         
@@ -77,7 +90,6 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
         
         guard let selectedImageView = cell.profileImageView.image else { return }
         mainView.mainImageView.image = selectedImageView
-        ProfileImage.selectedImage = selectedImage
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
