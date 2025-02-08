@@ -30,6 +30,13 @@ final class ProfileImageViewController: UIViewController {
         bindVMData()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // 순환참조 해제 위함
+        viewModel.sendSelectedImage = nil
+    }
+    
     private func bindVMData() {
         
     }
