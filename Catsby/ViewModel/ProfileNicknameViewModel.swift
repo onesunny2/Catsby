@@ -44,22 +44,20 @@ final class ProfileNicknameViewModel {
     
     let inputNickname: Observable<String?> = Observable("")
     let inputCompleteButton: Observable<Void> = Observable(())
-    let inputIndexpathItem: Observable<Int> = Observable(0)
-    let inputButtonAction: Observable<Int> = Observable(0)
+    let inputButtonAction: Observable<(Int, Int)> = Observable((0, 0))
     
     let outputInvalidText: Observable<String> = Observable("")
     let outputViewTransition: Observable<Void> = Observable(())
-    let outputMbtiLabel: Observable<[String]> = Observable([])
-    var outputIsTopOn: Observable<[Bool]> = Observable([])
-    var outputIsBottomOn: Observable<[Bool]> = Observable([])
+    var outputIsTopOn: [Observable<Bool>] = []
+    var outputIsBottomOn: [Observable<Bool>] = []
     
     init() {
         print("프로필닉네임 VM Init")
         currentSelectedImage = randomImage
         
         for _ in 0...3 {  // 초기에 모두 OFF인 상태
-            outputIsTopOn.value.append(false)
-            outputIsBottomOn.value.append(false)
+            outputIsTopOn.append(Observable(false))
+            outputIsBottomOn.append(Observable(false))
         }
         
         inputNickname.bind { [weak self] _ in
@@ -70,12 +68,8 @@ final class ProfileNicknameViewModel {
             self?.tappedCompleteButton()
         }
         
-        inputIndexpathItem.bind { [weak self] _ in
-            self?.setMbtiLabel()
-        }
-        
-        inputButtonAction.bind { [weak self] tag in
-            self?.mbtiButtonLogic(self?.inputIndexpathItem.value ?? 0, tag)
+        inputButtonAction.lazyBind { [weak self] index, tag in
+            self?.mbtiButtonLogic(index, tag)
         }
     }
     
@@ -134,32 +128,28 @@ final class ProfileNicknameViewModel {
         }
     }
     
-    private func setMbtiLabel() {
-        outputMbtiLabel.value = mbtiList[inputIndexpathItem.value]
-    }
-    
     private func mbtiButtonLogic(_ index: Int, _ tag: Int) {
         
         if tag == 0 {
             
-            if outputIsTopOn.value[index] && !outputIsBottomOn.value[index] {
-                outputIsTopOn.value[index] = false
-            } else if !outputIsTopOn.value[index] && !outputIsBottomOn.value[index] {
-                outputIsTopOn.value[index] = true
-            } else if !outputIsTopOn.value[index] && outputIsBottomOn.value[index] {
-                outputIsTopOn.value[index] = true
-                outputIsBottomOn.value[index] = false
+            if outputIsTopOn[index].value && !outputIsBottomOn[index].value {
+                outputIsTopOn[index].value = false
+            } else if !outputIsTopOn[index].value && !outputIsBottomOn[index].value {
+                outputIsTopOn[index].value = true
+            } else if !outputIsTopOn[index].value && outputIsBottomOn[index].value {
+                outputIsTopOn[index].value = true
+                outputIsBottomOn[index].value = false
             }
             
         } else if tag == 1 {
             
-            if outputIsBottomOn.value[index] && !outputIsTopOn.value[index] {
-                outputIsBottomOn.value[index] = false
-            } else if !outputIsBottomOn.value[index] && !outputIsTopOn.value[index] {
-                outputIsBottomOn.value[index] = true
-            } else if !outputIsBottomOn.value[index] && outputIsTopOn.value[index] {
-                outputIsBottomOn.value[index] = true
-                outputIsTopOn.value[index] = false
+            if outputIsBottomOn[index].value && !outputIsTopOn[index].value {
+                outputIsBottomOn[index].value = false
+            } else if !outputIsBottomOn[index].value && !outputIsTopOn[index].value {
+                outputIsBottomOn[index].value = true
+            } else if !outputIsBottomOn[index].value && outputIsTopOn[index].value {
+                outputIsBottomOn[index].value = true
+                outputIsTopOn[index].value = false
             }
         }
         

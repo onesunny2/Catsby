@@ -14,7 +14,7 @@ final class MBTICollectionViewCell: UICollectionViewCell, BaseConfigure {
     
     let topButton: BaseButton
     let bottomButton: BaseButton
-    var buttonAction: ((Int) -> ())?
+    var buttonAction: ((Int) -> ())?  // TODO: 질문 - Cell이 이정도를 들고 있는 것에 대하여
     
     override init(frame: CGRect) {
         topButton = BaseButton(title: "", size: 20, weight: .regular, bgColor: .catsBlack, foreColor: .catsDarkgray)
@@ -65,19 +65,15 @@ final class MBTICollectionViewCell: UICollectionViewCell, BaseConfigure {
     
     func configBind(_ viewModel: ProfileNicknameViewModel, index: Int) {
         
-        viewModel.outputIsTopOn.bind { [weak self] values in
-            
-            let value = values[index]
-            
+        viewModel.outputIsTopOn[index].bind { [weak self] value in
+
             self?.topButton.stroke(value ? .clear : .catsDarkgray, value ? 0 : 1)
             self?.topButton.configuration?.baseBackgroundColor = value ? .catsMain : .catsBlack
             self?.topButton.configuration?.baseForegroundColor = value ? .catsBlack : .catsDarkgray
         }
         
-        viewModel.outputIsBottomOn.bind { [weak self] values in
-            
-            let value = values[index]
-            
+        viewModel.outputIsBottomOn[index].bind { [weak self] value in
+ 
             self?.bottomButton.stroke(value ? .clear : .catsDarkgray, value ? 0 : 1)
             self?.bottomButton.configuration?.baseBackgroundColor = value ? .catsMain : .catsBlack
             self?.bottomButton.configuration?.baseForegroundColor = value ? .catsBlack : .catsDarkgray
