@@ -32,7 +32,7 @@ final class ProfileNicknameView: BaseView {
     
     private func collectionviewFlowLayout() -> UICollectionViewFlowLayout {
         let cellSpacing: CGFloat = 12
-        let cellSize: CGFloat = 40
+        let cellSize: CGFloat = 50
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -58,7 +58,7 @@ final class ProfileNicknameView: BaseView {
         completeButton.capsuleStyle()
         completeButton.stroke(.catsMain, 2)
         
-        mbtiTitleLabel = BaseLabel(text: "MBTI", align: .left, color: .catsBlack, size: 20, weight: .bold)
+        mbtiTitleLabel = BaseLabel(text: "MBTI", align: .left, size: 20, weight: .bold)
         
         mbtiCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         
@@ -125,8 +125,8 @@ final class ProfileNicknameView: BaseView {
         mbtiCollectionView.snp.makeConstraints {
             $0.top.equalTo(mbtiTitleLabel.snp.top)
             $0.trailing.equalTo(self.safeAreaLayoutGuide).inset(8)
-            $0.height.equalTo(92)
-            $0.width.equalTo(196)
+            $0.height.equalTo(112)
+            $0.width.equalTo(236)
         }
         
         completeButton.snp.makeConstraints {
