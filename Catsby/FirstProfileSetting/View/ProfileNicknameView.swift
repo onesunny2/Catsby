@@ -32,7 +32,7 @@ final class ProfileNicknameView: BaseView {
     
     private func collectionviewFlowLayout() -> UICollectionViewFlowLayout {
         let cellSpacing: CGFloat = 12
-        let cellSize: CGFloat = 50
+        let cellSize: CGFloat = (mbtiCollectionView.bounds.width - (cellSpacing * 3)) / 4
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -64,8 +64,6 @@ final class ProfileNicknameView: BaseView {
         
         super.init(frame: frame)
         
-        mbtiCollectionView.collectionViewLayout = collectionviewFlowLayout()
-        
         backgroundColor = .catsBlack
         configHierarchy()
         configLayout()
@@ -78,6 +76,13 @@ final class ProfileNicknameView: BaseView {
         let profileRadius = profileImageView.frame.width / 2
         profileImageView.clipCorner(profileRadius)
         profileImageView.stroke(.catsMain, 2)
+        
+        mbtiCollectionView.snp.makeConstraints {
+            let cellHeight = ((mbtiCollectionView.bounds.width - 36) / 4) * 2 + 12
+            $0.height.equalTo(cellHeight)
+        }
+        
+        mbtiCollectionView.collectionViewLayout = collectionviewFlowLayout()
     }
     
     override func configHierarchy() {
@@ -123,10 +128,9 @@ final class ProfileNicknameView: BaseView {
         }
         
         mbtiCollectionView.snp.makeConstraints {
-            $0.top.equalTo(mbtiTitleLabel.snp.top)
+            $0.top.equalTo(mbtiTitleLabel.snp.top).offset(4)
             $0.trailing.equalTo(self.safeAreaLayoutGuide).inset(8)
-            $0.height.equalTo(112)
-            $0.width.equalTo(236)
+            $0.leading.equalTo(mbtiTitleLabel.snp.trailing).offset(60)
         }
         
         completeButton.snp.makeConstraints {
