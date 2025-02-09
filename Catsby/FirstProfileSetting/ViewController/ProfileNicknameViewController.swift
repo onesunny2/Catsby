@@ -90,12 +90,17 @@ extension ProfileNicknameViewController: UICollectionViewDelegate, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return viewModel.mbtiList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
+        let row = viewModel.mbtiList[indexPath.row]
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MBTICollectionViewCell.id, for: indexPath) as? MBTICollectionViewCell else { return UICollectionViewCell() }
+        
+        cell.topButton.changeTitle(title: row[0], size: 20, weight: .regular)
+        cell.bottomButton.changeTitle(title: row[1], size: 20, weight: .regular)
         
         
         return cell

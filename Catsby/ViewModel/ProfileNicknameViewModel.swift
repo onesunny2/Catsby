@@ -37,6 +37,7 @@ import Foundation
 final class ProfileNicknameViewModel {
     
     private let userDefaults = UserDefaultsManager.shared
+    let mbtiList = [["E", "I"], ["S", "N"], ["T", "F"], ["J", "P"]]
     
     var currentSelectedImage: String = ""
     let randomImage = ProfileImage.imageList.randomElement() ?? "profile_10"
