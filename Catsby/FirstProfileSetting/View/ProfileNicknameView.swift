@@ -57,7 +57,6 @@ final class ProfileNicknameView: BaseView {
         
         completeButton = BaseButton(title: "완료", size: 16, weight: .bold, bgColor: .catsMain, foreColor: .catsWhite)
         completeButton.capsuleStyle()
-        completeButton.stroke(.catsMain, 2)
         
         mbtiTitleLabel = BaseLabel(text: "MBTI", align: .left, size: 20, weight: .bold)
         

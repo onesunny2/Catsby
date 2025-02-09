@@ -56,6 +56,7 @@ final class ProfileNicknameViewModel {
     let outputInvalidText: Observable<String> = Observable("")
     let outputIsNicknameError: Observable<Bool> = Observable(false)
     let outputViewTransition: Observable<Void> = Observable(())
+    let outputIsCompleted: Observable<Bool> = Observable(false)
     var outputIsTopOn: [Observable<Bool>] = []
     var outputIsBottomOn: [Observable<Bool>] = []
     
@@ -97,6 +98,7 @@ final class ProfileNicknameViewModel {
             if "@#$%".contains(character) {
                 outputInvalidText.value = Comment.specialCharacter.rawValue
                 outputIsNicknameError.value = true
+                outputIsCompleted.value = false
                 return
             }
         }
@@ -105,6 +107,7 @@ final class ProfileNicknameViewModel {
         if text.contains(/\d/) {
             outputInvalidText.value = Comment.number.rawValue
             outputIsNicknameError.value = true
+            outputIsCompleted.value = false
             return
         }
         
@@ -114,24 +117,27 @@ final class ProfileNicknameViewModel {
         case 0:
             outputInvalidText.value = Comment.space.rawValue
             outputIsNicknameError.value = false
+            outputIsCompleted.value = false
         case 2...9:
             outputInvalidText.value = Comment.pass.rawValue
             outputIsNicknameError.value = false
+            outputIsCompleted.value = true
         default:
             outputInvalidText.value = Comment.length.rawValue
             outputIsNicknameError.value = true
+            outputIsCompleted.value = false
         }
     }
     
     private func tappedCompleteButton() {
         
         if outputInvalidText.value == Comment.pass.rawValue {
-            
+
             guard let text = inputNickname.value else {
                 print("text nil")
                 return
             }
-            
+
             userDefaults.saveData(value: currentSelectedImage, type: .profileImage)
             userDefaults.saveData(value: text, type: .profileName)
             userDefaults.saveData(value: Date(), type: .profileDate)
@@ -165,8 +171,5 @@ final class ProfileNicknameViewModel {
                 outputIsTopOn[index].value = false
             }
         }
-        
     }
-    
-    
 }
