@@ -54,6 +54,7 @@ final class ProfileNicknameViewModel {
     let inputButtonAction: Observable<(Int, Int)> = Observable((0, 0))
     
     let outputInvalidText: Observable<String> = Observable("")
+    let outputIsNicknameError: Observable<Bool> = Observable(false)
     let outputViewTransition: Observable<Void> = Observable(())
     var outputIsTopOn: [Observable<Bool>] = []
     var outputIsBottomOn: [Observable<Bool>] = []
@@ -95,6 +96,7 @@ final class ProfileNicknameViewModel {
         for character in text {
             if "@#$%".contains(character) {
                 outputInvalidText.value = Comment.specialCharacter.rawValue
+                outputIsNicknameError.value = true
                 return
             }
         }
@@ -102,6 +104,7 @@ final class ProfileNicknameViewModel {
         // 숫자
         if text.contains(/\d/) {
             outputInvalidText.value = Comment.number.rawValue
+            outputIsNicknameError.value = true
             return
         }
         
@@ -110,10 +113,13 @@ final class ProfileNicknameViewModel {
         switch count {
         case 0:
             outputInvalidText.value = Comment.space.rawValue
+            outputIsNicknameError.value = false
         case 2...9:
             outputInvalidText.value = Comment.pass.rawValue
+            outputIsNicknameError.value = false
         default:
             outputInvalidText.value = Comment.length.rawValue
+            outputIsNicknameError.value = true
         }
     }
     
