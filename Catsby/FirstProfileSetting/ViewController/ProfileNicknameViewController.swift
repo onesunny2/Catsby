@@ -47,7 +47,6 @@ final class ProfileNicknameViewController: UIViewController {
         }
         
         viewModel.outputIsCompleted.bind { [weak self] isCompleted in
-            print(isCompleted, self?.viewModel.outputInvalidText.value)
             self?.mainView.completeButton.configuration?.baseBackgroundColor = isCompleted ? .catsMain : .catsDisabled
         }
     }
