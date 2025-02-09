@@ -41,6 +41,10 @@ final class ProfileNicknameViewController: UIViewController {
         viewModel.outputInvalidText.bind { [weak self] _ in
             self?.mainView.checkNickname.text = self?.viewModel.outputInvalidText.value
         }
+        
+        viewModel.outputIsNicknameError.bind { [weak self] isError in
+            self?.mainView.checkNickname.textColor = isError ? .catsRed : .catsMain
+        }
     }
     
     private func tapGesture() {
