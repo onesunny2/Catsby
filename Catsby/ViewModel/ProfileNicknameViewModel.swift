@@ -44,9 +44,11 @@ final class ProfileNicknameViewModel {
     
     let inputNickname: Observable<String?> = Observable("")
     let inputCompleteButton: Observable<Void> = Observable(())
+    let inputIndexPathItem: Observable<Int> = Observable(0)
     
     let outputInvalidText: Observable<String> = Observable("")
     let outputViewTransition: Observable<Void> = Observable(())
+    let outputMbtiLabel: Observable<[String]> = Observable([])
     
     init() {
         print("프로필닉네임 VM Init")
@@ -58,6 +60,10 @@ final class ProfileNicknameViewModel {
         
         inputCompleteButton.lazyBind { [weak self] _ in
             self?.tappedCompleteButton()
+        }
+        
+        inputIndexPathItem.bind { [weak self] _ in
+            self?.setMbtiLabel()
         }
     }
     
@@ -114,5 +120,9 @@ final class ProfileNicknameViewModel {
             
             outputViewTransition.value = ()
         }
+    }
+    
+    private func setMbtiLabel() {
+        outputMbtiLabel.value = mbtiList[inputIndexPathItem.value]
     }
 }

@@ -22,8 +22,6 @@ final class MBTICollectionViewCell: UICollectionViewCell, BaseConfigure {
         
         super.init(frame: frame)
         
-//        backgroundColor = .catsMain
-        
         [topButton, bottomButton].forEach {
             $0.cornerRadius(self.frame.width / 2)
             $0.stroke(.catsDarkgray, 1)
