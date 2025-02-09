@@ -32,13 +32,14 @@ final class ProfileNicknameView: BaseView {
     
     private func collectionviewFlowLayout() -> UICollectionViewFlowLayout {
         let cellSpacing: CGFloat = 12
-        let cellSize: CGFloat = (mbtiCollectionView.bounds.width - (cellSpacing * 3)) / 4
+        let cellWidth: CGFloat = (mbtiCollectionView.bounds.width - (cellSpacing * 3)) / 4
+        let cellHeight: CGFloat = mbtiCollectionView.bounds.height
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = cellSpacing
-        layout.minimumInteritemSpacing = cellSpacing
-        layout.itemSize = CGSize(width: cellSize, height: cellSize)
+        layout.minimumInteritemSpacing = 0
+        layout.itemSize = CGSize(width: cellWidth, height: cellHeight)
         layout.sectionInset = .zero
         
         return layout
@@ -149,6 +150,8 @@ final class ProfileNicknameView: BaseView {
         textfield.clearButtonMode = .whileEditing
         
         underline.backgroundColor = .catsWhite
+        
+        mbtiCollectionView.backgroundColor = .clear
         
         mbtiCollectionView.register(MBTICollectionViewCell.self, forCellWithReuseIdentifier: MBTICollectionViewCell.id)
     }
