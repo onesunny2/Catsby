@@ -94,17 +94,23 @@ extension ProfileNicknameViewController: UICollectionViewDelegate, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        viewModel.inputIndexPathItem.value = indexPath.item
+
+        viewModel.inputIndexpathItem.value = indexPath.item
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MBTICollectionViewCell.id, for: indexPath) as? MBTICollectionViewCell else { return UICollectionViewCell() }
-        
+ 
         cell.topButton.changeTitle(title: viewModel.outputMbtiLabel.value[0], size: 20, weight: .regular)
         cell.bottomButton.changeTitle(title: viewModel.outputMbtiLabel.value[1], size: 20, weight: .regular)
         
+        cell.buttonAction = { [weak self] tag in
+            self?.viewModel.inputButtonAction.value = tag
+        }
         
+        cell.configBind(viewModel, index: viewModel.inputIndexpathItem.value)
+ 
         return cell
     }
+
 }
 
 extension ProfileNicknameViewController {

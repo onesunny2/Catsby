@@ -14,13 +14,16 @@ final class MBTICollectionViewCell: UICollectionViewCell, BaseConfigure {
     
     let topButton: BaseButton
     let bottomButton: BaseButton
+    var buttonAction: ((Int) -> ())?
     
     override init(frame: CGRect) {
-        topButton = BaseButton(title: "E", size: 20, weight: .regular, bgColor: .catsBlack, foreColor: .catsDarkgray)
+        topButton = BaseButton(title: "", size: 20, weight: .regular, bgColor: .catsBlack, foreColor: .catsDarkgray)
          
-        bottomButton = BaseButton(title: "I", size: 20, weight: .regular, bgColor: .catsBlack, foreColor: .catsDarkgray)
+        bottomButton = BaseButton(title: "", size: 20, weight: .regular, bgColor: .catsBlack, foreColor: .catsDarkgray)
         
         super.init(frame: frame)
+        
+        backgroundColor = .clear
         
         [topButton, bottomButton].forEach {
             $0.cornerRadius(self.frame.width / 2)
@@ -29,6 +32,16 @@ final class MBTICollectionViewCell: UICollectionViewCell, BaseConfigure {
         
         configHierarchy()
         configLayout()
+        
+        topButton.tag = 0
+        bottomButton.tag = 1
+        
+        topButton.addTarget(self, action: #selector(tappedMbtiButton), for: .touchUpInside)
+        bottomButton.addTarget(self, action: #selector(tappedMbtiButton), for: .touchUpInside)
+    }
+    
+    @objc private func tappedMbtiButton(_ sender: UIButton) {
+        buttonAction?(sender.tag)
     }
     
     func configHierarchy() {
@@ -47,6 +60,27 @@ final class MBTICollectionViewCell: UICollectionViewCell, BaseConfigure {
             $0.top.equalTo(topButton.snp.bottom).offset(12)
             $0.horizontalEdges.equalToSuperview()
             $0.size.equalTo(self.frame.width)
+        }
+    }
+    
+    func configBind(_ viewModel: ProfileNicknameViewModel, index: Int) {
+        
+        viewModel.outputIsTopOn.bind { [weak self] values in
+            
+            let value = values[index]
+            
+            self?.topButton.stroke(value ? .clear : .catsDarkgray, value ? 0 : 1)
+            self?.topButton.configuration?.baseBackgroundColor = value ? .catsMain : .catsBlack
+            self?.topButton.configuration?.baseForegroundColor = value ? .catsBlack : .catsDarkgray
+        }
+        
+        viewModel.outputIsBottomOn.bind { [weak self] values in
+            
+            let value = values[index]
+            
+            self?.bottomButton.stroke(value ? .clear : .catsDarkgray, value ? 0 : 1)
+            self?.bottomButton.configuration?.baseBackgroundColor = value ? .catsMain : .catsBlack
+            self?.bottomButton.configuration?.baseForegroundColor = value ? .catsBlack : .catsDarkgray
         }
     }
     
