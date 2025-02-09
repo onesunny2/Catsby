@@ -27,6 +27,23 @@ final class ProfileNicknameView: BaseView {
     private let underline = UIView()
     let checkNickname: BaseLabel
     let completeButton: BaseButton
+    private let mbtiTitleLabel: BaseLabel
+    let mbtiCollectionView: UICollectionView
+    
+    private func collectionviewFlowLayout() -> UICollectionViewFlowLayout {
+        let cellSpacing: CGFloat = 12
+        let cellWidth: CGFloat = (mbtiCollectionView.bounds.width - (cellSpacing * 3)) / 4
+        let cellHeight: CGFloat = mbtiCollectionView.bounds.height
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = cellSpacing
+        layout.minimumInteritemSpacing = 0
+        layout.itemSize = CGSize(width: cellWidth, height: cellHeight)
+        layout.sectionInset = .zero
+        
+        return layout
+    }
     
     
     override init(frame: CGRect) {
@@ -42,6 +59,10 @@ final class ProfileNicknameView: BaseView {
         completeButton.capsuleStyle()
         completeButton.stroke(.catsMain, 2)
         
+        mbtiTitleLabel = BaseLabel(text: "MBTI", align: .left, size: 20, weight: .bold)
+        
+        mbtiCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        
         super.init(frame: frame)
         
         backgroundColor = .catsBlack
@@ -56,10 +77,17 @@ final class ProfileNicknameView: BaseView {
         let profileRadius = profileImageView.frame.width / 2
         profileImageView.clipCorner(profileRadius)
         profileImageView.stroke(.catsMain, 2)
+        
+        mbtiCollectionView.snp.makeConstraints {
+            let cellHeight = ((mbtiCollectionView.bounds.width - 36) / 4) * 2 + 12
+            $0.height.equalTo(cellHeight)
+        }
+        
+        mbtiCollectionView.collectionViewLayout = collectionviewFlowLayout()
     }
     
     override func configHierarchy() {
-        [profileImageView, cameraImageView, textfield, underline, checkNickname, completeButton].forEach {
+        [profileImageView, cameraImageView, textfield, underline, checkNickname, mbtiTitleLabel, mbtiCollectionView, completeButton].forEach {
             self.addSubview($0)
         }
     }
@@ -95,8 +123,19 @@ final class ProfileNicknameView: BaseView {
             $0.leading.equalTo(textfield.snp.leading)
         }
         
+        mbtiTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(checkNickname.snp.bottom).offset(35)
+            $0.leading.equalTo(self.safeAreaLayoutGuide).inset(8)
+        }
+        
+        mbtiCollectionView.snp.makeConstraints {
+            $0.top.equalTo(mbtiTitleLabel.snp.top).offset(4)
+            $0.trailing.equalTo(self.safeAreaLayoutGuide).inset(8)
+            $0.leading.equalTo(mbtiTitleLabel.snp.trailing).offset(60)
+        }
+        
         completeButton.snp.makeConstraints {
-            $0.top.equalTo(checkNickname.snp.bottom).offset(32)
+            $0.bottom.equalTo(self.safeAreaLayoutGuide).inset(25)
             $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide).inset(8)
             $0.height.equalTo(44)
         }
@@ -111,5 +150,9 @@ final class ProfileNicknameView: BaseView {
         textfield.clearButtonMode = .whileEditing
         
         underline.backgroundColor = .catsWhite
+        
+        mbtiCollectionView.backgroundColor = .clear
+        
+        mbtiCollectionView.register(MBTICollectionViewCell.self, forCellWithReuseIdentifier: MBTICollectionViewCell.id)
     }
 }

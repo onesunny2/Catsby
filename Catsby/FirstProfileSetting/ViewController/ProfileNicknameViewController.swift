@@ -31,6 +31,7 @@ final class ProfileNicknameViewController: UIViewController {
         
         setNavigation()
         tapGesture()
+        setCollectionView()
         bindVMData()
         
         mainView.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
@@ -78,6 +79,26 @@ extension ProfileNicknameViewController: UITextFieldDelegate {
     
     @objc func checkNicknameCondition(textfield: UITextField) {
         viewModel.inputNickname.value = textfield.text
+    }
+}
+
+extension ProfileNicknameViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+
+    private func setCollectionView() {
+        mainView.mbtiCollectionView.delegate = self
+        mainView.mbtiCollectionView.dataSource = self
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 4
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MBTICollectionViewCell.id, for: indexPath) as? MBTICollectionViewCell else { return UICollectionViewCell() }
+        
+        
+        return cell
     }
 }
 
