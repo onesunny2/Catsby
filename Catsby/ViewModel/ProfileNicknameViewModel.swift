@@ -27,29 +27,45 @@ import Foundation
     ☑️ output 할 목록: 각 조건에 맞는 조건 label들
  
  < 고민되는 부분 >
- - 너무 작은 단위로 프로퍼티를 관리하니까 (ex. 하나의 이벤트 단위보다는 String, Int 등의 단일 객체를) 해당 프로퍼티가 여러 개 사용될 때 어려움을 느낌
-   => 그럼 조금 큰 덩어리로 묶어서 하나의 로직? 액션?을 넘기려고 해보자(랜덤 이미지나 이런 예외적인 경우 빼고)
- 
  - 선택한 이미지 보관하고 저장하는 로직 바꾸기
     ㄴ 현재는 열거형의 타입프로퍼티를 사용하고 있는데 이를 뷰모델에 currentImage라는 변수를 두어 제어하고 이미지 선택 화면과는 값 역전달로 주고받아보기
+ 
+ 🥕🥕🥕🥕MBTI 로직 오류 여행기🥕🥕🥕🥕
+ (1차) cellForRowAt에 output 2개 bind 설정 & indexPath.item 옵저버블 관리 -> 마지막 인덱스만 적용됨
+ (2차) bind는 한번만 되어야하는데 여러번 되어서 그런 것 같아 viewDidLoad로 옮김 -> collectionView 그려지는 타이밍과 어긋나서 아무 작동 안함
+ (3차) viewDidAppear로 옮김 -> 똑같음
+ (4차) indexpath.item을 하나의 옵저버블로 관리하니까 결국 감시자가 마지막으로 감시한건 마지막 item이었음 -> 옵저버블에서 제거 but 실패
+ (5차) 하나의 로직 감시자로 4개의 셀을 관리하니 결국 마지막 셀로만 작용함 -> bool값을 배열로 관리 -> 근데 바보같이 감시자 분리한다면서 bool값만 배열로 둬서 결국 감시자가 똑같은건 ....
+ (6차) 감시자 자체를 배열로 두고, 이를 indexpath.item을 인덱스로 받아서 해결....
+ p.s. 언젠가부터 output은 셀 내부로 들어갔는데 그건 기억이 희미...
+ 
  */
 
 final class ProfileNicknameViewModel {
     
     private let userDefaults = UserDefaultsManager.shared
+    let mbtiList = [["E", "I"], ["S", "N"], ["T", "F"], ["J", "P"]]
     
     var currentSelectedImage: String = ""
     let randomImage = ProfileImage.imageList.randomElement() ?? "profile_10"
     
     let inputNickname: Observable<String?> = Observable("")
     let inputCompleteButton: Observable<Void> = Observable(())
+    let inputButtonAction: Observable<(Int, Int)> = Observable((0, 0))
     
     let outputInvalidText: Observable<String> = Observable("")
     let outputViewTransition: Observable<Void> = Observable(())
+    var outputIsTopOn: [Observable<Bool>] = []
+    var outputIsBottomOn: [Observable<Bool>] = []
     
     init() {
         print("프로필닉네임 VM Init")
         currentSelectedImage = randomImage
+        
+        for _ in 0...3 {  // 초기에 모두 OFF인 상태
+            outputIsTopOn.append(Observable(false))
+            outputIsBottomOn.append(Observable(false))
+        }
         
         inputNickname.bind { [weak self] _ in
             self?.checkNicknameCondition()
@@ -57,6 +73,10 @@ final class ProfileNicknameViewModel {
         
         inputCompleteButton.lazyBind { [weak self] _ in
             self?.tappedCompleteButton()
+        }
+        
+        inputButtonAction.lazyBind { [weak self] index, tag in
+            self?.mbtiButtonLogic(index, tag)
         }
     }
     
@@ -114,4 +134,33 @@ final class ProfileNicknameViewModel {
             outputViewTransition.value = ()
         }
     }
+    
+    private func mbtiButtonLogic(_ index: Int, _ tag: Int) {
+        
+        if tag == 0 {
+            
+            if outputIsTopOn[index].value && !outputIsBottomOn[index].value {
+                outputIsTopOn[index].value = false
+            } else if !outputIsTopOn[index].value && !outputIsBottomOn[index].value {
+                outputIsTopOn[index].value = true
+            } else if !outputIsTopOn[index].value && outputIsBottomOn[index].value {
+                outputIsTopOn[index].value = true
+                outputIsBottomOn[index].value = false
+            }
+            
+        } else if tag == 1 {
+            
+            if outputIsBottomOn[index].value && !outputIsTopOn[index].value {
+                outputIsBottomOn[index].value = false
+            } else if !outputIsBottomOn[index].value && !outputIsTopOn[index].value {
+                outputIsBottomOn[index].value = true
+            } else if !outputIsBottomOn[index].value && outputIsTopOn[index].value {
+                outputIsBottomOn[index].value = true
+                outputIsTopOn[index].value = false
+            }
+        }
+        
+    }
+    
+    
 }
