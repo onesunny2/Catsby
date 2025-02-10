@@ -48,12 +48,16 @@ final class ProfileNicknameViewController: UIViewController {
         
         
         // TODO: (질문) 2개의 outputIsCompleted와 outputMbtiSelectedCount을 하나의 bind로 묶고 싶은데 둘의 결과값이 나오는 위치가 달라서 어떻게 컨트롤 해야할지 모르겠어요
-        viewModel.outputIsCompleted.bind { [weak self] isCompleted in
-            self?.mainView.completeButton.configuration?.baseBackgroundColor = isCompleted ? .catsMain : .catsDisabled
-        }
+//        viewModel.outputIsCompleted.bind { [weak self] isCompleted in
+//            self?.mainView.completeButton.configuration?.baseBackgroundColor = isCompleted ? .catsMain : .catsDisabled
+//        }
+//        
+//        viewModel.outputMbtiSelectedCount.bind { [weak self] count in
+//            self?.mainView.completeButton.configuration?.baseBackgroundColor = (count == 4) ? .catsMain : .catsDisabled
+//        }
         
-        viewModel.outputMbtiSelectedCount.bind { [weak self] count in
-            self?.mainView.completeButton.configuration?.baseBackgroundColor = (count == 4) ? .catsMain : .catsDisabled
+        viewModel.outputIsCompletePossible.bind { [weak self] value in
+            self?.mainView.completeButton.configuration?.baseBackgroundColor = value ? .catsMain : .catsDisabled
         }
         
         viewModel.outputViewTransition.lazyBind { [weak self] _ in

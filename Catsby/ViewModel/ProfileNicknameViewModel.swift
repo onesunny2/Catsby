@@ -61,6 +61,7 @@ final class ProfileNicknameViewModel {
     var outputIsTopOn: [Observable<Bool>] = []
     var outputIsBottomOn: [Observable<Bool>] = []
     let outputMbtiSelectedCount: Observable<Int> = Observable(0)
+    var outputIsCompletePossible: Observable<Bool> = Observable(false)
     
     init() {
         print("프로필닉네임 VM Init")
@@ -129,6 +130,8 @@ final class ProfileNicknameViewModel {
             outputIsNicknameError.value = true
             outputIsCompleted.value = false
         }
+        
+        outputIsCompletePossible.value = outputIsCompleted.value && (outputMbtiSelectedCount.value == 4)
     }
     
     private func tappedCompleteButton() {
@@ -178,5 +181,6 @@ final class ProfileNicknameViewModel {
         let bottomCount = outputIsBottomOn.filter { $0.value == true }.count
         
         outputMbtiSelectedCount.value = topCount + bottomCount
+        outputIsCompletePossible.value = outputIsCompleted.value && (outputMbtiSelectedCount.value == 4)
     }
 }
