@@ -45,17 +45,7 @@ final class ProfileNicknameViewController: UIViewController {
         viewModel.outputIsNicknameError.bind { [weak self] isError in
             self?.mainView.checkNickname.textColor = isError ? .catsRed : .catsMain
         }
-        
-        
-        // TODO: (질문) 2개의 outputIsCompleted와 outputMbtiSelectedCount을 하나의 bind로 묶고 싶은데 둘의 결과값이 나오는 위치가 달라서 어떻게 컨트롤 해야할지 모르겠어요
-//        viewModel.outputIsCompleted.bind { [weak self] isCompleted in
-//            self?.mainView.completeButton.configuration?.baseBackgroundColor = isCompleted ? .catsMain : .catsDisabled
-//        }
-//        
-//        viewModel.outputMbtiSelectedCount.bind { [weak self] count in
-//            self?.mainView.completeButton.configuration?.baseBackgroundColor = (count == 4) ? .catsMain : .catsDisabled
-//        }
-        
+
         viewModel.outputIsCompletePossible.bind { [weak self] value in
             self?.mainView.completeButton.configuration?.baseBackgroundColor = value ? .catsMain : .catsDisabled
         }
@@ -77,10 +67,13 @@ final class ProfileNicknameViewController: UIViewController {
         vc.viewModel.inputSelectedImage.value = viewModel.currentSelectedImage
         
         vc.viewModel.sendSelectedImage = { [weak self] in
-            let image = vc.viewModel.inputSelectedImage.value
-            self?.mainView.profileImageView.image = UIImage(named: image)
             
-            self?.viewModel.currentSelectedImage = image
+            guard let self else { return }
+            
+            let image = vc.viewModel.inputSelectedImage.value
+            mainView.profileImageView.image = UIImage(named: image)
+            
+            viewModel.currentSelectedImage = image
         }
        
         self.viewTransition(style: .push(animated: true), vc: vc)
