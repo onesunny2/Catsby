@@ -49,6 +49,10 @@ final class ProfileNicknameViewController: UIViewController {
         viewModel.outputIsCompleted.bind { [weak self] isCompleted in
             self?.mainView.completeButton.configuration?.baseBackgroundColor = isCompleted ? .catsMain : .catsDisabled
         }
+        
+        viewModel.outputMbtiSelectedCount.bind { [weak self] count in
+            self?.mainView.completeButton.configuration?.baseBackgroundColor = (count == 4) ? .catsMain : .catsDisabled
+        }
     }
     
     private func tapGesture() {
