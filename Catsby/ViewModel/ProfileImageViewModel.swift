@@ -15,39 +15,47 @@ import Foundation
  3. 처음 화면 진입했을 때 이전화면의 프로필 이미지와 컬렉션뷰의 이미지가 같으면 테두리 효과 주기
  */
 
-final class ProfileImageViewModel {
+final class ProfileImageViewModel: BaseViewModel {
+    
+    struct Input {
+        let selectedImage: Observable<String> = Observable("")
+        let indexPathItem: Observable<Int> = Observable(0)
+    }
+    
+    struct Output {
+        let selectedImage: Observable<String> = Observable("")
+    }
+    
+    private(set) var input: Input
+    private(set) var output: Output
     
     var sendSelectedImage: (() -> ())?
-    var currentImage: String = ""
-    
-    // 컬렉션뷰에서 selected된 이미지
-    let inputSelectedImage: Observable<String> = Observable("")
-    let inputIndexPathItem: Observable<Int> = Observable(0)
-    
-    let outputSelectedImage: Observable<String> = Observable("")
-    let outputCellImage: Observable<String> = Observable("")
-    var outputImageIsMatched: Observable<Void> = Observable(())
+    var cellImage: String = ""
     
     init() {
         print("프로필이미지 VM Init")
         
-        inputIndexPathItem.bind { [weak self] index in
-            self?.checkCellImage(index)
-        }
+        input = Input()
+        output = Output()
         
-        inputSelectedImage.bind { [weak self] image in
-//            self?.checkSelectedImage()
-//            self?.currentImage = image
-            self?.outputSelectedImage.value = image
-        }
+        transformBinds()
     }
     
     deinit {
         print("프로필이미지 VM Deinit")
     }
     
-    // 전달받은 indexpath로 셀 이미지 내보내기
+    func transformBinds() {
+        input.indexPathItem.bind { [weak self] index in
+            self?.checkCellImage(index)
+        }
+        
+        input.selectedImage.bind { [weak self] image in
+            self?.output.selectedImage.value = image
+        }
+    }
+ 
     private func checkCellImage(_ index: Int) {
-        outputCellImage.value = ProfileImage.imageList[index]
+        cellImage = ProfileImage.imageList[index]
     }
 }

@@ -64,13 +64,13 @@ final class ProfileNicknameViewController: UIViewController {
     @objc func imageViewTapped() {
         print(#function)
         let vc = ProfileImageViewController()
-        vc.viewModel.inputSelectedImage.value = viewModel.currentSelectedImage
+        vc.viewModel.input.selectedImage.value = viewModel.currentSelectedImage
         
         vc.viewModel.sendSelectedImage = { [weak self] in
             
             guard let self else { return }
             
-            let image = vc.viewModel.inputSelectedImage.value
+            let image = vc.viewModel.input.selectedImage.value
             mainView.profileImageView.image = UIImage(named: image)
             
             viewModel.currentSelectedImage = image
