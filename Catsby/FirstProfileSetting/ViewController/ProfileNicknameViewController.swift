@@ -38,19 +38,19 @@ final class ProfileNicknameViewController: UIViewController {
     }
     
     private func bindVMData() {
-        viewModel.outputInvalidText.bind { [weak self] _ in
-            self?.mainView.checkNickname.text = self?.viewModel.outputInvalidText.value
+        viewModel.output.invalidText.bind { [weak self] _ in
+            self?.mainView.checkNickname.text = self?.viewModel.output.invalidText.value
         }
         
-        viewModel.outputIsNicknameError.bind { [weak self] isError in
+        viewModel.output.isNicknameError.bind { [weak self] isError in
             self?.mainView.checkNickname.textColor = isError ? .catsRed : .catsMain
         }
 
-        viewModel.outputIsCompletePossible.bind { [weak self] value in
+        viewModel.output.isCompletePossible.bind { [weak self] value in
             self?.mainView.completeButton.configuration?.baseBackgroundColor = value ? .catsMain : .catsDisabled
         }
         
-        viewModel.outputViewTransition.lazyBind { [weak self] _ in
+        viewModel.output.viewTransition.lazyBind { [weak self] _ in
             self?.viewTransition(style: .windowRoot, vc: TabBarController())
         }
     }
@@ -81,7 +81,7 @@ final class ProfileNicknameViewController: UIViewController {
     
     @objc private func completeButtonTapped() {
         
-        viewModel.inputCompleteButton.value = ()
+        viewModel.input.completeButton.value = ()
     }
 }
 
@@ -89,7 +89,7 @@ final class ProfileNicknameViewController: UIViewController {
 extension ProfileNicknameViewController: UITextFieldDelegate {
     
     @objc func checkNicknameCondition(textfield: UITextField) {
-        viewModel.inputNickname.value = textfield.text
+        viewModel.input.nickname.value = textfield.text
     }
 }
 
@@ -114,7 +114,7 @@ extension ProfileNicknameViewController: UICollectionViewDelegate, UICollectionV
         cell.bottomButton.changeTitle(title: labelList[1], size: 20, weight: .regular)
         
         cell.buttonAction = { [weak self] tag in
-            self?.viewModel.inputButtonAction.value = (indexPath.item, tag)
+            self?.viewModel.input.mbtiButtonAction.value = (indexPath.item, tag)
         }
         
         cell.configBind(viewModel, index: indexPath.item)
