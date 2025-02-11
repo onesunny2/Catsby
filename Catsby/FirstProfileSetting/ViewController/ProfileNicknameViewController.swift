@@ -34,35 +34,28 @@ final class ProfileNicknameViewController: UIViewController {
         setCollectionView()
         bindVMData()
         
+        viewModel.input.isCompleteStatus.value = ()
         mainView.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
     
     private func bindVMData() {
-        viewModel.outputInvalidText.bind { [weak self] _ in
-            self?.mainView.checkNickname.text = self?.viewModel.outputInvalidText.value
+        viewModel.output.invalidText.bind { [weak self] _ in
+            self?.mainView.checkNickname.text = self?.viewModel.output.invalidText.value
         }
         
-        viewModel.outputIsNicknameError.bind { [weak self] isError in
+        viewModel.output.isNicknameError.bind { [weak self] isError in
             self?.mainView.checkNickname.textColor = isError ? .catsRed : .catsMain
         }
-        
-        
-        // TODO: (질문) 2개의 outputIsCompleted와 outputMbtiSelectedCount을 하나의 bind로 묶고 싶은데 둘의 결과값이 나오는 위치가 달라서 어떻게 컨트롤 해야할지 모르겠어요
-//        viewModel.outputIsCompleted.bind { [weak self] isCompleted in
-//            self?.mainView.completeButton.configuration?.baseBackgroundColor = isCompleted ? .catsMain : .catsDisabled
-//        }
-//        
-//        viewModel.outputMbtiSelectedCount.bind { [weak self] count in
-//            self?.mainView.completeButton.configuration?.baseBackgroundColor = (count == 4) ? .catsMain : .catsDisabled
-//        }
-        
-        viewModel.outputIsCompletePossible.bind { [weak self] value in
+
+        viewModel.output.isCompletePossible.bind { [weak self] value in
             self?.mainView.completeButton.configuration?.baseBackgroundColor = value ? .catsMain : .catsDisabled
         }
         
-        viewModel.outputViewTransition.lazyBind { [weak self] _ in
+        viewModel.output.viewTransition.lazyBind { [weak self] _ in
             self?.viewTransition(style: .windowRoot, vc: TabBarController())
         }
+        
+        
     }
     
     private func tapGesture() {
@@ -74,13 +67,16 @@ final class ProfileNicknameViewController: UIViewController {
     @objc func imageViewTapped() {
         print(#function)
         let vc = ProfileImageViewController()
-        vc.viewModel.inputSelectedImage.value = viewModel.currentSelectedImage
+        vc.viewModel.input.selectedImage.value = viewModel.currentSelectedImage
         
         vc.viewModel.sendSelectedImage = { [weak self] in
-            let image = vc.viewModel.inputSelectedImage.value
-            self?.mainView.profileImageView.image = UIImage(named: image)
             
-            self?.viewModel.currentSelectedImage = image
+            guard let self else { return }
+            
+            let image = vc.viewModel.input.selectedImage.value
+            mainView.profileImageView.image = UIImage(named: image)
+            
+            viewModel.currentSelectedImage = image
         }
        
         self.viewTransition(style: .push(animated: true), vc: vc)
@@ -88,7 +84,7 @@ final class ProfileNicknameViewController: UIViewController {
     
     @objc private func completeButtonTapped() {
         
-        viewModel.inputCompleteButton.value = ()
+        viewModel.input.completeButton.value = ()
     }
 }
 
@@ -96,7 +92,7 @@ final class ProfileNicknameViewController: UIViewController {
 extension ProfileNicknameViewController: UITextFieldDelegate {
     
     @objc func checkNicknameCondition(textfield: UITextField) {
-        viewModel.inputNickname.value = textfield.text
+        viewModel.input.nickname.value = textfield.text
     }
 }
 
@@ -121,7 +117,7 @@ extension ProfileNicknameViewController: UICollectionViewDelegate, UICollectionV
         cell.bottomButton.changeTitle(title: labelList[1], size: 20, weight: .regular)
         
         cell.buttonAction = { [weak self] tag in
-            self?.viewModel.inputButtonAction.value = (indexPath.item, tag)
+            self?.viewModel.input.mbtiButtonAction.value = (indexPath.item, tag)
         }
         
         cell.configBind(viewModel, index: indexPath.item)

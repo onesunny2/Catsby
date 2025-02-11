@@ -23,7 +23,7 @@ final class ProfileImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        mainView.mainImageView.image = UIImage(named: viewModel.inputSelectedImage.value)
+        mainView.mainImageView.image = UIImage(named: viewModel.input.selectedImage.value)
 
         navigationItem.title = "프로필 이미지 설정"
         setCollectionView()
@@ -38,7 +38,9 @@ final class ProfileImageViewController: UIViewController {
     }
     
     private func bindVMData() {
-        
+        viewModel.output.selectedImage.bind { [weak self] image in
+            self?.mainView.mainImageView.image = UIImage(named: image)
+        }
     }
 
 }
@@ -57,29 +59,15 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        viewModel.inputIndexPathItem.value = indexPath.item
+        viewModel.input.indexPathItem.value = indexPath.item
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileImageCollectionViewCell.id, for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
-        
-        // TODO: 질문 - output값의 bind를 해줘야하는 순간의 판단 기준은 무엇인가? 어떨 때는 bind를 안해야 괜찮을 때가 있는 것 같아서...
-//        viewModel.outputCellImage.bind { image in
-//            cell.profileImageView.image = UIImage(named: image)
-//        }
-        cell.profileImageView.image = UIImage(named: viewModel.outputCellImage.value)
+
+        cell.profileImageView.image = UIImage(named: viewModel.cellImage)
         cell.clipImage()
         cell.profileImageView.alpha = 0.5
         
-        
-
-        // TODO: 질문- 왜 아래로직으로는 모든 셀이 선택되는 것인지
-//        viewModel.outputImageIsMatched.bind { _ in
-//            cell.isSelected = true
-//            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
-//            cell.profileImageView.stroke(.catsMain, 2)
-//            cell.profileImageView.alpha = 1
-//        }
-        
-        if viewModel.outputCellImage.value == viewModel.inputSelectedImage.value {
+        if viewModel.cellImage == viewModel.input.selectedImage.value {
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
             cell.profileImageView.stroke(.catsMain, 2)
@@ -96,11 +84,7 @@ extension ProfileImageViewController: UICollectionViewDelegate, UICollectionView
         cell.profileImageView.stroke(.catsMain, 2)
         cell.profileImageView.alpha = 1
         
-        viewModel.inputSelectedImage.value = ProfileImage.imageList[indexPath.item]
-        
-        viewModel.outputSelectedImage.bind { [weak self] image in
-            self?.mainView.mainImageView.image = UIImage(named: image)
-        }
+        viewModel.input.selectedImage.value = ProfileImage.imageList[indexPath.item]
         
         viewModel.sendSelectedImage?()
     }

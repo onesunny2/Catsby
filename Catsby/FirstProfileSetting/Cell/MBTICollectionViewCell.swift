@@ -65,14 +65,14 @@ final class MBTICollectionViewCell: UICollectionViewCell, BaseConfigure {
     
     func configBind(_ viewModel: ProfileNicknameViewModel, index: Int) {
         
-        viewModel.outputIsTopOn[index].bind { [weak self] value in
+        viewModel.output.isTopOn[index].bind { [weak self] value in
 
             self?.topButton.stroke(value ? .clear : .catsDarkgray, value ? 0 : 1)
             self?.topButton.configuration?.baseBackgroundColor = value ? .catsMain : .catsBlack
             self?.topButton.configuration?.baseForegroundColor = value ? .catsBlack : .catsDarkgray
         }
         
-        viewModel.outputIsBottomOn[index].bind { [weak self] value in
+        viewModel.output.isBottomOn[index].bind { [weak self] value in
  
             self?.bottomButton.stroke(value ? .clear : .catsDarkgray, value ? 0 : 1)
             self?.bottomButton.configuration?.baseBackgroundColor = value ? .catsMain : .catsBlack
