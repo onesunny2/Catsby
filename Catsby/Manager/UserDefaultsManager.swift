@@ -94,9 +94,15 @@ extension UserDefaultsManager {
         self.saveData(value: dicList, type: type)
     }
     
-    func resetData() {
+    func resetAllData() {
         for key in UserDefaults.standard.dictionaryRepresentation().keys {
             UserDefaults.standard.removeObject(forKey: key.description)
+        }
+    }
+    
+    func resetOneData(type: SaveData) {
+        for key in UserDefaults.standard.dictionaryRepresentation().keys {
+            UserDefaults.standard.removeObject(forKey: type.saveKey)
         }
     }
 }
