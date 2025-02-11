@@ -83,17 +83,15 @@ final class TodayMovieViewController: UIViewController {
     
     // 최근 검색어 전체 삭제 기능
     @objc func deleteAllkeywordsButtonTapped() {
-        let title = "최근검색어 삭제"
-        let message = "최근검색어를 모두 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다."
+        let title = recentkeywordViewModel.alertTitle
+        let message = recentkeywordViewModel.alertMessage
         
-        alerMessage(title, message) {
-            var searchKeywords = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
-            searchKeywords.removeAll()
-            UserDefaultsManager.shared.saveData(value: searchKeywords, type: .recentKeyword)
-            self.searchKeywordList = searchKeywords
+        alerMessage(title, message) { [weak self] in
             
-            self.mainView.noSearchLabel.isHidden = false
-            self.mainView.recentKeywordCollectionView.isHidden = true
+            self?.recentkeywordViewModel.input.alertAction.value = ()
+            
+            self?.mainView.noSearchLabel.isHidden = false
+            self?.mainView.recentKeywordCollectionView.isHidden = true
         }
     }
     

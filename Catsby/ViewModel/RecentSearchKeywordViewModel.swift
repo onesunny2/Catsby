@@ -11,9 +11,10 @@ import Foundation
  < 분리되어야 할 로직 >
  ✅ 1. 화면 분기점: viewdidLoad에서 트리거 받아서(✓ Input) bool값 내보내기(✓ output)
     📌 기존에는 viewIsAppearing을 통해서 검색결과 내용을 반영시켰는데, 추후 검색결과 화면 VM 로직 짜면서 분리해줄 방법 찾기 (현재는 viewDidLoad에만... 매번 부르면 코스트가 많이 들 것 같음)
- 2. 저장된 키워드 리스트를 시간순으로 보여주기 위해 역순으로 처리해서 내보내기(✓ output)
+ ✅ 2. 저장된 키워드 리스트를 시간순으로 보여주기 위해 역순으로 처리해서 내보내기(✓ output)
     - output값 바인딩되면 datareload
- 3. 전체 삭제 버튼 @objc 함수에서 트리거하기(✓ Input)
+    📌 왠지 이것도 검색결과 화면이랑 엮여야 할 것 같은..?
+ ✅ 3. 전체 삭제 버튼 @objc 함수에서 트리거하기(✓ Input)
     - 알럿 메시지의 action값을 input으로 해서... 처리해야하나..?
  4. 현재 cell 안에 있는 삭제 로직 VC으로 꺼내서 VM에서 처리(✓ Input) & (✓ output)
  */
@@ -33,6 +34,9 @@ final class RecentSearchKeywordViewModel: BaseViewModel {
     
     private(set) var input: Input
     private(set) var output: Output
+    
+    let alertTitle = "최근검색어 전체삭제"
+    let alertMessage = "최근검색어를 모두 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다."
     
     init() {
         
@@ -82,7 +86,7 @@ extension RecentSearchKeywordViewModel {
         
         UserDefaultsManager.shared.resetOneData(type: .recentKeyword)
         
-        // 화면에 배열 불러내서 거기에 빈 것 넣어야할 것 같음
-       
+        // VC에서 사용중인 배열 비워주기
+        output.reversedKeywordsList.value = []
     }
 }
