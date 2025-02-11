@@ -11,17 +11,17 @@ import SnapKit
 final class TodayMovieViewController: UIViewController {
     
     private let mainView = TodayMovieView()
-    private let networkManager = NetworkManager.shared
-    var trendMovie: [TrendResults] = [] {
-        didSet {
-            mainView.todayMovieCollectionView.reloadData()
-        }
-    }
+    private let viewModel = TodayMovieViewModel()
+
     var selectedMovie = 0  // 영화 상세화면에서 좋아요 반영되었을 때 dataReload를 위해 저장해두는 값
     var searchKeywordList = UserDefaultsManager.shared.getArrayData(type: .recentKeyword) {
         didSet {
             mainView.recentKeywordCollectionView.reloadData()
         }
+    }
+    
+    deinit {
+        print("메인화면 VC Deinit")
     }
     
     override func loadView() {
@@ -36,10 +36,17 @@ final class TodayMovieViewController: UIViewController {
         
         setNavigation()
         setCollectionView()
-        getTodayMovieData()
+        viewModel.input.getTodayMovieData.value = ()
+        bindVMData()
         tapGesture()
         
         mainView.deleteAllKeywordButton.addTarget(self, action: #selector(deleteAllkeywordsButtonTapped), for: .touchUpInside)
+    }
+    
+    private func bindVMData() {
+        viewModel.output.trendMovieResults.bind { [weak self] _ in
+            self?.mainView.todayMovieCollectionView.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,15 +119,6 @@ final class TodayMovieViewController: UIViewController {
         mainView.profileboxView.addGestureRecognizer(tapgesture)
     }
     
-    private func getTodayMovieData() {
-        
-        networkManager.callRequest(type: TrendMovie.self, api: .trend) { result in
-            self.trendMovie = result.results
-        } failHandler: {
-            print(#function, "error")
-        }
-    }
-    
     private func setNavigation() {
         let searchImage = UIImage(systemName: "magnifyingglass")?.withTintColor(.catsMain, renderingMode: .alwaysOriginal)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: searchImage, style: .done, target: self, action: #selector(searchItemTapped))
@@ -146,7 +144,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         case mainView.recentKeywordCollectionView:
             return searchKeywordList.count
         case mainView.todayMovieCollectionView:
-            return trendMovie.count
+            return viewModel.output.trendMovieResults.value.count
         default:
             return 0
         }
@@ -175,8 +173,9 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             return cell
             
         case mainView.todayMovieCollectionView:
+
+            let row = viewModel.output.trendMovieResults.value[indexPath.item]
             
-            let row = trendMovie[indexPath.item]
             let key = String(row.id)
             let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[key]
             
@@ -226,7 +225,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             selectedMovie = indexPath.item
             
             let vc = MovieDetailViewController()
-            vc.trendResult = trendMovie[indexPath.item]
+            vc.trendResult = viewModel.output.trendMovieResults.value[indexPath.item]
             vc.isSearchresult = false
             
             self.viewTransition(style: .push(animated: true), vc: vc)
