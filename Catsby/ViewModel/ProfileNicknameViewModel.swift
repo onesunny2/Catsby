@@ -47,6 +47,7 @@ final class ProfileNicknameViewModel: BaseViewModel {
         let nickname: Observable<String?> = Observable("")
         let completeButton: Observable<Void> = Observable(())
         let mbtiButtonAction: Observable<(Int, Int)> = Observable((0, 0))
+        var isCompleteStatus: Observable<Void> = Observable(())
     }
     
     struct Output {
@@ -95,6 +96,10 @@ final class ProfileNicknameViewModel: BaseViewModel {
         input.mbtiButtonAction.lazyBind { [weak self] index, tag in
             self?.mbtiButtonLogic(index, tag)
         }
+        
+//        input.isCompleteStatus.bind { [weak self] _ in
+//            self?.checkButtonStatus()
+//        }
     }
     
     private func valueSetting() {
@@ -105,6 +110,10 @@ final class ProfileNicknameViewModel: BaseViewModel {
             output.isBottomOn.append(Observable(false))
         }
     }
+    
+//    private func checkButtonStatus() {
+//        output.isCompletePossible = output.isCompleted.value && (output.mbtiSelectedCount.value == 4)
+//    }
     
     private func checkNicknameCondition() {
         
@@ -148,7 +157,7 @@ final class ProfileNicknameViewModel: BaseViewModel {
             output.isCompleted.value = false
         }
         
-        output.isCompletePossible.value = output.isCompleted.value && (output.mbtiSelectedCount.value == 4)
+        output.isCompletePossible.value = (output.invalidText.value == Comment.pass.rawValue) && (output.mbtiSelectedCount.value == 4)
     }
     
     private func tappedCompleteButton() {
@@ -198,6 +207,6 @@ final class ProfileNicknameViewModel: BaseViewModel {
         let bottomCount = output.isBottomOn.filter { $0.value == true }.count
         
         output.mbtiSelectedCount.value = topCount + bottomCount
-        output.isCompletePossible.value = output.isCompleted.value && (output.mbtiSelectedCount.value == 4)
+        output.isCompletePossible.value = (output.invalidText.value == Comment.pass.rawValue) && (output.mbtiSelectedCount.value == 4)
     }
 }

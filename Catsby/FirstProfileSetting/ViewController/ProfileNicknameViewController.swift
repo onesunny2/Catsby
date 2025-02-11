@@ -34,6 +34,7 @@ final class ProfileNicknameViewController: UIViewController {
         setCollectionView()
         bindVMData()
         
+        viewModel.input.isCompleteStatus.value = ()
         mainView.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
     
@@ -53,6 +54,8 @@ final class ProfileNicknameViewController: UIViewController {
         viewModel.output.viewTransition.lazyBind { [weak self] _ in
             self?.viewTransition(style: .windowRoot, vc: TabBarController())
         }
+        
+        
     }
     
     private func tapGesture() {
