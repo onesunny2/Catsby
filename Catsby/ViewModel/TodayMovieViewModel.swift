@@ -17,16 +17,20 @@ import Foundation
     1) userdefaults 매니저 내 changeDicData 실행 - VM에서 처리
     2) 메인화면 상단 프로필에 변경된 무비박스 카운트가 반영되도록 (✓ Output)
     3) 데이터 reload -> 이건 뷰컨에서 진행 (✓ Output)
+ ✅ 4. 포스터 url 값 내부에서 저장 프로퍼티로 계산해서 내보내기(좋아요 여부, pathurl) (observable ㄴㄴ)
  
  < 고려해야 할 부분 >
- - 이미지가 없을 때를 고려해 default 이미지 넣어두기
+ - 이미지가 없을 때를 고려해 default 이미지 넣어두기 => 현재 전체적으로 VM 작업하고 난 후 건드려야할 것 같음. 안그러면 임시로 처음 값을 설정해둔 디코딩 모델들에 손이 많이 감
  */
 
 final class TodayMovieViewModel: BaseViewModel {
     
+    typealias IDAndPath = (Int, String)
+    
     struct Input {
         let getTodayMovieData: Observable<Void> = Observable(())
         let heartBtnTapped: Observable<Int> = Observable(0)
+        let cellIdAndPath: Observable<IDAndPath> = Observable((0, ""))
     }
     
     struct Output {
@@ -37,7 +41,9 @@ final class TodayMovieViewModel: BaseViewModel {
     
     private(set) var input: Input
     private(set) var output: Output
-
+    
+    private(set) var isLiked = false
+    private(set) var pathUrl = ""
     
     init() {
         print("오늘의영화 VM Init")
@@ -59,6 +65,10 @@ final class TodayMovieViewModel: BaseViewModel {
         
         input.heartBtnTapped.lazyBind { [weak self] tag in
             self?.heartBtnTapped(tag)
+        }
+        
+        input.cellIdAndPath.bind { [weak self] id, url in
+            self?.getBtnStatusAndPathurl(id, url)
         }
     }
 }
@@ -90,5 +100,13 @@ extension TodayMovieViewModel {
         
         // datareload 필요한 영화의 indexPath
         output.reloadIndexPath.value = [IndexPath(item: tag, section: 0)]
+    }
+    
+    private func getBtnStatusAndPathurl(_ id: Int, _ url: String) {
+        
+        let key = String(id)
+        isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[key] ?? false
+        
+        pathUrl = NetworkManager.pathUrl + url
     }
 }

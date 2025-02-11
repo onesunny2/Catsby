@@ -184,18 +184,15 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
 
             let row = viewModel.output.trendMovieResults.value[indexPath.item]
             
-            let key = String(row.id)
-            let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[key]
+            viewModel.input.cellIdAndPath.value = (row.id, row.posterpath)
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
             
             cell.heartButton.tag = indexPath.item
-            
             cell.heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
-            
-            let url = NetworkManager.pathUrl + row.posterpath
-            cell.getData(url: url, title: row.title, plot: row.overview)
-            cell.heartButton.isSelected = isLiked ?? false
+
+            cell.getData(url: viewModel.pathUrl, title: row.title, plot: row.overview)
+            cell.heartButton.isSelected = viewModel.isLiked
             
             return cell
             
