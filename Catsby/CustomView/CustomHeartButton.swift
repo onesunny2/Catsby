@@ -32,7 +32,6 @@ final class CustomHeartButton: UIButton {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print(#function)
         super.touchesEnded(touches, with: event)
 
         isSelected.toggle()

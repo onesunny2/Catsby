@@ -19,8 +19,6 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
     var heartButton: CustomHeartButton
     let plotLabel: BaseLabel
     
-    var buttonTapAction: (() -> ())?
-    
     override init(frame: CGRect) {
         posterImageView = BaseImageView(type: UIImage(named: "profile_11") ?? UIImage(), bgcolor: .catsWhite)
         
@@ -35,14 +33,8 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
         configHierarchy()
         configLayout()
         configView()
-        
-        heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
     }
-    
-    @objc func heartButtonTapped() {
-        buttonTapAction?()
-    }
-    
+
     func configHierarchy() {
         [posterImageView, textStackView, heartButton ].forEach {
             self.addSubview($0)
@@ -91,12 +83,13 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
                                     options: [
                                         .processor(DownSampling.processor(posterImageView)),
                                         .scaleFactor(UIScreen.main.scale),
-                                        .cacheOriginalImage
+                                        .onlyFromCache
                                     ])
         
         titleLabel.text = title
         plotLabel.text = plot
-
+        
+        posterCornerRadius()
     }
 
     func posterCornerRadius() {

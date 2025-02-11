@@ -47,6 +47,14 @@ final class TodayMovieViewController: UIViewController {
         viewModel.output.trendMovieResults.bind { [weak self] _ in
             self?.mainView.todayMovieCollectionView.reloadData()
         }
+        
+        viewModel.output.newMovieboxTitle.bind { [weak self] title in
+            self?.mainView.profileboxView.movieboxButton.changeTitle(title: title, size: 14, weight: .bold)
+        }
+        
+        viewModel.output.reloadIndexPath.lazyBind { [weak self] indexPath in
+            self?.mainView.todayMovieCollectionView.reloadItems(at: indexPath)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -180,25 +188,14 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[key]
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
-
-            cell.buttonTapAction = {
-
-                UserDefaultsManager.shared.changeDicData(id: row.id)
-                
-                let savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
-
-                // 상단 프로필에 변경된 무비박스 카운트 반영되도록
-                let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
-                let newtitle = "\(count)개의 무비박스 보관중"
-                self.mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
-
-                self.mainView.todayMovieCollectionView.reloadItems(at: [IndexPath(item: indexPath.row, section: 0)])
-            }
+            
+            cell.heartButton.tag = indexPath.item
+            
+            cell.heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
             
             let url = NetworkManager.pathUrl + row.posterpath
             cell.getData(url: url, title: row.title, plot: row.overview)
             cell.heartButton.isSelected = isLiked ?? false
-            cell.posterCornerRadius()
             
             return cell
             
@@ -206,6 +203,10 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             print("collectionview: default")
             return UICollectionViewCell()
         }
+    }
+    
+    @objc func heartButtonTapped(_ sender: UIButton) {
+        viewModel.input.heartBtnTapped.value = sender.tag
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
