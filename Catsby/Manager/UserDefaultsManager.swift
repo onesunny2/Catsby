@@ -40,6 +40,13 @@ extension UserDefaultsManager {
 
 // MARK: UserDefaults 관련 메서드들
 extension UserDefaultsManager {
+    
+    func getData<T>(type: SaveData) -> T? {
+        guard let data = UserDefaults.standard.object(forKey: type.saveKey) as? T else { return nil }
+        
+        return data
+    }
+    
     func getStringData(type: SaveData) -> String {
         guard let data = UserDefaults.standard.string(forKey: type.saveKey) else { return "" }
         
