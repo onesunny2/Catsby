@@ -22,11 +22,13 @@ final class RecentSearchKeywordViewModel: BaseViewModel {
     
     struct Input {
         let checkKeyword: Observable<Void> = Observable(())
+        let alertAction: Observable<Void> = Observable(())
+        let requestKeywordsList: Observable<Void> = Observable(())
     }
     
     struct Output {
         let isKeywordIn: Observable<Bool> = Observable(false)
-        
+        let reversedKeywordsList: Observable<[String]> = Observable([])
     }
     
     private(set) var input: Input
@@ -45,6 +47,14 @@ final class RecentSearchKeywordViewModel: BaseViewModel {
         input.checkKeyword.bind { [weak self] _ in
             self?.checkKeyword()
         }
+        
+        input.alertAction.lazyBind { [weak self] _ in
+            self?.removeAllKeywords()
+        }
+        
+        input.requestKeywordsList.bind { [weak self] _ in
+            self?.getUserdefaultsKeywords()
+        }
     }
     
 }
@@ -58,5 +68,21 @@ extension RecentSearchKeywordViewModel {
         let searchKeywordList = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
         let keywordCount = searchKeywordList.count
         output.isKeywordIn.value = (keywordCount == 0)
+    }
+    
+    // 저장된 리스트 불러내서 collectionview CellForItemAt에 뿌리기
+    private func getUserdefaultsKeywords() {
+        
+        let reversedList = UserDefaultsManager.shared.getArrayData(type: .recentKeyword).reversed()
+        output.reversedKeywordsList.value = Array(reversedList)
+    }
+    
+    // 기존에 저장된 키워드 리스트 싹 삭제
+    private func removeAllKeywords() {
+        
+        UserDefaultsManager.shared.resetOneData(type: .recentKeyword)
+        
+        // 화면에 배열 불러내서 거기에 빈 것 넣어야할 것 같음
+       
     }
 }

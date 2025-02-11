@@ -15,11 +15,6 @@ final class TodayMovieViewController: UIViewController {
     private let recentkeywordViewModel = RecentSearchKeywordViewModel()
 
     var selectedMovie = 0  // 영화 상세화면에서 좋아요 반영되었을 때 dataReload를 위해 저장해두는 값
-    var searchKeywordList = UserDefaultsManager.shared.getArrayData(type: .recentKeyword) {
-        didSet {
-            mainView.recentKeywordCollectionView.reloadData()
-        }
-    }
     
     deinit {
         print("메인화면 VC Deinit")
@@ -61,6 +56,10 @@ final class TodayMovieViewController: UIViewController {
         recentkeywordViewModel.output.isKeywordIn.bind { [weak self] value in
             self?.mainView.noSearchLabel.isHidden = value ? false : true
             self?.mainView.recentKeywordCollectionView.isHidden = value ? true : false
+        }
+        
+        recentkeywordViewModel.output.reversedKeywordsList.bind { [weak self] _ in
+            self?.mainView.recentKeywordCollectionView.reloadData()
         }
     }
     
@@ -151,7 +150,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         
         switch collectionView {
         case mainView.recentKeywordCollectionView:
-            return searchKeywordList.count
+            return recentkeywordViewModel.output.reversedKeywordsList.value.count
         case mainView.todayMovieCollectionView:
             return todaymovieViewModel.output.trendMovieResults.value.count
         default:
@@ -164,17 +163,20 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         switch collectionView {
         case mainView.recentKeywordCollectionView:
             
-            let keyword = searchKeywordList.reversed()[indexPath.item]
+            recentkeywordViewModel.input.requestKeywordsList.value = ()
+            
+            var keywordsList = recentkeywordViewModel.output.reversedKeywordsList.value
+            let keyword = keywordsList[indexPath.item]
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentKeywordCollectionViewCell.id, for: indexPath) as? RecentKeywordCollectionViewCell else { return UICollectionViewCell() }
             
             cell.getDataFromAPI(keyword)
             cell.deleteAction = {
                 // 해당되는 키워드 삭제
-                guard let index = self.searchKeywordList.firstIndex(of: keyword) else { return }
-                self.searchKeywordList.remove(at: index)
+                guard let index = keywordsList.firstIndex(of: keyword) else { return }
+                keywordsList.remove(at: index)
                 
-                UserDefaultsManager.shared.saveData(value: self.searchKeywordList, type: .recentKeyword)
+                UserDefaultsManager.shared.saveData(value: keywordsList, type: .recentKeyword)
             }
             cell.cornerRadius()
             cell.layoutIfNeeded()
@@ -211,7 +213,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         
         switch collectionView {
         case mainView.recentKeywordCollectionView:
-            let keyword = searchKeywordList.reversed()[indexPath.item]
+            let keyword = recentkeywordViewModel.output.reversedKeywordsList.value[indexPath.item]
             
             let vc = SearchResultViewController()
             vc.isEmptyFirst = false
@@ -236,7 +238,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         if collectionView == mainView.recentKeywordCollectionView {
-            let text = searchKeywordList.reversed()[indexPath.row]
+            let text = recentkeywordViewModel.output.reversedKeywordsList.value[indexPath.row]
             let fontStyle = UIFont.systemFont(ofSize: 14, weight: .medium)
             
             let cellWidth = text.size(withAttributes: [.font: fontStyle]).width + 40
