@@ -16,15 +16,15 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
     let posterImageView: BaseImageView
     let textStackView = UIStackView()
     let titleLabel: BaseLabel
-    let heartButton = UIButton()
+    var heartButton: CustomHeartButton
     let plotLabel: BaseLabel
-    
-    var buttonTapAction: (() -> ())?
     
     override init(frame: CGRect) {
         posterImageView = BaseImageView(type: UIImage(named: "profile_11") ?? UIImage(), bgcolor: .catsWhite)
         
         titleLabel = BaseLabel(text: "", align: .left, color: .catsWhite, size: 16, weight: .bold)
+
+        heartButton = CustomHeartButton()
         
         plotLabel = BaseLabel(text: "", align: .left, size: 12, weight: .regular, line: 2)
         
@@ -33,14 +33,8 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
         configHierarchy()
         configLayout()
         configView()
-        
-        heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
     }
-    
-    @objc func heartButtonTapped() {
-        buttonTapAction?()
-    }
-    
+
     func configHierarchy() {
         [posterImageView, textStackView, heartButton ].forEach {
             self.addSubview($0)
@@ -82,24 +76,20 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
     
     private func configView() {
         posterImageView.backgroundColor = .catsDarkgray
-        
-        heartButton.configuration = .filled()
-        heartButton.configuration?.imagePadding = 0
-        heartButton.configuration?.baseForegroundColor = .catsMain
-        heartButton.configuration?.baseBackgroundColor = .clear
     }
     
-    func getData(url: String, title: String, plot: String, isLiked: Bool) {
+    func getData(url: String, title: String, plot: String) {
         posterImageView.kf.setImage(with: URL(string: url),
                                     options: [
                                         .processor(DownSampling.processor(posterImageView)),
                                         .scaleFactor(UIScreen.main.scale),
-                                        .cacheOriginalImage
+                                        .onlyFromCache
                                     ])
         
         titleLabel.text = title
         plotLabel.text = plot
-        heartButton.configuration?.image = UIImage(systemName: isLiked ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
+        
+        posterCornerRadius()
     }
 
     func posterCornerRadius() {

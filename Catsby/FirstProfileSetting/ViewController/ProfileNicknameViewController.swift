@@ -34,7 +34,6 @@ final class ProfileNicknameViewController: UIViewController {
         setCollectionView()
         bindVMData()
         
-        viewModel.input.isCompleteStatus.value = ()
         mainView.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
     

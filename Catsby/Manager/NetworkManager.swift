@@ -14,9 +14,8 @@ final class NetworkManager {
     static let pathUrl = "https://image.tmdb.org/t/p/w500"
     static let originalUrl = "https://image.tmdb.org/t/p/original"
     private init() {}
-
-    func callRequest<T: Decodable>(type: T.Type, api: TmdbAPI, successHandler: @escaping (T) -> (), failHandler: @escaping () -> ()) {
-        
+    
+    func testCallRequest(api: TmdbAPI) {
         AF.request(
             api.endPoint,
             method: api.method,
@@ -24,8 +23,11 @@ final class NetworkManager {
             encoding: URLEncoding(destination: .queryString),
             headers: api.header
         ).responseString { value in
-//            dump(value)
+            dump(value)
         }
+    }
+
+    func callRequest<T: Decodable>(type: T.Type, api: TmdbAPI, successHandler: @escaping (T) -> (), failHandler: @escaping () -> ()) {
         
         AF.request(
             api.endPoint,
