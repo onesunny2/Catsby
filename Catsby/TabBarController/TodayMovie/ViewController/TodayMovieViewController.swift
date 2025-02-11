@@ -182,12 +182,10 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
 
             cell.buttonTapAction = {
-                let key = String(row.id)
-                var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
-                
-                savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
 
-                UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
+                UserDefaultsManager.shared.changeDicData(id: row.id)
+                
+                let savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
 
                 // 상단 프로필에 변경된 무비박스 카운트 반영되도록
                 let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count

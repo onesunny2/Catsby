@@ -83,6 +83,17 @@ extension UserDefaultsManager {
         UserDefaults.standard.set(value, forKey: type.saveKey)
     }
     
+    // 좋아요 버튼 액션 좋아요 저장 로직
+    func changeDicData(type: SaveData = .likeButton, id: Int) {
+        
+        let key = String(id)
+        var dicList = self.getDicData(type: type)
+        
+        dicList[key] = (dicList[key] ?? false) ? false : true
+        
+        self.saveData(value: dicList, type: type)
+    }
+    
     func resetData() {
         for key in UserDefaults.standard.dictionaryRepresentation().keys {
             UserDefaults.standard.removeObject(forKey: key.description)
