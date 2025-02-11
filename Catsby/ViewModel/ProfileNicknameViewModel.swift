@@ -47,17 +47,14 @@ final class ProfileNicknameViewModel: BaseViewModel {
         let nickname: Observable<String?> = Observable("")
         let completeButton: Observable<Void> = Observable(())
         let mbtiButtonAction: Observable<(Int, Int)> = Observable((0, 0))
-        var isCompleteStatus: Observable<Void> = Observable(())
     }
     
     struct Output {
         let invalidText: Observable<String> = Observable("")
         let isNicknameError: Observable<Bool> = Observable(false)
         let viewTransition: Observable<Void> = Observable(())
-        let isCompleted: Observable<Bool> = Observable(false)
         var isTopOn: [Observable<Bool>] = []
         var isBottomOn: [Observable<Bool>] = []
-        let mbtiSelectedCount: Observable<Int> = Observable(0)
         var isCompletePossible: Observable<Bool> = Observable(false)
     }
     
@@ -68,6 +65,7 @@ final class ProfileNicknameViewModel: BaseViewModel {
     let mbtiList = [["E", "I"], ["S", "N"], ["T", "F"], ["J", "P"]]
     
     var currentSelectedImage: String = ""
+    var mbtiSelectedCount = 0
     let randomImage = ProfileImage.imageList.randomElement() ?? "profile_10"
     
     init() {
@@ -86,7 +84,10 @@ final class ProfileNicknameViewModel: BaseViewModel {
     
     func transformBinds() {
         input.nickname.bind { [weak self] _ in
-            self?.checkNicknameCondition()
+            
+            guard let self else { return }
+            checkNicknameCondition()
+            output.isCompletePossible.value = !output.isNicknameError.value && (mbtiSelectedCount == 4)
         }
         
         input.completeButton.lazyBind { [weak self] _ in
@@ -94,12 +95,11 @@ final class ProfileNicknameViewModel: BaseViewModel {
         }
         
         input.mbtiButtonAction.lazyBind { [weak self] index, tag in
-            self?.mbtiButtonLogic(index, tag)
+            
+            guard let self else { return }
+            mbtiButtonLogic(index, tag)
+            output.isCompletePossible.value = !output.isNicknameError.value && (mbtiSelectedCount == 4)
         }
-        
-//        input.isCompleteStatus.bind { [weak self] _ in
-//            self?.checkButtonStatus()
-//        }
     }
     
     private func valueSetting() {
@@ -110,11 +110,7 @@ final class ProfileNicknameViewModel: BaseViewModel {
             output.isBottomOn.append(Observable(false))
         }
     }
-    
-//    private func checkButtonStatus() {
-//        output.isCompletePossible = output.isCompleted.value && (output.mbtiSelectedCount.value == 4)
-//    }
-    
+
     private func checkNicknameCondition() {
         
         guard let text = input.nickname.value else {
@@ -127,7 +123,6 @@ final class ProfileNicknameViewModel: BaseViewModel {
             if "@#$%".contains(character) {
                 output.invalidText.value = Comment.specialCharacter.rawValue
                 output.isNicknameError.value = true
-                output.isCompleted.value = false
                 return
             }
         }
@@ -136,7 +131,6 @@ final class ProfileNicknameViewModel: BaseViewModel {
         if text.contains(/\d/) {
             output.invalidText.value = Comment.number.rawValue
             output.isNicknameError.value = true
-            output.isCompleted.value = false
             return
         }
         
@@ -145,24 +139,19 @@ final class ProfileNicknameViewModel: BaseViewModel {
         switch count {
         case 0:
             output.invalidText.value = Comment.space.rawValue
-            output.isNicknameError.value = false
-            output.isCompleted.value = false
+            output.isNicknameError.value = true
         case 2...9:
             output.invalidText.value = Comment.pass.rawValue
             output.isNicknameError.value = false
-            output.isCompleted.value = true
         default:
             output.invalidText.value = Comment.length.rawValue
             output.isNicknameError.value = true
-            output.isCompleted.value = false
         }
-        
-        output.isCompletePossible.value = (output.invalidText.value == Comment.pass.rawValue) && (output.mbtiSelectedCount.value == 4)
     }
     
     private func tappedCompleteButton() {
         
-        if (output.invalidText.value == Comment.pass.rawValue) && (output.mbtiSelectedCount.value == 4) {
+        if (output.invalidText.value == Comment.pass.rawValue) && (mbtiSelectedCount == 4) {
 
             guard let text = input.nickname.value else {
                 print("text nil")
@@ -206,7 +195,7 @@ final class ProfileNicknameViewModel: BaseViewModel {
         let topCount = output.isTopOn.filter { $0.value == true }.count
         let bottomCount = output.isBottomOn.filter { $0.value == true }.count
         
-        output.mbtiSelectedCount.value = topCount + bottomCount
-        output.isCompletePossible.value = (output.invalidText.value == Comment.pass.rawValue) && (output.mbtiSelectedCount.value == 4)
+        mbtiSelectedCount = topCount + bottomCount
+
     }
 }
