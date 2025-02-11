@@ -188,7 +188,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
                 savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
 
                 UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
-                
+
                 // 상단 프로필에 변경된 무비박스 카운트 반영되도록
                 let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
                 let newtitle = "\(count)개의 무비박스 보관중"
@@ -198,7 +198,8 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             }
             
             let url = NetworkManager.pathUrl + row.posterpath
-            cell.getData(url: url, title: row.title, plot: row.overview, isLiked: isLiked ?? false)
+            cell.getData(url: url, title: row.title, plot: row.overview)
+            cell.heartButton.isSelected = isLiked ?? false
             cell.posterCornerRadius()
             
             return cell
