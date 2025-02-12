@@ -11,14 +11,10 @@ import SnapKit
 final class TodayMovieViewController: UIViewController {
     
     private let mainView = TodayMovieView()
-    private let viewModel = TodayMovieViewModel()
+    private let todaymovieViewModel = TodayMovieViewModel()
+    private let recentkeywordViewModel = RecentSearchKeywordViewModel()
 
     var selectedMovie = 0  // 영화 상세화면에서 좋아요 반영되었을 때 dataReload를 위해 저장해두는 값
-    var searchKeywordList = UserDefaultsManager.shared.getArrayData(type: .recentKeyword) {
-        didSet {
-            mainView.recentKeywordCollectionView.reloadData()
-        }
-    }
     
     deinit {
         print("메인화면 VC Deinit")
@@ -36,7 +32,9 @@ final class TodayMovieViewController: UIViewController {
         
         setNavigation()
         setCollectionView()
-        viewModel.input.getTodayMovieData.value = ()
+        todaymovieViewModel.input.getTodayMovieData.value = ()
+        recentkeywordViewModel.input.checkKeyword.value = ()
+        recentkeywordViewModel.input.requestKeywordsList.value = ()
         bindVMData()
         tapGesture()
         
@@ -44,16 +42,25 @@ final class TodayMovieViewController: UIViewController {
     }
     
     private func bindVMData() {
-        viewModel.output.trendMovieResults.bind { [weak self] _ in
+        todaymovieViewModel.output.trendMovieResults.bind { [weak self] _ in
             self?.mainView.todayMovieCollectionView.reloadData()
         }
         
-        viewModel.output.newMovieboxTitle.bind { [weak self] title in
+        todaymovieViewModel.output.newMovieboxTitle.bind { [weak self] title in
             self?.mainView.profileboxView.movieboxButton.changeTitle(title: title, size: 14, weight: .bold)
         }
         
-        viewModel.output.reloadIndexPath.lazyBind { [weak self] indexPath in
+        todaymovieViewModel.output.reloadIndexPath.lazyBind { [weak self] indexPath in
             self?.mainView.todayMovieCollectionView.reloadItems(at: indexPath)
+        }
+        
+        recentkeywordViewModel.output.isKeywordIn.bind { [weak self] value in
+            self?.mainView.noSearchLabel.isHidden = value ? false : true
+            self?.mainView.recentKeywordCollectionView.isHidden = value ? true : false
+        }
+        
+        recentkeywordViewModel.output.reversedKeywordsList.bind { [weak self] _ in
+            self?.mainView.recentKeywordCollectionView.reloadData()
         }
     }
     
@@ -65,12 +72,6 @@ final class TodayMovieViewController: UIViewController {
         let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
         let newtitle = "\(count)개의 무비박스 보관중"
         mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
-        
-        // 최근검색어 분기점
-        searchKeywordList = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
-        let keywordCount = UserDefaultsManager.shared.getArrayData(type: .recentKeyword).count
-        mainView.noSearchLabel.isHidden = (keywordCount == 0) ? false : true
-        mainView.recentKeywordCollectionView.isHidden = (keywordCount == 0) ? true : false
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -83,17 +84,15 @@ final class TodayMovieViewController: UIViewController {
     
     // 최근 검색어 전체 삭제 기능
     @objc func deleteAllkeywordsButtonTapped() {
-        let title = "최근검색어 삭제"
-        let message = "최근검색어를 모두 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다."
+        let title = recentkeywordViewModel.alertTitle
+        let message = recentkeywordViewModel.alertMessage
         
-        alerMessage(title, message) {
-            var searchKeywords = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
-            searchKeywords.removeAll()
-            UserDefaultsManager.shared.saveData(value: searchKeywords, type: .recentKeyword)
-            self.searchKeywordList = searchKeywords
+        alerMessage(title, message) { [weak self] in
             
-            self.mainView.noSearchLabel.isHidden = false
-            self.mainView.recentKeywordCollectionView.isHidden = true
+            self?.recentkeywordViewModel.input.alertAction.value = ()
+            
+            self?.mainView.noSearchLabel.isHidden = false
+            self?.mainView.recentKeywordCollectionView.isHidden = true
         }
     }
     
@@ -150,9 +149,9 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         
         switch collectionView {
         case mainView.recentKeywordCollectionView:
-            return searchKeywordList.count
+            return recentkeywordViewModel.output.reversedKeywordsList.value.count
         case mainView.todayMovieCollectionView:
-            return viewModel.output.trendMovieResults.value.count
+            return todaymovieViewModel.output.trendMovieResults.value.count
         default:
             return 0
         }
@@ -163,36 +162,31 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         switch collectionView {
         case mainView.recentKeywordCollectionView:
             
-            let keyword = searchKeywordList.reversed()[indexPath.item]
+            let keywordsList = recentkeywordViewModel.output.reversedKeywordsList.value
+            let keyword = keywordsList[indexPath.item]
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentKeywordCollectionViewCell.id, for: indexPath) as? RecentKeywordCollectionViewCell else { return UICollectionViewCell() }
+
+            cell.deleteButton.tag = indexPath.item
+            cell.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
             
-            cell.getDataFromAPI(keyword)
-            cell.deleteAction = {
-                // 해당되는 키워드 삭제
-                guard let index = self.searchKeywordList.firstIndex(of: keyword) else { return }
-                self.searchKeywordList.remove(at: index)
-                
-                UserDefaultsManager.shared.saveData(value: self.searchKeywordList, type: .recentKeyword)
-            }
-            cell.cornerRadius()
-            cell.layoutIfNeeded()
+            cell.sendCellData(keyword)
             
             return cell
             
         case mainView.todayMovieCollectionView:
 
-            let row = viewModel.output.trendMovieResults.value[indexPath.item]
+            let row = todaymovieViewModel.output.trendMovieResults.value[indexPath.item]
             
-            viewModel.input.cellIdAndPath.value = (row.id, row.posterpath)
+            todaymovieViewModel.input.cellIdAndPath.value = (row.id, row.posterpath)
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.id, for: indexPath) as? TodayMovieCollectionViewCell else { return UICollectionViewCell() }
             
             cell.heartButton.tag = indexPath.item
             cell.heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
 
-            cell.getData(url: viewModel.pathUrl, title: row.title, plot: row.overview)
-            cell.heartButton.isSelected = viewModel.isLiked
+            cell.getData(url: todaymovieViewModel.pathUrl, title: row.title, plot: row.overview)
+            cell.heartButton.isSelected = todaymovieViewModel.isLiked
             
             return cell
             
@@ -203,14 +197,20 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     @objc func heartButtonTapped(_ sender: UIButton) {
-        viewModel.input.heartBtnTapped.value = sender.tag
+        print(#function)
+        todaymovieViewModel.input.heartBtnTapped.value = sender.tag
+    }
+    
+    @objc func deleteButtonTapped(_ sender: UIButton) {
+        print(#function)
+        recentkeywordViewModel.input.deleteBtnTapped.value = sender.tag
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         switch collectionView {
         case mainView.recentKeywordCollectionView:
-            let keyword = searchKeywordList.reversed()[indexPath.item]
+            let keyword = recentkeywordViewModel.output.reversedKeywordsList.value[indexPath.item]
             
             let vc = SearchResultViewController()
             vc.isEmptyFirst = false
@@ -222,7 +222,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             selectedMovie = indexPath.item
             
             let vc = MovieDetailViewController()
-            vc.trendResult = viewModel.output.trendMovieResults.value[indexPath.item]
+            vc.trendResult = todaymovieViewModel.output.trendMovieResults.value[indexPath.item]
             vc.isSearchresult = false
             
             self.viewTransition(style: .push(animated: true), vc: vc)
@@ -235,7 +235,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         if collectionView == mainView.recentKeywordCollectionView {
-            let text = searchKeywordList.reversed()[indexPath.row]
+            let text = recentkeywordViewModel.output.reversedKeywordsList.value[indexPath.row]
             let fontStyle = UIFont.systemFont(ofSize: 14, weight: .medium)
             
             let cellWidth = text.size(withAttributes: [.font: fontStyle]).width + 40

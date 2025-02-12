@@ -102,7 +102,7 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                 let nav = UINavigationController(rootViewController: OnboardingViewController())
                 self.viewTransition(style: .windowRoot, vc: nav)
                 
-                UserDefaultsManager.shared.resetData()
+                UserDefaultsManager.shared.resetAllData()
             }
         }
     }
