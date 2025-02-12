@@ -67,11 +67,7 @@ final class TodayMovieViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // 무비박스 갯수 반영
-        let savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
-        let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
-        let newtitle = "\(count)개의 무비박스 보관중"
-        mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
+//        movieboxCount()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -80,6 +76,13 @@ final class TodayMovieViewController: UIViewController {
         // 영화 상세화면에서 좋아요 기능 적용한 것 해당 영화만 데이터 리로드 되도록
             // ❔왜인지 viewWillAppear에서 실행하면 시점이 밀리는지 정확한 index로 찾아가지 못함
         mainView.todayMovieCollectionView.reloadItems(at: [IndexPath(item: selectedMovie, section: 0)])
+    }
+    
+    private func movieboxCount() {
+        let savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
+        let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
+        let newtitle = "\(count)개의 무비박스 보관중"
+        mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
     }
     
     // 최근 검색어 전체 삭제 기능
@@ -113,10 +116,14 @@ final class TodayMovieViewController: UIViewController {
     @objc func searchItemTapped() {
         
         let vc = SearchResultViewController()
-        vc.heartButtonActionToMainView = {
-            self.mainView.todayMovieCollectionView.reloadData()
-        }
         vc.viewModel.isEmptyFirst = true
+        
+        // TODO: 질문 - 왜 여기서는 작동이 안될까?
+//        vc.viewModel.output.sendHeartBtnAction.lazyBind { [weak self] title in
+//            
+//            self?.mainView.profileboxView.movieboxButton.changeTitle(title: title, size: 14, weight: .bold)
+//            self?.mainView.todayMovieCollectionView.reloadData()
+//        }
         self.viewTransition(style: .push(animated: true), vc: vc)
     }
     
@@ -215,6 +222,11 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             let vc = SearchResultViewController()
             vc.viewModel.isEmptyFirst = false
             vc.viewModel.input.recentSearchKeyword.value = keyword
+            vc.viewModel.output.sendHeartBtnAction.lazyBind { [weak self] title in
+                print(title)
+                self?.mainView.profileboxView.movieboxButton.changeTitle(title: title, size: 14, weight: .bold)
+                self?.mainView.todayMovieCollectionView.reloadData()
+            }
             
             self.viewTransition(style: .push(animated: true), vc: vc)
             

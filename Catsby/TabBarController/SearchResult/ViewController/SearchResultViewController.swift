@@ -176,20 +176,6 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         cell.heartButton.addTarget(self, action: #selector(heartbuttonTapped), for: .touchUpInside)
         cell.heartButton.isSelected = isLiked
         
-//        cell.tapbuttonAction = {
-//            let key = String(row.id)
-//            var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
-//            
-//            savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
-//
-//            UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
-//            
-//            self.mainView.tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .none)
-//            
-//            // 메인 화면에 전달 할 좋아요 내용(검색결과에서 누른 영화가 오늘의 영화에 있을 가능성 고려)
-//            self.heartButtonActionToMainView?()
-//        }
-        
         return cell
     }
     

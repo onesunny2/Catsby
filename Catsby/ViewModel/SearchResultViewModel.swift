@@ -46,6 +46,7 @@ final class SearchResultViewModel: BaseViewModel {
         let isResultsZero: Observable<Bool> = Observable(true)
         let scrollToTop: Observable<Void> = Observable(())
         let reloadIndexPath: Observable<[IndexPath]> = Observable([])
+        let sendHeartBtnAction: Observable<String> = Observable("")
     }
     
     private(set) var input: Input
@@ -171,8 +172,12 @@ extension SearchResultViewModel {
         let movie = output.searchResults.value[tag]
         UserDefaultsManager.shared.changeDicData(id: movie.id)
         
-       // 좋아요 갯수는 이전 화면과 연결해줄 때 적용
+        let savedLikedList = UserDefaultsManager.shared.getDicData(type: .likeButton)
+        let isLikedCount = savedLikedList.filter { $0.value == true }.count
+        let newTitle = "\(isLikedCount)개의 무비박스 보관중"
         
+       // 좋아요 갯수는 이전 화면과 연결해줄 때 적용(좋아요 갯수랑, 데이터 리로드 시키는 역할)
+        output.sendHeartBtnAction.value = newTitle
         output.reloadIndexPath.value = [IndexPath(row: tag, section: 0)]
     }
 }

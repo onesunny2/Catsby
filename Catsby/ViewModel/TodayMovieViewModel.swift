@@ -74,6 +74,8 @@ final class TodayMovieViewModel: BaseViewModel {
             self?.getBtnStatusAndPathurl(id, url)
         }
     }
+    
+//    func 
 }
 
 // 실행 매서드 모음
