@@ -37,6 +37,12 @@ final class ProfileNicknameViewController: UIViewController {
         mainView.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
     
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        view.endEditing(true)
+    }
+    
     private func bindVMData() {
         viewModel.output.invalidText.bind { [weak self] _ in
             self?.mainView.checkNickname.text = self?.viewModel.output.invalidText.value
