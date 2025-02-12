@@ -74,6 +74,13 @@ final class TodayMovieViewModel: BaseViewModel {
             self?.getBtnStatusAndPathurl(id, url)
         }
     }
+    
+    func movieboxCount() {
+        let savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
+        let count = savedDictionary.filter{ $0.value == true }.count
+        let newtitle = "\(count)개의 무비박스 보관중"
+        output.newMovieboxTitle.value = newtitle
+    }
 }
 
 // 실행 매서드 모음
@@ -97,9 +104,7 @@ extension TodayMovieViewModel {
         UserDefaultsManager.shared.changeDicData(id: movie.id)
         
         // 버튼을 눌렀을 때 좋아요를 한 영화의 갯수
-        let savedDicList = UserDefaultsManager.shared.getDicData(type: .likeButton)
-        let likedMovieCount = savedDicList.filter { $0.value == true }.count
-        output.newMovieboxTitle.value = "\(likedMovieCount)개의 무비박스 보관중"
+        movieboxCount()
         
         // datareload 필요한 영화의 indexPath
         output.reloadIndexPath.value = [IndexPath(item: tag, section: 0)]

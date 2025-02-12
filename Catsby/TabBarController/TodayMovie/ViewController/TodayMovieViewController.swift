@@ -37,6 +37,7 @@ final class TodayMovieViewController: UIViewController {
         recentkeywordViewModel.input.requestKeywordsList.value = ()
         bindVMData()
         tapGesture()
+        todaymovieViewModel.movieboxCount()
         
         mainView.deleteAllKeywordButton.addTarget(self, action: #selector(deleteAllkeywordsButtonTapped), for: .touchUpInside)
     }
@@ -62,16 +63,6 @@ final class TodayMovieViewController: UIViewController {
         recentkeywordViewModel.output.reversedKeywordsList.bind { [weak self] _ in
             self?.mainView.recentKeywordCollectionView.reloadData()
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // 무비박스 갯수 반영
-        let savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
-        let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
-        let newtitle = "\(count)개의 무비박스 보관중"
-        mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -113,10 +104,16 @@ final class TodayMovieViewController: UIViewController {
     @objc func searchItemTapped() {
         
         let vc = SearchResultViewController()
-        vc.heartButtonActionToMainView = {
-            self.mainView.todayMovieCollectionView.reloadData()
+        vc.viewModel.isEmptyFirst = true
+        vc.viewModel.output.reloadMainViewKeywords.lazyBind { [weak self] keywords in
+            self?.recentkeywordViewModel.output.reversedKeywordsList.value = keywords
         }
-        vc.isEmptyFirst = true
+        // TODO: 질문 - 왜 여기서는 작동이 안될까?
+//        vc.viewModel.output.sendHeartBtnAction.lazyBind { [weak self] title in
+//            
+//            self?.mainView.profileboxView.movieboxButton.changeTitle(title: title, size: 14, weight: .bold)
+//            self?.mainView.todayMovieCollectionView.reloadData()
+//        }
         self.viewTransition(style: .push(animated: true), vc: vc)
     }
     
@@ -213,8 +210,16 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             let keyword = recentkeywordViewModel.output.reversedKeywordsList.value[indexPath.item]
             
             let vc = SearchResultViewController()
-            vc.isEmptyFirst = false
-            vc.keywordQuery = keyword
+            vc.viewModel.isEmptyFirst = false
+            vc.viewModel.input.recentSearchKeyword.value = keyword
+            vc.viewModel.output.sendHeartBtnAction.lazyBind { [weak self] title in
+                print(title)
+                self?.mainView.profileboxView.movieboxButton.changeTitle(title: title, size: 14, weight: .bold)
+                self?.mainView.todayMovieCollectionView.reloadData()
+            }
+//            vc.viewModel.output.reloadMainViewKeywords.lazyBind { [weak self] keywords in
+//                self?.recentkeywordViewModel.output.reversedKeywordsList.value = keywords
+//            }
             
             self.viewTransition(style: .push(animated: true), vc: vc)
             
