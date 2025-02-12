@@ -37,7 +37,7 @@ final class TodayMovieViewModel: BaseViewModel {
     }
     
     struct Output {
-        let trendMovieResults: Observable<[TrendResults]> = Observable([])
+        let trendMovieResults: Observable<[SearchResults]> = Observable([])
         let newMovieboxTitle: Observable<String> = Observable("")
         let reloadIndexPath: Observable<[IndexPath]> = Observable([])
     }
@@ -87,7 +87,7 @@ final class TodayMovieViewModel: BaseViewModel {
 extension TodayMovieViewModel {
     
     private func callRequest() {
-        NetworkManager.shared.callRequest(type: TrendMovie.self, api: .trend) { [weak self] result in
+        NetworkManager.shared.callRequest(type: SearchMovie.self, api: .trend) { [weak self] result in
            
             self?.output.trendMovieResults.value = result.results
             
