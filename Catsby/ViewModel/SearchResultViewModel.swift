@@ -47,6 +47,7 @@ final class SearchResultViewModel: BaseViewModel {
         let scrollToTop: Observable<Void> = Observable(())
         let reloadIndexPath: Observable<[IndexPath]> = Observable([])
         let sendHeartBtnAction: Observable<String> = Observable("")
+        let reloadMainViewKeywords: Observable<[String]> = Observable([])
     }
     
     private(set) var input: Input
@@ -152,6 +153,9 @@ extension SearchResultViewModel {
         if output.searchResults.value.count != 0 {
             output.scrollToTop.value = ()
         }
+        
+        // 이전 메인화면의 최근 키워드 목록 업데이트
+        output.reloadMainViewKeywords.value = savedKeywords.reversed()
     }
     
     // 페이지네이션을 위한 prefetch 처리
