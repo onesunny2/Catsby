@@ -37,6 +37,7 @@ final class TodayMovieViewController: UIViewController {
         recentkeywordViewModel.input.requestKeywordsList.value = ()
         bindVMData()
         tapGesture()
+        todaymovieViewModel.movieboxCount()
         
         mainView.deleteAllKeywordButton.addTarget(self, action: #selector(deleteAllkeywordsButtonTapped), for: .touchUpInside)
     }
@@ -64,25 +65,12 @@ final class TodayMovieViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-//        movieboxCount()
-    }
-    
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         
         // 영화 상세화면에서 좋아요 기능 적용한 것 해당 영화만 데이터 리로드 되도록
             // ❔왜인지 viewWillAppear에서 실행하면 시점이 밀리는지 정확한 index로 찾아가지 못함
         mainView.todayMovieCollectionView.reloadItems(at: [IndexPath(item: selectedMovie, section: 0)])
-    }
-    
-    private func movieboxCount() {
-        let savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
-        let count = savedDictionary.map{ $0.value }.filter{ $0 == true }.count
-        let newtitle = "\(count)개의 무비박스 보관중"
-        mainView.profileboxView.movieboxButton.changeTitle(title: newtitle, size: 14, weight: .bold)
     }
     
     // 최근 검색어 전체 삭제 기능
