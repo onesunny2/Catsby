@@ -214,7 +214,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             
             let vc = SearchResultViewController()
             vc.viewModel.isEmptyFirst = false
-            vc.viewModel.input.searchKeyword.value = keyword
+            vc.viewModel.input.recentSearchKeyword.value = keyword
             
             self.viewTransition(style: .push(animated: true), vc: vc)
             

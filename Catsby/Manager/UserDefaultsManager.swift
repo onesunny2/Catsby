@@ -101,7 +101,7 @@ extension UserDefaultsManager {
     }
     
     func resetOneData(type: SaveData) {
-        for key in UserDefaults.standard.dictionaryRepresentation().keys {
+        for _ in UserDefaults.standard.dictionaryRepresentation().keys {
             UserDefaults.standard.removeObject(forKey: type.saveKey)
         }
     }

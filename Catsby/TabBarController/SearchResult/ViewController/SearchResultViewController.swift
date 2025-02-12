@@ -31,12 +31,22 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         bindVMData()
         
         if !viewModel.isEmptyFirst {
-            searchController.searchBar.text = viewModel.input.searchKeyword.value
+            searchController.searchBar.text = viewModel.input.recentSearchKeyword.value
         }
     }
     
     deinit {
         print("검색결과 VC Deinit")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if viewModel.isEmptyFirst {
+            DispatchQueue.main.async {
+                self.searchController.searchBar.becomeFirstResponder()
+            }
+        }
     }
     
     private func bindVMData() {
@@ -48,15 +58,9 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         viewModel.output.searchResults.lazyBind { [weak self] _ in
             self?.mainView.tableView.reloadData()
         }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         
-        if viewModel.isEmptyFirst {
-            DispatchQueue.main.async {
-                self.searchController.searchBar.becomeFirstResponder()
-            }
+        viewModel.output.scrollToTop.lazyBind { [weak self] _ in
+            self?.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
         }
     }
     
@@ -87,25 +91,8 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
 extension SearchResultViewController {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
-        guard let keyword = searchController.searchBar.text else { return }
-        
-        var savedKeywords = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
-        // 중복값 있다면 제거하고 추가되도록
-        if let index = savedKeywords.firstIndex(of: keyword) {
-            savedKeywords.remove(at: index)
-        }
-        savedKeywords.append(keyword)
-        UserDefaultsManager.shared.saveData(value: savedKeywords, type: .recentKeyword)
-        
-        viewModel.output.searchResults.value = []
-        currentPage = 1
-        
-        viewModel.input.searchKeyword.value = keyword
-        
-        if viewModel.output.searchResults.value.count != 0 {
-           mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-        }
+        // 키워드와 함께 로직 전달하기
+        viewModel.input.clickedSearchBtn.value = searchController.searchBar.text
     }
 }
 
@@ -222,12 +209,6 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         
-        for indexPath in indexPaths {
-        
-            if (viewModel.output.searchResults.value.count - 3 == indexPath.row) && (isEnd == false) {
-                currentPage += 1
-//                getSearchAPI()
-            }
-        }
+        viewModel.input.tableIndexPaths.value = indexPaths
     }
 }
