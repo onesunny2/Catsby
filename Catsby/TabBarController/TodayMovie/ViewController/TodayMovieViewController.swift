@@ -220,9 +220,6 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             vc.viewModel.output.reloadMainViewKeywords.lazyBind { [weak self] keywords in
                 self?.recentkeywordViewModel.output.reversedKeywordsList.value = keywords
             }
-//            vc.viewModel.output.reloadMainViewKeywords.lazyBind { [weak self] keywords in
-//                self?.recentkeywordViewModel.output.reversedKeywordsList.value = keywords
-//            }
             
             self.viewTransition(style: .push(animated: true), vc: vc)
             
