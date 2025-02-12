@@ -217,6 +217,9 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
                 self?.mainView.profileboxView.movieboxButton.changeTitle(title: title, size: 14, weight: .bold)
                 self?.mainView.todayMovieCollectionView.reloadData()
             }
+            vc.viewModel.output.reloadMainViewKeywords.lazyBind { [weak self] keywords in
+                self?.recentkeywordViewModel.output.reversedKeywordsList.value = keywords
+            }
 //            vc.viewModel.output.reloadMainViewKeywords.lazyBind { [weak self] keywords in
 //                self?.recentkeywordViewModel.output.reversedKeywordsList.value = keywords
 //            }
