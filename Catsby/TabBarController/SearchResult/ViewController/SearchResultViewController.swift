@@ -11,19 +11,10 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     
     private let mainView = SearchResultView()
     let viewModel = SearchResultViewModel()
-    private let networkManager = NetworkManager.shared
     private let searchController = UISearchController(searchResultsController: nil)
-    
-//    var isEmptyFirst: Bool = true
-    let group = DispatchGroup()
+
     var currentPage = 1
-    var keywordQuery = ""
     var isEnd = false
-    var searchResults: [SearchResults] = [] {
-        didSet {
-            mainView.tableView.reloadData()
-        }
-    }
     
     var heartButtonActionToMainView: (() -> ())?
     var currentId = 0  // 메인화면에 전달
@@ -37,15 +28,26 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         
         setNavigation()
         setTableView()
+        bindVMData()
         
         if !viewModel.isEmptyFirst {
-            searchController.searchBar.text = keywordQuery
-            getSearchAPI()
+            searchController.searchBar.text = viewModel.input.searchKeyword.value
         }
     }
     
     deinit {
         print("검색결과 VC Deinit")
+    }
+    
+    private func bindVMData() {
+        viewModel.output.isResultsZero.lazyBind { [weak self] value in
+            self?.mainView.resultLabel.isHidden = value ? false : true
+            self?.mainView.tableView.isHidden = value ? true : false
+        }
+        
+        viewModel.output.searchResults.lazyBind { [weak self] _ in
+            self?.mainView.tableView.reloadData()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -56,41 +58,6 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
                 self.searchController.searchBar.becomeFirstResponder()
             }
         }
-    }
-
-    // API 데이터 가져오기
-    private func getSearchAPI() {
-        
-        group.enter()
-        networkManager.callRequest(type: SearchMovie.self, api: .search(keyword: keywordQuery, page: currentPage)) { value in
-            
-            switch self.currentPage {
-            case 1:
-                self.searchResults = value.results
-
-            default:
-                self.searchResults.append(contentsOf: value.results)
-            }
-            
-            let caculatePage = (value.totalResults ?? 0 / 20)
-            if self.currentPage == caculatePage {
-                self.isEnd = true
-            }
-            
-            self.group.leave()
-        } failHandler: {
-            print("request error")
-            
-            self.group.leave()
-        }
-        
-        group.notify(queue: .main) {
-            // 검색결과 없으면 tableView 사라지고 레이블 나오도록
-            let isTotlaZero = (self.searchResults.count == 0)
-            self.mainView.tableView.isHidden = isTotlaZero ? true : false
-            self.mainView.resultLabel.isHidden = isTotlaZero ? false : true
-        }
-
     }
     
     // 네비게이션 타이틀 및 서치바 설정
@@ -122,7 +89,6 @@ extension SearchResultViewController {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         guard let keyword = searchController.searchBar.text else { return }
-        keywordQuery = keyword
         
         var savedKeywords = UserDefaultsManager.shared.getArrayData(type: .recentKeyword)
         // 중복값 있다면 제거하고 추가되도록
@@ -132,11 +98,12 @@ extension SearchResultViewController {
         savedKeywords.append(keyword)
         UserDefaultsManager.shared.saveData(value: savedKeywords, type: .recentKeyword)
         
-        searchResults = []
+        viewModel.output.searchResults.value = []
         currentPage = 1
-        getSearchAPI()
         
-        if searchResults.count != 0 {
+        viewModel.input.searchKeyword.value = keyword
+        
+        if viewModel.output.searchResults.value.count != 0 {
            mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
         }
     }
@@ -158,12 +125,12 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchResults.count
+        return viewModel.output.searchResults.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let row = searchResults[indexPath.row]
+        let row = viewModel.output.searchResults.value[indexPath.row]
         let genreList = Genre.genreList
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultTableViewCell.id, for: indexPath) as? SearchResultTableViewCell else { return UITableViewCell() }
@@ -232,13 +199,13 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let row = searchResults[indexPath.row]
+        let row = viewModel.output.searchResults.value[indexPath.row]
         guard let cell = tableView.cellForRow(at: indexPath) as? SearchResultTableViewCell else { return }
         
         let vc = MovieDetailViewController()
         
         vc.isSearchresult = true
-        vc.searchResult = searchResults[indexPath.row]
+        vc.searchResult = viewModel.output.searchResults.value[indexPath.row]
         // 검색결과를 타고 들어간 상세화면에서 좋아요를 눌렀을 경우 검색결과로 되돌아왔을 때 반영되도록 구현
         vc.heartButtonStatus = {
             let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)] ?? false
@@ -257,9 +224,9 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         
         for indexPath in indexPaths {
         
-            if (searchResults.count - 3 == indexPath.row) && (isEnd == false) {
+            if (viewModel.output.searchResults.value.count - 3 == indexPath.row) && (isEnd == false) {
                 currentPage += 1
-                getSearchAPI()
+//                getSearchAPI()
             }
         }
     }
