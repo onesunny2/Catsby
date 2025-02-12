@@ -13,10 +13,6 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
     let viewModel = SearchResultViewModel()
     private let searchController = UISearchController(searchResultsController: nil)
 
-    var currentPage = 1
-    var isEnd = false
-    
-    var heartButtonActionToMainView: (() -> ())?
     var currentId = 0  // 메인화면에 전달
     
     override func loadView() {
@@ -122,59 +118,19 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let row = viewModel.output.searchResults.value[indexPath.row]
-        let genreList = Genre.genreList
+        viewModel.input.cellData.value = row
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultTableViewCell.id, for: indexPath) as? SearchResultTableViewCell else { return UITableViewCell() }
-        
-        let title = row.title
-        let date = row.releaseDate
-        let genreArray = Array(row.genreID.prefix(2))
-        let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)] ?? false
-        if let posterpath = row.posterpath {
-            let url = NetworkManager.pathUrl + posterpath
-            
-            // 가지고 있는 장르 갯수에 따라 분리
-            switch genreArray.count {
-            case 0:
-                let genre: [String] = []
-                cell.getData(url, title, date, genre)
-            case 1:
-                let genre = [genreList[genreArray[0]] ?? "장르오류"]
-                cell.getData(url, title, date, genre)
-            case 2:
-                let genre = [genreList[genreArray[0]] ?? "장르오류", genreList[genreArray[1]] ?? "장르오류"]
-                cell.getData(url, title, date, genre)
-            default:
-                print("genre error")
-                break
-            }
-        } else {
-            // 포스터 없으면 기본값으로 사용할 이미지
-            let url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYaqjTuNYAbIxAk0GzMiX8-ah3Q63B8cIBMyFJE1zx-4Ty8ZIOSAneIuNysLOXvIffm2o&usqp=CAU"
-            
-            // 가지고 있는 장르 갯수에 따라 분리
-            switch genreArray.count {
-            case 0:
-                let genre: [String] = []
-                cell.getData(url, title, date, genre)
-            case 1:
-                let genre = [genreList[genreArray[0]] ?? "장르오류"]
-                cell.getData(url, title, date, genre)
-            case 2:
-                let genre = [genreList[genreArray[0]] ?? "장르오류", genreList[genreArray[1]] ?? "장르오류"]
-                cell.getData(url, title, date, genre)
-            default:
-                print("genre error")
-                break
-            }
-        }
 
-        cell.cornerRadius()
-        cell.selectionStyle = .none
+        let url = viewModel.cellData.poster
+        let title = viewModel.cellData.title
+        let date = viewModel.cellData.date
+        let genre = viewModel.cellData.genre ?? []
+        cell.getData(url, title, date, genre)
         
         cell.heartButton.tag = indexPath.item
         cell.heartButton.addTarget(self, action: #selector(heartbuttonTapped), for: .touchUpInside)
-        cell.heartButton.isSelected = isLiked
+        cell.heartButton.isSelected = viewModel.cellData.isLiked
         
         return cell
     }
@@ -200,7 +156,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             
             cell.heartButton.configuration?.image = UIImage(systemName: savedStatus ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
             
-            self.heartButtonActionToMainView?()  // 여기서 변동된 것도 메인화면에 가야하니까
+//            self.heartButtonActionToMainView?()  // 여기서 변동된 것도 메인화면에 가야하니까
         }
         
         self.viewTransition(style: .push(animated: true), vc: vc)

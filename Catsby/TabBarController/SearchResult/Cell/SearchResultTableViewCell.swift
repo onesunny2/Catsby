@@ -123,20 +123,15 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
                                         .cacheOriginalImage
                                     ])
         
-        // 타이틀
         titleLabel.text = title
-        
-        // 날짜
-        guard let stringToDate = UserDefaultsManager.dateformatter.date(from: date) else { return }
-        UserDefaultsManager.dateformatter.dateFormat = "yyyy. MM. dd"
-        let newDate = UserDefaultsManager.dateformatter.string(from: stringToDate)
-        releaseDateLabel.text = newDate
-        
-        // 장르
+        releaseDateLabel.text = date
         genreList = genre
 
-        if genreList.count != 0 {
-            for index in 0...genreList.count - 1 {
+        if !genreList.isEmpty {
+            
+            let count = genreList.count
+            
+            for index in 0...(count > 2 ? 1 : 0) {
                 // 📌 순서 잘 지키기..+ 빈배열이었다가 데이터를 넣었기 때문에 다시 다 그려줘야하는 점..!
                 // stackView - UIView - UILabel의 관계 구조 혼동하지 않도록
                 genreLabel.append(BaseLabel(text: genreList[index], align: .center, size: 13, weight: .medium))
@@ -154,10 +149,12 @@ final class SearchResultTableViewCell: UITableViewCell, BaseConfigure {
             }
         }
         
+        cornerRadius()
+        self.selectionStyle = .none
         self.layoutIfNeeded()
     }
     
-    func cornerRadius() {
+    private func cornerRadius() {
         posterImageView.clipCorner(5)
         self.layoutIfNeeded()
     }
