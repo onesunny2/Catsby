@@ -10,10 +10,11 @@ import UIKit
 final class SearchResultViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate {
     
     private let mainView = SearchResultView()
+    let viewModel = SearchResultViewModel()
     private let networkManager = NetworkManager.shared
     private let searchController = UISearchController(searchResultsController: nil)
     
-    var isEmptyFirst: Bool = true
+//    var isEmptyFirst: Bool = true
     let group = DispatchGroup()
     var currentPage = 1
     var keywordQuery = ""
@@ -37,16 +38,20 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         setNavigation()
         setTableView()
         
-        if !isEmptyFirst {
+        if !viewModel.isEmptyFirst {
             searchController.searchBar.text = keywordQuery
             getSearchAPI()
         }
     }
     
+    deinit {
+        print("검색결과 VC Deinit")
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if isEmptyFirst {
+        if viewModel.isEmptyFirst {
             DispatchQueue.main.async {
                 self.searchController.searchBar.becomeFirstResponder()
             }
@@ -245,7 +250,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         
         self.viewTransition(style: .push(animated: true), vc: vc)
         
-        isEmptyFirst = false
+        viewModel.isEmptyFirst = false
     }
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {

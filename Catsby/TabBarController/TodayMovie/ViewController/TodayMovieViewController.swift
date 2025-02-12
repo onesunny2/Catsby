@@ -116,7 +116,7 @@ final class TodayMovieViewController: UIViewController {
         vc.heartButtonActionToMainView = {
             self.mainView.todayMovieCollectionView.reloadData()
         }
-        vc.isEmptyFirst = true
+        vc.viewModel.isEmptyFirst = true
         self.viewTransition(style: .push(animated: true), vc: vc)
     }
     
@@ -213,7 +213,7 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             let keyword = recentkeywordViewModel.output.reversedKeywordsList.value[indexPath.item]
             
             let vc = SearchResultViewController()
-            vc.isEmptyFirst = false
+            vc.viewModel.isEmptyFirst = false
             vc.keywordQuery = keyword
             
             self.viewTransition(style: .push(animated: true), vc: vc)
