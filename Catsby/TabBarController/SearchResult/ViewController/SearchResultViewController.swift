@@ -62,6 +62,10 @@ final class SearchResultViewController: UIViewController, UISearchBarDelegate, U
         viewModel.output.scrollToTop.lazyBind { [weak self] _ in
             self?.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
         }
+        
+        viewModel.output.reloadIndexPath.lazyBind { [weak self] indexPath in
+            self?.mainView.tableView.reloadRows(at: indexPath, with: .none)
+        }
     }
     
     // 네비게이션 타이틀 및 서치바 설정
@@ -125,7 +129,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         let title = row.title
         let date = row.releaseDate
         let genreArray = Array(row.genreID.prefix(2))
-        let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)]
+        let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)] ?? false
         if let posterpath = row.posterpath {
             let url = NetworkManager.pathUrl + posterpath
             
@@ -133,13 +137,13 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             switch genreArray.count {
             case 0:
                 let genre: [String] = []
-                cell.getData(url, title, date, genre, isLiked ?? false)
+                cell.getData(url, title, date, genre)
             case 1:
                 let genre = [genreList[genreArray[0]] ?? "장르오류"]
-                cell.getData(url, title, date, genre, isLiked ?? false)
+                cell.getData(url, title, date, genre)
             case 2:
                 let genre = [genreList[genreArray[0]] ?? "장르오류", genreList[genreArray[1]] ?? "장르오류"]
-                cell.getData(url, title, date, genre, isLiked ?? false)
+                cell.getData(url, title, date, genre)
             default:
                 print("genre error")
                 break
@@ -152,13 +156,13 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             switch genreArray.count {
             case 0:
                 let genre: [String] = []
-                cell.getData(url, title, date, genre, isLiked ?? false)
+                cell.getData(url, title, date, genre)
             case 1:
                 let genre = [genreList[genreArray[0]] ?? "장르오류"]
-                cell.getData(url, title, date, genre, isLiked ?? false)
+                cell.getData(url, title, date, genre)
             case 2:
                 let genre = [genreList[genreArray[0]] ?? "장르오류", genreList[genreArray[1]] ?? "장르오류"]
-                cell.getData(url, title, date, genre, isLiked ?? false)
+                cell.getData(url, title, date, genre)
             default:
                 print("genre error")
                 break
@@ -167,26 +171,37 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
 
         cell.cornerRadius()
         cell.selectionStyle = .none
-        cell.tapbuttonAction = {
-            let key = String(row.id)
-            var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
-            
-            savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
-
-            UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
-            
-            self.mainView.tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .none)
-            
-            // 메인 화면에 전달 할 좋아요 내용(검색결과에서 누른 영화가 오늘의 영화에 있을 가능성 고려)
-            self.heartButtonActionToMainView?()
-        }
+        
+        cell.heartButton.tag = indexPath.item
+        cell.heartButton.addTarget(self, action: #selector(heartbuttonTapped), for: .touchUpInside)
+        cell.heartButton.isSelected = isLiked
+        
+//        cell.tapbuttonAction = {
+//            let key = String(row.id)
+//            var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
+//            
+//            savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
+//
+//            UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
+//            
+//            self.mainView.tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .none)
+//            
+//            // 메인 화면에 전달 할 좋아요 내용(검색결과에서 누른 영화가 오늘의 영화에 있을 가능성 고려)
+//            self.heartButtonActionToMainView?()
+//        }
         
         return cell
+    }
+    
+    @objc func heartbuttonTapped(_ sender: UIButton) {
+        print(#function)
+        viewModel.input.heartBtnTapped.value = sender.tag
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let row = viewModel.output.searchResults.value[indexPath.row]
+        
         guard let cell = tableView.cellForRow(at: indexPath) as? SearchResultTableViewCell else { return }
         
         let vc = MovieDetailViewController()

@@ -25,7 +25,7 @@ import Foundation
  - 1) 포스터 이미지 처리: 값이 없으면 기본 내장 로직으로 내보내기
  - 2) 가지고 있는 장르 갯수에 따라 보여주는 갯수 다르도록 분기처리
  - 3) 좋아요 눌렀을 때, 로직 VM으로 분리 (** 커스텀 버튼으로 교체하기)
-        ㄴ 뒤로가기 눌렀을 때 이전 화면에 내용 전달해서 좋아요 바뀌었다고 알려줘야함! (프로필박스 및 오늘의 영화에 업데이트 필요)ㅅ
+        ㄴ 뒤로가기 눌렀을 때 이전 화면에 내용 전달해서 좋아요 바뀌었다고 알려줘야함! (프로필박스 및 오늘의 영화에 업데이트 필요)
  - ✅ 4) prefetching 기능 로직 VM으로 분리
  
  5. 이전화면으로 돌아가는 backbutton 눌렀을 때, 최근 검색어 화면 잘 적용되도록 하기
@@ -38,12 +38,14 @@ final class SearchResultViewModel: BaseViewModel {
         let recentSearchKeyword: Observable<String> = Observable("")
         let clickedSearchBtn: Observable<String?> = Observable(nil)
         let tableIndexPaths: Observable<[IndexPath]> = Observable([])
+        let heartBtnTapped: Observable<Int> = Observable(0)
     }
     
     struct Output {
         let searchResults: Observable<[SearchResults]> = Observable([])
         let isResultsZero: Observable<Bool> = Observable(true)
         let scrollToTop: Observable<Void> = Observable(())
+        let reloadIndexPath: Observable<[IndexPath]> = Observable([])
     }
     
     private(set) var input: Input
@@ -83,6 +85,10 @@ final class SearchResultViewModel: BaseViewModel {
         
         input.tableIndexPaths.bind { [weak self] indexPaths in
             self?.setPagenation(indexPaths)
+        }
+        
+        input.heartBtnTapped.lazyBind { [weak self] tag in
+            self?.tappedHeartButton(tag)
         }
     }
 }
@@ -157,5 +163,16 @@ extension SearchResultViewModel {
                 callRequest(currentKeyword , currentPage)
             }
         }
+    }
+    
+    // 좋아요 버튼
+    private func tappedHeartButton(_ tag: Int) {
+        
+        let movie = output.searchResults.value[tag]
+        UserDefaultsManager.shared.changeDicData(id: movie.id)
+        
+       // 좋아요 갯수는 이전 화면과 연결해줄 때 적용
+        
+        output.reloadIndexPath.value = [IndexPath(row: tag, section: 0)]
     }
 }
