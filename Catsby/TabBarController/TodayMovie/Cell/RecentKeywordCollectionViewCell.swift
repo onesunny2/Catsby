@@ -15,9 +15,8 @@ final class RecentKeywordCollectionViewCell: UICollectionViewCell, BaseConfigure
     private let bgView = UIView()
     private let stackView = UIStackView()
     private var keywordLabel: BaseLabel
-    private let deleteButton: BaseButton
-    
-    var deleteAction: (() -> ())?
+    let deleteButton: BaseButton
+
     var backgroundAction: (() -> ())?
     
     override init(frame: CGRect) {
@@ -33,17 +32,15 @@ final class RecentKeywordCollectionViewCell: UICollectionViewCell, BaseConfigure
 
         configHierarchy()
         configLayout()
-        
-        deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-        backgroundTapGesture()
+       
+//        backgroundTapGesture()
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         
         keywordLabel.text = ""
-        deleteAction = {}
-        backgroundAction = {}
+//        backgroundAction = {}
     }
     
     func configHierarchy() {
@@ -69,27 +66,28 @@ final class RecentKeywordCollectionViewCell: UICollectionViewCell, BaseConfigure
         
     }
     
-    private func backgroundTapGesture() {
-        let tapgesture = UITapGestureRecognizer(target: self, action: #selector(backgroundTapped))
-        bgView.isUserInteractionEnabled = true
-        bgView.addGestureRecognizer(tapgesture)
-    }
+//    private func backgroundTapGesture() {
+//        let tapgesture = UITapGestureRecognizer(target: self, action: #selector(backgroundTapped))
+//        bgView.isUserInteractionEnabled = true
+//        bgView.addGestureRecognizer(tapgesture)
+//    }
+
+//    @objc private func backgroundTapped() {
+//        print(#function)
+//        backgroundAction?()
+//    }
     
-    @objc private func deleteButtonTapped() {
-        deleteAction?()
-    }
-    
-    @objc private func backgroundTapped() {
-        backgroundAction?()
-    }
-    
-    func getDataFromAPI(_ text: String) {
+    func sendCellData(_ text: String) {
         keywordLabel.text = text
+        
+        cornerRadius()
     }
     
     func cornerRadius() {
         bgView.layer.cornerRadius = 15
         bgView.clipsToBounds = true
+        
+        self.layoutIfNeeded()
     }
     
     

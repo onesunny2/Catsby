@@ -25,6 +25,7 @@ final class RecentSearchKeywordViewModel: BaseViewModel {
         let checkKeyword: Observable<Void> = Observable(())
         let alertAction: Observable<Void> = Observable(())
         let requestKeywordsList: Observable<Void> = Observable(())
+        let deleteBtnTapped: Observable<Int> = Observable(0)
     }
     
     struct Output {
@@ -59,8 +60,11 @@ final class RecentSearchKeywordViewModel: BaseViewModel {
         input.requestKeywordsList.bind { [weak self] _ in
             self?.getUserdefaultsKeywords()
         }
+        
+        input.deleteBtnTapped.lazyBind { [weak self] tag in
+            self?.deleteBtnTapped(tag)
+        }
     }
-    
 }
 
 // 매서드 분리
@@ -88,5 +92,28 @@ extension RecentSearchKeywordViewModel {
         
         // VC에서 사용중인 배열 비워주기
         output.reversedKeywordsList.value = []
+        
+        UserDefaultsManager.shared.saveData(value: [], type: .recentKeyword)
+    }
+    
+    // 최근검색어 x 표시 눌렀을 때 삭제
+    private func deleteBtnTapped(_ tag: Int) {
+        
+        var keywordsList = output.reversedKeywordsList.value
+        let keyword = keywordsList[tag]
+        
+        guard let index = keywordsList.firstIndex(of: keyword) else {
+            print("deleteButton fail")
+            return
+        }
+        
+        keywordsList.remove(at: index)
+        
+        output.reversedKeywordsList.value = keywordsList
+        
+        // 기존 배열 순서대로 다시 userdefaultsManager에 저장은 되어야 함
+        UserDefaultsManager.shared.saveData(value: Array(keywordsList.reversed()), type: .recentKeyword)
+        
+        output.isKeywordIn.value = (keywordsList.count == 0)
     }
 }

@@ -34,6 +34,7 @@ final class TodayMovieViewController: UIViewController {
         setCollectionView()
         todaymovieViewModel.input.getTodayMovieData.value = ()
         recentkeywordViewModel.input.checkKeyword.value = ()
+        recentkeywordViewModel.input.requestKeywordsList.value = ()
         bindVMData()
         tapGesture()
         
@@ -161,23 +162,15 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
         switch collectionView {
         case mainView.recentKeywordCollectionView:
             
-            recentkeywordViewModel.input.requestKeywordsList.value = ()
-            
-            var keywordsList = recentkeywordViewModel.output.reversedKeywordsList.value
+            let keywordsList = recentkeywordViewModel.output.reversedKeywordsList.value
             let keyword = keywordsList[indexPath.item]
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentKeywordCollectionViewCell.id, for: indexPath) as? RecentKeywordCollectionViewCell else { return UICollectionViewCell() }
+
+            cell.deleteButton.tag = indexPath.item
+            cell.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
             
-            cell.getDataFromAPI(keyword)
-            cell.deleteAction = {
-                // 해당되는 키워드 삭제
-                guard let index = keywordsList.firstIndex(of: keyword) else { return }
-                keywordsList.remove(at: index)
-                
-                UserDefaultsManager.shared.saveData(value: keywordsList, type: .recentKeyword)
-            }
-            cell.cornerRadius()
-            cell.layoutIfNeeded()
+            cell.sendCellData(keyword)
             
             return cell
             
@@ -204,7 +197,13 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     @objc func heartButtonTapped(_ sender: UIButton) {
+        print(#function)
         todaymovieViewModel.input.heartBtnTapped.value = sender.tag
+    }
+    
+    @objc func deleteButtonTapped(_ sender: UIButton) {
+        print(#function)
+        recentkeywordViewModel.input.deleteBtnTapped.value = sender.tag
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

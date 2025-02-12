@@ -83,7 +83,7 @@ final class TodayMovieCollectionViewCell: UICollectionViewCell, BaseConfigure {
                                     options: [
                                         .processor(DownSampling.processor(posterImageView)),
                                         .scaleFactor(UIScreen.main.scale),
-                                        .onlyFromCache
+                                        .cacheOriginalImage
                                     ])
         
         titleLabel.text = title
