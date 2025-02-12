@@ -16,8 +16,6 @@ final class RecentKeywordCollectionViewCell: UICollectionViewCell, BaseConfigure
     private let stackView = UIStackView()
     private var keywordLabel: BaseLabel
     let deleteButton: BaseButton
-
-    var backgroundAction: (() -> ())?
     
     override init(frame: CGRect) {
         keywordLabel = BaseLabel(text: "", align: .right, color: .catsBlack, size: 14, weight: .medium)
@@ -32,15 +30,12 @@ final class RecentKeywordCollectionViewCell: UICollectionViewCell, BaseConfigure
 
         configHierarchy()
         configLayout()
-       
-//        backgroundTapGesture()
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         
         keywordLabel.text = ""
-//        backgroundAction = {}
     }
     
     func configHierarchy() {
@@ -65,17 +60,6 @@ final class RecentKeywordCollectionViewCell: UICollectionViewCell, BaseConfigure
         stackView.alignment = .center
         
     }
-    
-//    private func backgroundTapGesture() {
-//        let tapgesture = UITapGestureRecognizer(target: self, action: #selector(backgroundTapped))
-//        bgView.isUserInteractionEnabled = true
-//        bgView.addGestureRecognizer(tapgesture)
-//    }
-
-//    @objc private func backgroundTapped() {
-//        print(#function)
-//        backgroundAction?()
-//    }
     
     func sendCellData(_ text: String) {
         keywordLabel.text = text

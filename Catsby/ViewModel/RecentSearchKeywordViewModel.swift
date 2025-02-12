@@ -16,7 +16,7 @@ import Foundation
     📌 왠지 이것도 검색결과 화면이랑 엮여야 할 것 같은..?
  ✅ 3. 전체 삭제 버튼 @objc 함수에서 트리거하기(✓ Input)
     - 알럿 메시지의 action값을 input으로 해서... 처리해야하나..?
- 4. 현재 cell 안에 있는 삭제 로직 VC으로 꺼내서 VM에서 처리(✓ Input) & (✓ output)
+ ✅ 4. 현재 cell 안에 있는 삭제 로직 VC으로 꺼내서 VM에서 처리(✓ Input) & (✓ output)
  */
 
 final class RecentSearchKeywordViewModel: BaseViewModel {
