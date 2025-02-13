@@ -14,7 +14,7 @@ import Foundation
  ✅ 2. 네트워크 통신을 통해 나온 모델을 가지고 가공해서 내보내기 (output)
  - 가공을 해서 내보내는 이유는 옵셔널 처리를 해야할 부분이 있을 것 같아서 후처리로 VC에서 사용하기 위함
  ** backdrop Image는 갯수에 맞춰서 해야함!! 5개 넘는지 미만인지에 따라서
- 3. 좋아요 기능
+ ✅ 3. 좋아요 기능
  - 로직 userdefaults에 있는 것으로 변경
  - 상세화면에서 좋아요 누른 후 이전 화면에서 연동되어 보이도록
  
@@ -27,11 +27,13 @@ final class DetailViewModel: BaseViewModel {
     
     struct Input {
         let callRequest: Observable<Void> = Observable(())
+        let tappedHeartBtn: Observable<Void> = Observable(())
     }
     
     struct Output {
         let endCallRequest: Observable<Void> = Observable(())
         let detailData: Observable<DetailData> = Observable(([], [], []))
+        let sendHeartBtnAction: Observable<Void> = Observable(())
     }
     
     private(set) var input: Input
@@ -39,6 +41,7 @@ final class DetailViewModel: BaseViewModel {
     
     private let group = DispatchGroup()
     var backdropDetails: BackDropDetail = (0, "", "", "", 0.0, [])
+    var cellIndexPath: Int = 0
     
     init() {
         print("상세화면 VM Init")
@@ -59,6 +62,10 @@ final class DetailViewModel: BaseViewModel {
         input.callRequest.bind { [weak self] _ in
             guard let self else { return }
             callRequest(backdropDetails.id)
+        }
+        
+        input.tappedHeartBtn.bind { [weak self] _ in
+            self?.output.sendHeartBtnAction.value = ()
         }
     }
     

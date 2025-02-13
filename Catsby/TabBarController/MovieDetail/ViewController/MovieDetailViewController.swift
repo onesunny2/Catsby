@@ -12,9 +12,6 @@ final class MovieDetailViewController: UIViewController {
     
     private let mainView = MovieDetailView()
     let viewModel = DetailViewModel()
-
-    var heartButtonStatus: (() -> ())? // 검색결과 화면에 하트버튼 상태전달 위한 변수
-    
     
     override func loadView() {
         view = mainView
@@ -105,7 +102,7 @@ final class MovieDetailViewController: UIViewController {
         let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[key] ?? false
         navigationItem.rightBarButtonItem?.image = UIImage(systemName: isLiked ? "heart.fill" : "heart")
         
-        heartButtonStatus?()
+        viewModel.input.tappedHeartBtn.value = ()
     }
 }
 

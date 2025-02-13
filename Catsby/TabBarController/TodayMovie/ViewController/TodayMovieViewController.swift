@@ -13,8 +13,6 @@ final class TodayMovieViewController: UIViewController {
     private let mainView = TodayMovieView()
     private let todaymovieViewModel = TodayMovieViewModel()
     private let recentkeywordViewModel = RecentSearchKeywordViewModel()
-
-    var selectedMovie = 0  // 영화 상세화면에서 좋아요 반영되었을 때 dataReload를 위해 저장해두는 값
     
     deinit {
         print("메인화면 VC Deinit")
@@ -63,14 +61,6 @@ final class TodayMovieViewController: UIViewController {
         recentkeywordViewModel.output.reversedKeywordsList.bind { [weak self] _ in
             self?.mainView.recentKeywordCollectionView.reloadData()
         }
-    }
-    
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        
-        // 영화 상세화면에서 좋아요 기능 적용한 것 해당 영화만 데이터 리로드 되도록
-            // ❔왜인지 viewWillAppear에서 실행하면 시점이 밀리는지 정확한 index로 찾아가지 못함
-        mainView.todayMovieCollectionView.reloadItems(at: [IndexPath(item: selectedMovie, section: 0)])
     }
     
     // 최근 검색어 전체 삭제 기능
@@ -224,12 +214,16 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             self.viewTransition(style: .push(animated: true), vc: vc)
             
         case mainView.todayMovieCollectionView:
-            selectedMovie = indexPath.item
             
             let vc = MovieDetailViewController()
             let trendMovie = todaymovieViewModel.output.trendMovieResults.value[indexPath.item]
             
+            vc.viewModel.cellIndexPath = indexPath.item
             vc.viewModel.backdropDetails = (trendMovie.id, trendMovie.title, trendMovie.overview, trendMovie.releaseDate, trendMovie.vote, trendMovie.genreID)
+            
+            vc.viewModel.output.sendHeartBtnAction.lazyBind { [weak self] _ in
+                self?.mainView.todayMovieCollectionView.reloadItems(at: [IndexPath(item: vc.viewModel.cellIndexPath, section: 0)])
+            }
             
             self.viewTransition(style: .push(animated: true), vc: vc)
         
