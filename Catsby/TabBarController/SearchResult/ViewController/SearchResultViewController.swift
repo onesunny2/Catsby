@@ -151,13 +151,10 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         let searchMovie = viewModel.output.searchResults.value[indexPath.row]
         vc.viewModel.backdropDetails = (searchMovie.id, searchMovie.title, searchMovie.overview, searchMovie.releaseDate, searchMovie.vote, searchMovie.genreID)
         
-        // 검색결과를 타고 들어간 상세화면에서 좋아요를 눌렀을 경우 검색결과로 되돌아왔을 때 반영되도록 구현
-        vc.heartButtonStatus = {
-            let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)] ?? false
+        vc.viewModel.output.sendHeartBtnAction.lazyBind { _ in
+            let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)] ?? false
             
-            cell.heartButton.configuration?.image = UIImage(systemName: savedStatus ? "heart.fill" : "heart", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 16)))
-            
-//            self.heartButtonActionToMainView?()  // 여기서 변동된 것도 메인화면에 가야하니까
+            cell.heartButton.isSelected = isLiked
         }
         
         self.viewTransition(style: .push(animated: true), vc: vc)
