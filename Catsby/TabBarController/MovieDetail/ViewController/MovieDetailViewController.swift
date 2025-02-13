@@ -11,24 +11,7 @@ import SnapKit
 final class MovieDetailViewController: UIViewController {
     
     private let mainView = MovieDetailView()
-    private let networkManager = NetworkManager.shared
-    private let group = DispatchGroup()
-    
-    private var imageBackdrop: [ImageBackdrops] = [] {
-        didSet {
-            mainView.backdropCollectionView.reloadData()
-        }
-    }
-    private var imagePosters: [ImagePosters] = [] {
-        didSet {
-            mainView.posterCollectionView.reloadData()
-        }
-    }
-    private var cast: [CreditCast] = [] {
-        didSet {
-            mainView.castCollectionView.reloadData()
-        }
-    }
+    let viewModel = DetailViewModel()
     
     var trendResult = TrendResults(backdrop: "", id: 0, title: "", overview: "", posterpath: "", genreID: [], releaseDate: "", vote: 0)
     var searchResult = SearchResults(id: 0, backdrop: "", title: "", overview: "", posterpath: "", genreID: [], releaseDate: "", vote: 0.0)
@@ -45,10 +28,28 @@ final class MovieDetailViewController: UIViewController {
 
         setCollectionView()
         setNavigation()
-        getDataAPI()
         setDataFromAPI()
+        bindVMData()
+        
+        viewModel.input.callRequest.value = ()
         
         mainView.moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
+    }
+    
+    deinit {
+        print("상세화면 VC Deinit")
+    }
+    
+    private func bindVMData() {
+        viewModel.output.endCallRequest.bind { [weak self] _ in
+            guard let self else { return }
+            mainView.backdropCollectionView.reloadData()
+            mainView.castCollectionView.reloadData()
+            mainView.posterCollectionView.reloadData()
+            
+            // 자꾸 처음에 위치가 튀는 것 때문에 설정
+            setCollectionViewScrollOffset()
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -79,60 +80,14 @@ final class MovieDetailViewController: UIViewController {
     }
     
     private func setDataFromAPI() {
-        
-        let synopsis = isSearchresult ?  searchResult.overview : trendResult.overview
-        let release = isSearchresult ? searchResult.releaseDate : trendResult.releaseDate
-        let vote = isSearchresult ? String(searchResult.vote) : String(trendResult.vote)
-        let genreID = isSearchresult ? Array(searchResult.genreID.prefix(2)) : Array(trendResult.genreID.prefix(2))
-        
-        mainView.synopsisContentLabel.text = synopsis
-        
-        switch genreID.count {
-        case 0:
-            let genre = ""
-            mainView.setBackdropInfo(release, vote, genre)
-        case 1:
-            let genre = (Genre.genreList[genreID[0]] ?? "")
-            mainView.setBackdropInfo(release, vote, genre)
-        case 2:
-            let genre: String = (Genre.genreList[genreID[0]] ?? "") + ", " + (Genre.genreList[genreID[1]] ?? "")
-            mainView.setBackdropInfo(release, vote, genre)
-        default: break
-        }
-    }
-    
-    private func getDataAPI() {
-       
-        // backdrop, poster 정보
-        group.enter()
-        networkManager.callRequest(type: ImageMovie.self, api: .image(movieID: isSearchresult ? searchResult.id : trendResult.id)) { result in
-            self.imageBackdrop = Array(result.backdrops.prefix(5))
-            self.imagePosters = result.posters
-            self.group.leave()
-        } failHandler: {
-            print(#function, "error")
-            self.group.leave()
-        }
-        
-        // cast 정보
-        group.enter()
-        networkManager.callRequest(type: CreditMovie.self, api: .credit(movieID: isSearchresult ? searchResult.id : trendResult.id)) { result in
-            self.cast = result.cast
-            self.group.leave()
-        } failHandler: {
-            print(#function, "error")
-            self.group.leave()
-        }
-        
-        group.notify(queue: .main) {
-            self.mainView.backdropCollectionView.reloadData()
-            self.mainView.castCollectionView.reloadData()
-            self.mainView.posterCollectionView.reloadData()
-            
-            // 자꾸 처음에 위치가 튀는 것 때문에 설정
-            self.setCollectionViewScrollOffset()
-        }
 
+        let release = viewModel.backdropDetails.release
+        let vote = String(viewModel.backdropDetails.vote)
+        let genre = viewModel.genreList()
+        print(genre)
+        
+        mainView.synopsisContentLabel.text = viewModel.backdropDetails.synopsis
+        mainView.setBackdropInfo(release, vote, genre)
     }
     
     private func setNavigation() {
@@ -171,9 +126,12 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView {
-        case mainView.backdropCollectionView: return imageBackdrop.count
-        case mainView.castCollectionView: return cast.count
-        case mainView.posterCollectionView: return imagePosters.count
+        case mainView.backdropCollectionView:
+            return viewModel.output.detailData.value.imgBackdrops.count
+        case mainView.castCollectionView:
+            return viewModel.output.detailData.value.casts.count
+        case mainView.posterCollectionView:
+            return viewModel.output.detailData.value.imgPosters.count
         default: return 0
         }
     }
@@ -182,7 +140,7 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
         
         switch collectionView {
         case mainView.backdropCollectionView:
-            let backdrop = imageBackdrop[indexPath.item]
+            let backdrop = viewModel.output.detailData.value.imgBackdrops[indexPath.item]
 
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BackDropCollectionViewCell.id, for: indexPath) as? BackDropCollectionViewCell else { return UICollectionViewCell() }
             
@@ -192,7 +150,7 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
             return cell
             
         case mainView.castCollectionView:
-            let cast = cast[indexPath.item]
+            let cast = viewModel.output.detailData.value.casts[indexPath.item]
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.id, for: indexPath) as? CastCollectionViewCell else { return UICollectionViewCell() }
             
@@ -200,7 +158,7 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
                 let url = NetworkManager.pathUrl + filepath
                 cell.getDataFromAPI(url, cast.name, cast.character)
             } else {
-                let url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYaqjTuNYAbIxAk0GzMiX8-ah3Q63B8cIBMyFJE1zx-4Ty8ZIOSAneIuNysLOXvIffm2o&usqp=CAU"
+                let url = NetworkManager.defaultPoster
                 cell.getDataFromAPI(url, cast.name, cast.character)
             }
   
@@ -209,7 +167,7 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
             return cell
             
         case mainView.posterCollectionView:
-            let poster = imagePosters[indexPath.item]
+            let poster = viewModel.output.detailData.value.imgPosters[indexPath.item]
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PosterCollectionViewCell.id, for: indexPath) as? PosterCollectionViewCell else { return UICollectionViewCell() }
             

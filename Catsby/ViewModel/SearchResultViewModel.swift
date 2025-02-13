@@ -59,7 +59,6 @@ final class SearchResultViewModel: BaseViewModel {
     private let group = DispatchGroup()
     
     var isEmptyFirst: Bool = false
-    private let defaultPoster = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYaqjTuNYAbIxAk0GzMiX8-ah3Q63B8cIBMyFJE1zx-4Ty8ZIOSAneIuNysLOXvIffm2o&usqp=CAU"
     private var isPageEnd: Bool = false
     private var currentPage: Int = 1
     private var currentKeyword: String = ""
@@ -153,7 +152,7 @@ extension SearchResultViewModel {
         if let poster = cell.posterpath {
             posterUrl = NetworkManager.pathUrl + poster
         } else {
-            posterUrl = defaultPoster
+            posterUrl = NetworkManager.defaultPoster
         }
         
         // 날짜 변환

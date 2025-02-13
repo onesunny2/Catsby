@@ -227,7 +227,9 @@ extension TodayMovieViewController: UICollectionViewDelegate, UICollectionViewDa
             selectedMovie = indexPath.item
             
             let vc = MovieDetailViewController()
-            vc.trendResult = todaymovieViewModel.output.trendMovieResults.value[indexPath.item]
+            let trendMovie = todaymovieViewModel.output.trendMovieResults.value[indexPath.item]
+            
+            vc.viewModel.backdropDetails = (trendMovie.id, trendMovie.overview, trendMovie.releaseDate, trendMovie.vote, trendMovie.genreID)
             vc.isSearchresult = false
             
             self.viewTransition(style: .push(animated: true), vc: vc)

@@ -13,6 +13,7 @@ final class NetworkManager {
     static let shared = NetworkManager()
     static let pathUrl = "https://image.tmdb.org/t/p/w500"
     static let originalUrl = "https://image.tmdb.org/t/p/original"
+    static let defaultPoster = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYaqjTuNYAbIxAk0GzMiX8-ah3Q63B8cIBMyFJE1zx-4Ty8ZIOSAneIuNysLOXvIffm2o&usqp=CAU"
     private init() {}
     
     func testCallRequest(api: TmdbAPI) {

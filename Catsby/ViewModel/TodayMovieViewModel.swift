@@ -28,7 +28,7 @@ import Foundation
 
 final class TodayMovieViewModel: BaseViewModel {
     
-    typealias IDAndPath = (Int, String)
+    typealias IDAndPath = (Int, String?)
     
     struct Input {
         let getTodayMovieData: Observable<Void> = Observable(())
@@ -71,7 +71,7 @@ final class TodayMovieViewModel: BaseViewModel {
         }
         
         input.cellIdAndPath.bind { [weak self] id, url in
-            self?.getBtnStatusAndPathurl(id, url)
+            self?.getBtnStatusAndPathurl(id, url ?? NetworkManager.defaultPoster)
         }
     }
     
@@ -114,7 +114,7 @@ extension TodayMovieViewModel {
         
         let key = String(id)
         isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[key] ?? false
-        
+
         pathUrl = NetworkManager.pathUrl + url
     }
 }
