@@ -12,10 +12,7 @@ final class MovieDetailViewController: UIViewController {
     
     private let mainView = MovieDetailView()
     let viewModel = DetailViewModel()
-    
-    var trendResult = TrendResults(backdrop: "", id: 0, title: "", overview: "", posterpath: "", genreID: [], releaseDate: "", vote: 0)
-    var searchResult = SearchResults(id: 0, backdrop: "", title: "", overview: "", posterpath: "", genreID: [], releaseDate: "", vote: 0.0)
-    var isSearchresult = false
+
     var heartButtonStatus: (() -> ())? // 검색결과 화면에 하트버튼 상태전달 위한 변수
     
     
@@ -91,25 +88,22 @@ final class MovieDetailViewController: UIViewController {
     }
     
     private func setNavigation() {
-        navigationItem.title = isSearchresult ? searchResult.title : trendResult.title
+        navigationItem.title = viewModel.backdropDetails.title
         
-        let movieId = String(isSearchresult ? searchResult.id : trendResult.id)
+        let movieId = String(viewModel.backdropDetails.id)
         let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[movieId] ?? false
         let heart = UIImage(systemName: savedStatus ? "heart.fill" : "heart")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: heart, style: .done, target: self, action: #selector(heartButtonTapped))
     }
     
     @objc func heartButtonTapped() {
-        let key = String(isSearchresult ? searchResult.id : trendResult.id)
-        var savedDictionary = UserDefaultsManager.shared.getDicData(type: .likeButton)
         
-        savedDictionary[key] = ((savedDictionary[key] ?? false) ? false : true)
-        
-        UserDefaultsManager.shared.saveData(value: savedDictionary, type: .likeButton)
-        
+        UserDefaultsManager.shared.changeDicData(id: viewModel.backdropDetails.id)
+ 
         // 누르고 네비게이션에 하트 모양 반영되도록
-        let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[key] ?? false
-        navigationItem.rightBarButtonItem?.image = UIImage(systemName: savedStatus ? "heart.fill" : "heart")
+        let key = String(viewModel.backdropDetails.id)
+        let isLiked = UserDefaultsManager.shared.getDicData(type: .likeButton)[key] ?? false
+        navigationItem.rightBarButtonItem?.image = UIImage(systemName: isLiked ? "heart.fill" : "heart")
         
         heartButtonStatus?()
     }

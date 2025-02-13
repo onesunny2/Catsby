@@ -147,9 +147,10 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         guard let cell = tableView.cellForRow(at: indexPath) as? SearchResultTableViewCell else { return }
         
         let vc = MovieDetailViewController()
+
+        let searchMovie = viewModel.output.searchResults.value[indexPath.row]
+        vc.viewModel.backdropDetails = (searchMovie.id, searchMovie.title, searchMovie.overview, searchMovie.releaseDate, searchMovie.vote, searchMovie.genreID)
         
-        vc.isSearchresult = true
-        vc.searchResult = viewModel.output.searchResults.value[indexPath.row]
         // 검색결과를 타고 들어간 상세화면에서 좋아요를 눌렀을 경우 검색결과로 되돌아왔을 때 반영되도록 구현
         vc.heartButtonStatus = {
             let savedStatus = UserDefaultsManager.shared.getDicData(type: .likeButton)[String(row.id)] ?? false

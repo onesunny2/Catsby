@@ -10,12 +10,12 @@ import Foundation
 /*
  < 전달 받아 해야하는 작업 >
  이전 화면에서 전달받은 데이터를 가지고
- 1. viewDidLoad에서 API 호출 신호를 보냄 (input)
- 2. 네트워크 통신을 통해 나온 모델을 가지고 가공해서 내보내기 (output)
+ ✅ 1. viewDidLoad에서 API 호출 신호를 보냄 (input)
+ ✅ 2. 네트워크 통신을 통해 나온 모델을 가지고 가공해서 내보내기 (output)
  - 가공을 해서 내보내는 이유는 옵셔널 처리를 해야할 부분이 있을 것 같아서 후처리로 VC에서 사용하기 위함
  ** backdrop Image는 갯수에 맞춰서 해야함!! 5개 넘는지 미만인지에 따라서
  3. 좋아요 기능
- - 커스텀 하트 버튼으로 변경
+ - 로직 userdefaults에 있는 것으로 변경
  - 상세화면에서 좋아요 누른 후 이전 화면에서 연동되어 보이도록
  
  */
@@ -23,7 +23,7 @@ import Foundation
 final class DetailViewModel: BaseViewModel {
     
     typealias DetailData = (imgBackdrops: [ImageBackdrops], imgPosters: [ImagePosters], casts: [CreditCast])
-    typealias BackDropDetail = (id: Int, synopsis: String, release: String, vote: Double, genre: [Int])
+    typealias BackDropDetail = (id: Int, title: String, synopsis: String, release: String, vote: Double, genre: [Int])
     
     struct Input {
         let callRequest: Observable<Void> = Observable(())
@@ -38,7 +38,7 @@ final class DetailViewModel: BaseViewModel {
     private(set) var output: Output
     
     private let group = DispatchGroup()
-    var backdropDetails: BackDropDetail = (0, "", "", 0.0, [])
+    var backdropDetails: BackDropDetail = (0, "", "", "", 0.0, [])
     
     init() {
         print("상세화면 VM Init")
